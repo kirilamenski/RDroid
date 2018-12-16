@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.0'
+}
+
+group 'RDroidPc'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+        url = 'https://dl.bintray.com/android/android-tools/'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation group: 'org.bytedeco', name: 'javacv-platform', version: '1.4.3'
+
+    // Monkey Runner dependencies
+    implementation group: 'net.sf.sociaal', name: 'chimpchat', version: '22.6.3'
+    implementation group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
+    implementation group: 'com.android.tools', name: 'sdklib', version: '25.3.0'
+    implementation group: 'com.android.tools.build', name: 'gradle', version: '2.3.0'
+    implementation group: 'com.android.tools', name: 'sdk-common', version: '25.3.0'
+    implementation group: 'com.android.tools.ddms', name: 'ddmlib', version: '25.3.0'
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
