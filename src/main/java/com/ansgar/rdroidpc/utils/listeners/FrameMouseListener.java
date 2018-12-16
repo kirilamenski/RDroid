@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 import static com.ansgar.rdroidpc.utils.Converter.convertCoordinates;
 
-public class FrameMouseListener implements MouseMotionListener, MouseListener, MouseWheelListener {
+public class FrameMouseListener implements MouseMotionListener, MouseListener {
 
     private VideoFrame frame;
 
@@ -24,14 +24,10 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener, M
 
     @Override
     public void mouseMoved(MouseEvent e) {
-//        System.out.println("Moved: " + e.getX() + ", " + e.getY());
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        int x = (int) convertCoordinates(frame.getDeviceWidth(), frame.getWidth(), e.getX());
-        int y = (int) convertCoordinates(frame.getDeviceHeight(), frame.getHeight(), e.getY());
-        frame.getChimpDevice().touch(x, y, TouchPressType.DOWN_AND_UP);
     }
 
     @Override
@@ -50,16 +46,10 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener, M
 
     @Override
     public void mouseEntered(MouseEvent e) {
-//        System.out.println("Entered: " + e.getX() + ", " + e.getY());
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-//        System.out.println("Exited: " + e.getX() + ", " + e.getY());
     }
 
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-//        System.out.println("Wheel moved: " + e.getX() + ", " + e.getY());
-    }
 }
