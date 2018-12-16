@@ -1,17 +1,11 @@
 package com.ansgar.rdroidpc.commands;
 
-import com.ansgar.rdoidpc.constants.AdbCommandEnum;
 import com.ansgar.rdoidpc.entities.Device;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ResponseParserUtil {
-
-    public ResponseParserUtil() {
-
-    }
 
     public List<Device> getDevices(StringBuilder stringBuilder) {
         List<Device> devices = new ArrayList<>();

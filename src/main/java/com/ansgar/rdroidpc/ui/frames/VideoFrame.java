@@ -17,8 +17,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.ansgar.rdroidpc.utils.Converter.*;
-
 public class VideoFrame extends JPanel {
 
     private final int Y_OFFSET = 48;
@@ -107,12 +105,7 @@ public class VideoFrame extends JPanel {
                 imageHeight = height;
             }
             int x = -(imageWidth / 3 + 20);
-            g2d.drawImage(currentImage,
-                    x,
-                    0,
-                    imageWidth,
-                    imageHeight,
-                    this);
+            g2d.drawImage(currentImage, x, 0, imageWidth, imageHeight, this);
             g2d.dispose();
 
             if (!isWindowUpdated) updateWindowSize(x);
@@ -138,13 +131,11 @@ public class VideoFrame extends JPanel {
     }
 
     private void stopGrabber() {
-        if (frameGrabber != null) {
             try {
                 frameGrabber.flush();
             } catch (FrameGrabber.Exception e) {
                 e.printStackTrace();
             }
-        }
     }
 
     private void stopThread() {
@@ -164,7 +155,6 @@ public class VideoFrame extends JPanel {
     private void initMouseListener() {
         listener = new FrameMouseListener(this);
         addMouseListener(listener);
-        addMouseWheelListener(listener);
         addMouseMotionListener(listener);
     }
 

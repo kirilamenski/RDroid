@@ -14,7 +14,7 @@ enum class AdbCommandEnum(val command: String) {
     /**adb screenrecorder has time limit - 180 s (3 min). To solve this problem and don't get exception limit range you need to use 'hack'.
      * repeat string with screenrecord several time. Video will be streaming line * 180 s.
      */
-    SHOW_SCREEN_WITHOUT_TIME("adb -s %s shell screenrecord --bit-rate 22000000 --output-format=h264 --time-limit 180 --size 1920x1080 - ;" +
-            "screenrecord --bit-rate 22000000 --output-format=h264 --time-limit 180 --size 1920x1080 - ;" +
-            "screenrecord --bit-rate 22000000 --output-format=h264 --time-limit 180 --size 1920x1080 - ")
+    SHOW_SCREEN_WITHOUT_TIME("adb -s %s shell screenrecord --bit-rate 32000000 --output-format=h264 --time-limit 180 --size 1920x1080 - ;" +
+            "screenrecord --bit-rate 32000000 --output-format=h264 --time-limit 180 --size 1920x1080 - ;" +
+            "screenrecord --bit-rate 32000000 --output-format=h264 --time-limit 180 --size 1920x1080 - ")
 }
