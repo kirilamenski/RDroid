@@ -27,7 +27,6 @@ public class VideoFrame extends JPanel {
     private FrameGrabber frameGrabber;
     private BufferedImage currentImage;
     private Device device;
-    private CommandExecutor commandExecutor;
     private FrameMouseListener listener;
     private IChimpDevice chimpDevice;
 
@@ -36,7 +35,6 @@ public class VideoFrame extends JPanel {
 
     public VideoFrame(Device device) {
         this.device = device;
-        this.commandExecutor = new CommandExecutor();
         this.chimpDevice = new AdbBackend().waitForConnection();
 
         frame = new JFrame(device.getDeviceName());
