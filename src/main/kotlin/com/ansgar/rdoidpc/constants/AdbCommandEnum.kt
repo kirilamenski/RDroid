@@ -16,5 +16,7 @@ enum class AdbCommandEnum(val command: String) {
      */
     SHOW_SCREEN_WITHOUT_TIME("adb -s %s shell screenrecord --bit-rate 64m --output-format=h264 --time-limit 180 --size 1920x1080 - ;" +
             "screenrecord --bit-rate 64m --output-format=h264 --time-limit 180 --size 1920x1080 - ;" +
-            "screenrecord --bit-rate 64m --output-format=h264 --time-limit 180 --size 1920x1080 - ")
+            "screenrecord --bit-rate 64m --output-format=h264 --time-limit 180 --size 1920x1080 - "),
+    ADB_SHELL("adb -s %s shell"),
+    SCREEN_RECORD("screenrecord --bit-rate %dm --output-format=h264 --time-limit 180 --size %dx%d - ")
 }
