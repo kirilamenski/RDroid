@@ -6,6 +6,7 @@ import com.ansgar.rdoidpc.constants.AdbCommandEnum;
 import com.ansgar.rdoidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.utils.listeners.FrameMouseListener;
+import com.ansgar.rdroidpc.utils.listeners.KeyboardListener;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
@@ -43,6 +44,7 @@ public class VideoFrame extends JPanel {
         frame.pack();
         frame.setVisible(true);
         frame.setFocusable(true);
+        frame.setFocusTraversalKeysEnabled(false);
         frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -53,6 +55,7 @@ public class VideoFrame extends JPanel {
         });
 
         initMouseListener();
+        initKeyboardListener();
     }
 
     public void start(AdbCommandEnum adbCommandEnum) {
@@ -130,8 +133,10 @@ public class VideoFrame extends JPanel {
 
     private void stopGrabber() {
         try {
-            frameGrabber.close();
-            frameGrabber.stop();
+            if (frameGrabber != null) {
+                frameGrabber.close();
+                frameGrabber.stop();
+            }
         } catch (FrameGrabber.Exception e) {
             e.printStackTrace();
         }
@@ -155,6 +160,11 @@ public class VideoFrame extends JPanel {
         FrameMouseListener listener = new FrameMouseListener(this);
         addMouseListener(listener);
         addMouseMotionListener(listener);
+    }
+
+    private void initKeyboardListener() {
+        KeyboardListener listener = new KeyboardListener(this);
+        frame.addKeyListener(listener);
     }
 
 
