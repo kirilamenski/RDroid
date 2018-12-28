@@ -78,7 +78,6 @@ public class MainPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = table.rowAtPoint(e.getPoint());
-                System.out.println(row);
                 if (row >= 0) {
                     Device device = deviceList.get(row);
                     VideoFrame videoFrame = new VideoFrame(device);
