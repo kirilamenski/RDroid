@@ -27,15 +27,16 @@ public class VideoFrame extends JPanel {
     private FrameGrabber frameGrabber;
     private BufferedImage currentImage;
     private Device device;
-    private FrameMouseListener listener;
     private IChimpDevice chimpDevice;
+    private AdbBackend adbBackend;
 
     private int imageWidth, imageHeight;
     private boolean isWindowUpdated;
 
     public VideoFrame(Device device) {
         this.device = device;
-        this.chimpDevice = new AdbBackend().waitForConnection();
+        this.adbBackend = new AdbBackend();
+        this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
 
         frame = new JFrame(device.getDeviceName());
         frame.add(this);
@@ -46,7 +47,6 @@ public class VideoFrame extends JPanel {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                // TODO
                 stop();
                 e.getWindow().dispose();
             }
@@ -119,7 +119,7 @@ public class VideoFrame extends JPanel {
         stopGrabber();
         stopThread();
         stopFrame();
-        chimpDevice.dispose();
+        adbBackend.shutdown();
     }
 
     private void updateWindowSize(int x) {
@@ -129,11 +129,12 @@ public class VideoFrame extends JPanel {
     }
 
     private void stopGrabber() {
-            try {
-                frameGrabber.flush();
-            } catch (FrameGrabber.Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            frameGrabber.close();
+            frameGrabber.stop();
+        } catch (FrameGrabber.Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void stopThread() {
@@ -151,7 +152,7 @@ public class VideoFrame extends JPanel {
     }
 
     private void initMouseListener() {
-        listener = new FrameMouseListener(this);
+        FrameMouseListener listener = new FrameMouseListener(this);
         addMouseListener(listener);
         addMouseMotionListener(listener);
     }
@@ -168,4 +169,5 @@ public class VideoFrame extends JPanel {
     public int getDeviceHeight() {
         return device.getHeight();
     }
+
 }
