@@ -8,6 +8,7 @@ import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.commands.ResponseParserUtil;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.menu.MenuBar;
+import com.ansgar.rdroidpc.utils.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +56,7 @@ public class MainPanel extends JPanel {
         List<Device> deviceList = responseUtil.getDevices(lines);
 
         String[] columns = {"Name", "Width", "Height", "Device Id", "Status"};
-        String[][] datas = new String[deviceList.size()][5];
+        String[][] data = new String[deviceList.size()][5];
 
         for (int i = 0; i < deviceList.size(); i++) {
             Device device = deviceList.get(i);
@@ -63,7 +64,7 @@ public class MainPanel extends JPanel {
                     String.format(Locale.ENGLISH, AdbCommandEnum.DEVICE_NAME.getCommand(), device.getDeviceId()));
             responseUtil.setDeviceSize(device,
                     String.format(Locale.ENGLISH, AdbCommandEnum.DEVICE_SCREEN_SIZE.getCommand(), device.getDeviceId()));
-            datas[i] = new String[]{
+            data[i] = new String[]{
                     device.getDeviceName(),
                     String.valueOf(device.getWidth()),
                     String.valueOf(device.getHeight()),
@@ -72,7 +73,7 @@ public class MainPanel extends JPanel {
             };
         }
 
-        JTable table = new JTable(datas, columns);
+        JTable table = new JTable(data, columns);
         table.setCellEditor(null);
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -81,8 +82,7 @@ public class MainPanel extends JPanel {
                 if (row >= 0) {
                     Device device = deviceList.get(row);
                     VideoFrame videoFrame = new VideoFrame(device);
-                    videoFrame.startNewThread(String.format(Locale.ENGLISH,
-                            AdbCommandEnum.SHOW_SCREEN_WITHOUT_TIME.getCommand(), device.getDeviceId()));
+                    videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 64, 46));
                 }
             }
         });
