@@ -16,9 +16,7 @@ public class StringUtils {
 
         for (int i = 0; i <= count; i++) {
             stringBuilder.append(option);
-            if (i != count) {
-                    stringBuilder.append("; ");
-            }
+            if (i != count) stringBuilder.append("; ");
         }
 
         return stringBuilder.toString();
