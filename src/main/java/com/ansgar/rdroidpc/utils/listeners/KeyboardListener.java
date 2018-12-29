@@ -1,6 +1,7 @@
 package com.ansgar.rdroidpc.utils.listeners;
 
-import com.ansgar.rdroidpc.commands.CommandExecutor;
+import com.android.chimpchat.core.TouchPressType;
+import com.ansgar.rdoidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 
 import java.awt.event.KeyEvent;
@@ -20,14 +21,14 @@ public class KeyboardListener implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("pressed" + e.getKeyChar());
-        CommandExecutor commandExecutor = new CommandExecutor();
-        commandExecutor.execute("adb shell input text " + e.getKeyChar());
-        frame.getChimpDevice().type("Hello, world!");
+        AdbKeyCode adbKeyCode = AdbKeyCode.Companion.getAdbKeyEvent(e);
+        if (adbKeyCode != null) {
+            frame.getChimpDevice().press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println("released" + e.getKeyCode());
     }
+
 }
