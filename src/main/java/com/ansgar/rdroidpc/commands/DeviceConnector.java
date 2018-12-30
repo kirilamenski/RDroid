@@ -28,7 +28,6 @@ public class DeviceConnector {
     }
 
     public void execute(String command) throws IOException {
-        System.out.println(command);
         Process process = Runtime.getRuntime()
                 .exec(String.format(Locale.ENGLISH, "adb -s %s shell", device.getDeviceId()));
         if (process != null) {
