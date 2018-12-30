@@ -122,7 +122,8 @@ public class VideoFrame extends JPanel {
         stopGrabber();
         stopThread();
         stopFrame();
-        adbBackend.shutdown();
+
+        if (adbBackend != null) adbBackend.shutdown();
     }
 
     private void updateWindowSize(int x) {
