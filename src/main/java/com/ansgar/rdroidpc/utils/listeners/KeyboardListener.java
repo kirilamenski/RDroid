@@ -22,7 +22,9 @@ public class KeyboardListener implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         AdbKeyCode adbKeyCode = AdbKeyCode.Companion.getAdbKeyEvent(e);
-        if (adbKeyCode != null) {
+        if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN && adbKeyCode.isChar()) {
+            frame.getChimpDevice().type(String.valueOf(e.getKeyChar()));
+        } else {
             frame.getChimpDevice().press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);
         }
     }

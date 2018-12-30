@@ -3,6 +3,7 @@ package com.ansgar.rdroidpc.utils;
 import com.ansgar.rdoidpc.constants.AdbCommandEnum;
 import com.ansgar.rdoidpc.entities.Device;
 
+import java.nio.charset.Charset;
 import java.util.Locale;
 
 public class StringUtils {
@@ -20,6 +21,11 @@ public class StringUtils {
         }
 
         return stringBuilder.toString();
+    }
+
+    public static String getEncodedString(char ch) {
+        byte[] bytes = String.valueOf(ch).getBytes();
+        return new String(bytes, Charset.forName("UTF-8"));
     }
 
 }
