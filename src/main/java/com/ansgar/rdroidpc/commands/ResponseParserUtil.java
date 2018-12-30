@@ -15,8 +15,7 @@ public class ResponseParserUtil {
         for (String line : lines) {
             String[] deviceInf = line.split("\t");
             if (deviceInf.length == 2) {
-                devices.add(new Device(deviceInf[0], deviceInf[1],
-                        null, 0, 0));
+                devices.add(new Device(deviceInf[0], deviceInf[1], null, 0, 0));
             }
         }
 
@@ -26,11 +25,14 @@ public class ResponseParserUtil {
     public Device setDeviceName(Device device, String command) {
         CommandExecutor executor = new CommandExecutor();
         executor.setOnFinishExecuteListener(result -> {
-            String[] splitedResult = result.toString().split(": ");
-            String name = splitedResult[splitedResult.length - 1]
-                    .replace("[", "")
-                    .replace("]", "");
-            device.setDeviceName(name);
+            String[] lines = result.toString().split("\n");
+            if (lines.length > 0) {
+                String[] modelNameProp = lines[0].split(": ");
+                String name = modelNameProp[modelNameProp.length - 1]
+                        .replace("[", "")
+                        .replace("]", "");
+                device.setDeviceName(name);
+            }
         });
         executor.execute(command);
         return device;
