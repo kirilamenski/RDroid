@@ -18,7 +18,7 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
     @Override
     public void mouseDragged(MouseEvent e) {
         int x = (int) convertCoordinates(frame.getDeviceWidth(), frame.getWidth(), e.getX());
-        int y = (int) convertCoordinates(frame.getDeviceHeight(), frame.getHeight(), e.getY());
+        int y = (int) convertCoordinates(frame.getDeviceHeight(), frame.getFrameHeight(), e.getY());
         frame.getChimpDevice().touch(x, y, TouchPressType.MOVE);
     }
 
@@ -33,14 +33,14 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         int x = (int) convertCoordinates(frame.getDeviceWidth(), frame.getWidth(), e.getX());
-        int y = (int) convertCoordinates(frame.getDeviceHeight(), frame.getHeight(), e.getY());
+        int y = (int) convertCoordinates(frame.getDeviceHeight(), frame.getFrameHeight(), e.getY());
         frame.getChimpDevice().touch(x, y, TouchPressType.DOWN);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         int x = (int) convertCoordinates(frame.getDeviceWidth(), frame.getWidth(), e.getX());
-        int y = (int) convertCoordinates(frame.getDeviceHeight(), frame.getHeight(), e.getY());
+        int y = (int) convertCoordinates(frame.getDeviceHeight(), frame.getFrameHeight(), e.getY());
         frame.getChimpDevice().touch(x, y, TouchPressType.UP);
     }
 
