@@ -2,9 +2,14 @@ package com.ansgar.rdroidpc.ui.frames;
 
 import com.android.chimpchat.adb.AdbBackend;
 import com.android.chimpchat.core.IChimpDevice;
+import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdoidpc.constants.AdbCommandEnum;
+import com.ansgar.rdoidpc.constants.AdbKeyCode;
+import com.ansgar.rdoidpc.constants.Colors;
+import com.ansgar.rdoidpc.constants.DimensionConst;
 import com.ansgar.rdoidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
+import com.ansgar.rdroidpc.ui.components.NavigationBottomPanel;
 import com.ansgar.rdroidpc.utils.listeners.FrameMouseListener;
 import com.ansgar.rdroidpc.utils.listeners.KeyboardListener;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
@@ -15,13 +20,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 public class VideoFrame extends JPanel {
 
     private final int Y_OFFSET = 48;
-    private final float RESIZE_PERCENT = 0.85f;
 
     private JFrame frame;
     private Thread thread;
@@ -39,21 +45,8 @@ public class VideoFrame extends JPanel {
         this.adbBackend = new AdbBackend();
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
 
-        frame = new JFrame(device.getDeviceName());
-        frame.add(this);
-        frame.pack();
-        frame.setVisible(true);
-        frame.setFocusable(true);
-        frame.setFocusTraversalKeysEnabled(false);
-        frame.setResizable(false);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                stop();
-                e.getWindow().dispose();
-            }
-        });
-
+        setLayout(null);
+        initFrame(device.getDeviceName());
         initMouseListener();
         initKeyboardListener();
     }
@@ -97,11 +90,11 @@ public class VideoFrame extends JPanel {
         super.paintComponent(g);
         if (currentImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            int width = (int) (currentImage.getWidth() * RESIZE_PERCENT);
+            int width = (int) (currentImage.getWidth() * 0.85f);
             if (imageWidth != width) {
                 imageWidth = width;
             }
-            int height = (int) (currentImage.getHeight() * RESIZE_PERCENT);
+            int height = (int) (currentImage.getHeight() * 0.85f);
             if (imageHeight != height) {
                 imageHeight = height;
             }
@@ -127,7 +120,10 @@ public class VideoFrame extends JPanel {
     }
 
     private void updateWindowSize(int x) {
-        frame.setBounds(300, 0, imageWidth - (imageWidth + x + 48), imageHeight + Y_OFFSET);
+        frame.setBounds(300, 0,
+                imageWidth - (imageWidth + x + 48),
+                imageHeight + Y_OFFSET + DimensionConst.NAVIGATION_PANEL_HEIGHT);
+        add(initNavigationPanel());
         frame.revalidate();
         isWindowUpdated = true;
     }
@@ -157,6 +153,55 @@ public class VideoFrame extends JPanel {
         }
     }
 
+    private void initFrame(String title) {
+        frame = new JFrame(title);
+        frame.add(this);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setFocusable(true);
+        frame.setFocusTraversalKeysEnabled(false);
+        frame.setResizable(true);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                stop();
+                e.getWindow().dispose();
+            }
+        });
+    }
+
+    private JPanel initNavigationPanel() {
+        NavigationBottomPanel panel = new NavigationBottomPanel();
+        panel.setIcons("icons/ic_back.png", "icons/ic_home.png", "icons/ic_square.png");
+        panel.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        panel.setBounds(0,
+                imageHeight,
+                getWidth() + 24,
+                DimensionConst.NAVIGATION_PANEL_HEIGHT);
+        panel.setItemClickListener(listener);
+        panel.createPanel();
+
+        return panel;
+    }
+
+    private NavigationBottomPanel.OnNavigationPanelListener listener = id -> {
+        int keyCode = AdbKeyCode.KEYCODE_UNKNOWN.getKeyCode();
+        switch (id) {
+            case 0:
+                keyCode = AdbKeyCode.KEYCODE_BACK.getKeyCode();
+                break;
+            case 1:
+                keyCode = AdbKeyCode.KEYCODE_HOME.getKeyCode();
+                break;
+            case 2:
+                keyCode = AdbKeyCode.KEYCODE_APP_SWITCH.getKeyCode();
+                break;
+        }
+        if (keyCode != AdbKeyCode.KEYCODE_UNKNOWN.getKeyCode()) {
+            chimpDevice.press(String.valueOf(keyCode), TouchPressType.DOWN_AND_UP);
+        }
+    };
+
     private void initMouseListener() {
         FrameMouseListener listener = new FrameMouseListener(this);
         addMouseListener(listener);
@@ -181,4 +226,7 @@ public class VideoFrame extends JPanel {
         return device.getHeight();
     }
 
+    public int getFrameHeight() {
+        return getHeight() - DimensionConst.NAVIGATION_PANEL_HEIGHT;
+    }
 }
