@@ -7,7 +7,7 @@ import com.ansgar.rdoidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.commands.ResponseParserUtil;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
-import com.ansgar.rdroidpc.ui.menu.MenuBar;
+import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.utils.StringUtils;
 
 import javax.swing.*;

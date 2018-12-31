@@ -1,10 +1,8 @@
-package com.ansgar.rdroidpc.ui.menu;
+package com.ansgar.rdroidpc.ui.components.menu;
 
-import com.ansgar.rdoidpc.constants.AdbCommandEnum;
 import com.ansgar.rdoidpc.constants.Colors;
 import com.ansgar.rdoidpc.constants.DimensionConst;
 import com.ansgar.rdoidpc.constants.StringConst;
-import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 
 import javax.swing.*;
 import java.awt.*;

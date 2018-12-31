@@ -1,4 +1,4 @@
-package com.ansgar.rdroidpc.ui.menu;
+package com.ansgar.rdroidpc.ui.components.menu;
 
 import javax.swing.*;
 import java.awt.*;
