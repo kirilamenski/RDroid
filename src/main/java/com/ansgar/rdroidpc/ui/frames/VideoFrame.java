@@ -34,6 +34,7 @@ public class VideoFrame extends JPanel {
     private Device device;
     private IChimpDevice chimpDevice;
     private AdbBackend adbBackend;
+    private CommandExecutor commandExecutor;
 
     private int imageWidth, imageHeight;
     private boolean isWindowUpdated;
@@ -65,9 +66,9 @@ public class VideoFrame extends JPanel {
     }
 
     public void start(String command) {
-        CommandExecutor executor = new CommandExecutor();
+        commandExecutor = new CommandExecutor();
         try {
-            InputStream inputStream = executor.getInputStream(command);
+            InputStream inputStream = commandExecutor.getInputStream(command);
             frameGrabber = new FFmpegFrameGrabber(inputStream);
             frameGrabber.start();
 
@@ -113,7 +114,7 @@ public class VideoFrame extends JPanel {
         stopGrabber();
         stopThread();
         stopFrame();
-
+        if (commandExecutor != null) commandExecutor.destroy();
         if (adbBackend != null) adbBackend.shutdown();
     }
 
@@ -158,7 +159,7 @@ public class VideoFrame extends JPanel {
         frame.setVisible(true);
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
