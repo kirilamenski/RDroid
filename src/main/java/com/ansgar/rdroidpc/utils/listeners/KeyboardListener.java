@@ -24,7 +24,6 @@ public class KeyboardListener implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         pressedKey.put(e.getKeyCode(), e.getKeyCode());
-        System.out.println("Size: " + pressedKey.size() + ", " + e.getKeyCode());
         if (pressedKey.size() > 1) {
             checkForMultipleKey();
             return;
