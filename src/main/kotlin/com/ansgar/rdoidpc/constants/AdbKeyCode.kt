@@ -69,7 +69,7 @@ enum class AdbKeyCode(val keyCode: Int, val equalKeyEvent: Int? = null, val isCh
     KEYCODE_SYM(63, null, false),
     KEYCODE_EXPLORER(64, null, false),
     KEYCODE_ENVELOPE(65, null, false),
-    KEYCODE_ENTER(66, null, false),
+    KEYCODE_ENTER(66, KeyEvent.VK_ENTER, false),
     KEYCODE_DEL(67, KeyEvent.VK_BACK_SPACE, false),
     KEYCODE_GRAVE(68, null, false),
     KEYCODE_MINUS(69, null, false),
