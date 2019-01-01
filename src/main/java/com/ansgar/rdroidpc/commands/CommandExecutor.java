@@ -6,6 +6,7 @@ import java.io.*;
 
 public class CommandExecutor {
 
+    private Process process;
     private OnExecuteNextListener onExecuteNextListener;
     private onExecuteErrorListener onExecuteErrorListener;
     private OnFinishExecuteListener onFinishExecuteListener;
@@ -28,10 +29,10 @@ public class CommandExecutor {
 
     public void execute(String command) {
         try {
-            Process process = Runtime.getRuntime().exec(command);
+            process = Runtime.getRuntime().exec(command);
 
-            executeInputStream(process);
-            executeErrorStream(process);
+            executeInputStream();
+            executeErrorStream();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,7 +48,7 @@ public class CommandExecutor {
         return process.getInputStream();
     }
 
-    private void executeInputStream(Process process) throws IOException {
+    private void executeInputStream() throws IOException {
         BufferedReader inputStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
         StringBuilder stringBuilder = new StringBuilder();
@@ -58,11 +59,28 @@ public class CommandExecutor {
         if (onFinishExecuteListener != null) onFinishExecuteListener.onFinish(stringBuilder);
     }
 
-    private void executeErrorStream(Process process) throws IOException {
+    private void executeErrorStream() throws IOException {
         BufferedReader errorStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String line;
         while ((line = errorStream.readLine()) != null) {
             System.out.println(line);
+        }
+    }
+
+    public void destroy() {
+        if (process != null) {
+            OutputStream outputStream = process.getOutputStream();
+            InputStream inputStream = process.getInputStream();
+            InputStream errorStream = process.getErrorStream();
+            try {
+                outputStream.close();
+                outputStream.flush();
+                inputStream.close();
+                errorStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            process.destroyForcibly();
         }
     }
 
