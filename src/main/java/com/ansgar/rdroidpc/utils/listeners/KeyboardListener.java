@@ -52,6 +52,12 @@ public class KeyboardListener implements KeyListener {
             adbKeyCode = AdbKeyCode.KEYCODE_HOME;
         } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_SHIFT) && pressedKey.containsKey(KeyEvent.VK_L)) {
             adbKeyCode = AdbKeyCode.KEYCODE_APP_SWITCH;
+        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_SHIFT) && pressedKey.containsKey(KeyEvent.VK_F12)) {
+            adbKeyCode = AdbKeyCode.KEYCODE_VOLUME_UP;
+        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_SHIFT) && pressedKey.containsKey(KeyEvent.VK_F11)) {
+            adbKeyCode = AdbKeyCode.KEYCODE_VOLUME_DOWN;
+        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_SHIFT) && pressedKey.containsKey(KeyEvent.VK_F10)) {
+            adbKeyCode = AdbKeyCode.KEYCODE_VOLUME_MUTE;
         }
         if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN) {
             frame.getChimpDevice().press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);

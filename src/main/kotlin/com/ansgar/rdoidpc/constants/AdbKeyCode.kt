@@ -89,7 +89,8 @@ enum class AdbKeyCode(val keyCode: Int, val equalKeyEvent: Int? = null, val isCh
     KEYCODE_NOTIFICATION(83, null, false),
     KEYCODE_SEARCH(84, null, false),
     TAG_LAST_KEYCODE(85, null, false),
-    KEYCODE_APP_SWITCH(187, null, false);
+    KEYCODE_APP_SWITCH(187, null, false),
+    KEYCODE_VOLUME_MUTE(164, null, false);
 
     companion object {
         fun getAdbKeyEvent(e: KeyEvent?): AdbKeyCode {
