@@ -6,7 +6,7 @@ import java.net.URL;
 
 public class NavigationBottomPanel extends JPanel {
 
-    private int iconWidth = 20, iconHeight = 20;
+    private int iconWidth = -1, iconHeight = -1;
     private String[] icons;
     private OnNavigationPanelListener listener;
 
@@ -49,6 +49,9 @@ public class NavigationBottomPanel extends JPanel {
     }
 
     private Image getResizedIcon(URL iconPath) {
+        if (iconWidth == -1 || iconHeight == -1) {
+            iconWidth = iconHeight = (int) (getHeight() * 0.3);
+        }
         return new ImageIcon(iconPath).getImage().getScaledInstance(iconWidth, iconHeight, Image.SCALE_DEFAULT);
     }
 
