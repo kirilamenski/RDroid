@@ -89,11 +89,11 @@ public class VideoFrame extends JPanel {
         super.paintComponent(g);
         if (currentImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            int width = (int) (currentImage.getWidth() * 0.85f);
+            int width = (int) (currentImage.getWidth() * 0.5f);
             if (imageWidth != width) {
                 imageWidth = width;
             }
-            int height = (int) (currentImage.getHeight() * 0.85f);
+            int height = (int) (currentImage.getHeight() * 0.5f);
             if (imageHeight != height) {
                 imageHeight = height;
             }
@@ -175,7 +175,7 @@ public class VideoFrame extends JPanel {
         panel.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         panel.setBounds(0,
                 imageHeight,
-                getWidth() + 24,
+                frame.getWidth(),
                 DimensionConst.NAVIGATION_PANEL_HEIGHT);
         panel.setItemClickListener(listener);
         panel.createPanel();
