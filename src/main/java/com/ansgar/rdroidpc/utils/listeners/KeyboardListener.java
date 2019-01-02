@@ -26,7 +26,7 @@ public class KeyboardListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         pressedKey.put(e.getKeyCode(), e.getKeyCode());
 
-        if (pressedKey.size() > 1 && CollectionsUtil.getPositionInSet(pressedKey, KeyEvent.VK_SHIFT) != 0) {
+        if (pressedKey.size() > 1 && !(pressedKey.size() == 2 && pressedKey.containsKey(KeyEvent.VK_SHIFT))) {
             checkForMultipleKey();
             return;
         }
