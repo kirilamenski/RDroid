@@ -97,7 +97,7 @@ public class VideoFrame extends JPanel {
             if (imageHeight != height) {
                 imageHeight = height;
             }
-            int x = -(imageWidth / 3 + 20);
+            int x = -(imageWidth / 3 + 10);
             g2d.drawImage(currentImage, x, 0, imageWidth, imageHeight, this);
             g2d.dispose();
 
@@ -120,7 +120,7 @@ public class VideoFrame extends JPanel {
 
     private void updateWindowSize(int x) {
         frame.setBounds(300, 0,
-                imageWidth - (imageWidth + x + 48),
+                imageWidth - (imageWidth + x + 20),
                 imageHeight + Y_OFFSET + DimensionConst.NAVIGATION_PANEL_HEIGHT);
         add(initNavigationPanel());
         frame.revalidate();
