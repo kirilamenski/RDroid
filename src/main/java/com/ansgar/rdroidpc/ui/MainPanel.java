@@ -82,7 +82,7 @@ public class MainPanel extends JPanel {
                 if (row >= 0) {
                     Device device = deviceList.get(row);
                     VideoFrame videoFrame = new VideoFrame(device);
-                    videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 64, 45));
+                    videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 4, 45));
                 }
             }
         });
