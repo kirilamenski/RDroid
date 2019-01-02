@@ -3,6 +3,7 @@ package com.ansgar.rdroidpc.utils.listeners;
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdoidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
+import com.ansgar.rdroidpc.utils.CollectionsUtil;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -24,7 +25,8 @@ public class KeyboardListener implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         pressedKey.put(e.getKeyCode(), e.getKeyCode());
-        if (pressedKey.size() > 1) {
+
+        if (pressedKey.size() > 1 && CollectionsUtil.getPositionInSet(pressedKey, KeyEvent.VK_SHIFT) != 0) {
             checkForMultipleKey();
             return;
         }
@@ -47,9 +49,9 @@ public class KeyboardListener implements KeyListener {
         AdbKeyCode adbKeyCode = AdbKeyCode.KEYCODE_UNKNOWN;
         if (pressedKey.containsKey(KeyEvent.VK_ALT) && pressedKey.containsKey(KeyEvent.VK_LEFT)) {
             adbKeyCode = AdbKeyCode.KEYCODE_BACK;
-        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_SHIFT) && pressedKey.containsKey(KeyEvent.VK_H)) {
+        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_ALT) && pressedKey.containsKey(KeyEvent.VK_H)) {
             adbKeyCode = AdbKeyCode.KEYCODE_HOME;
-        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_SHIFT) && pressedKey.containsKey(KeyEvent.VK_L)) {
+        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_ALT) && pressedKey.containsKey(KeyEvent.VK_L)) {
             adbKeyCode = AdbKeyCode.KEYCODE_APP_SWITCH;
         } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_SHIFT) && pressedKey.containsKey(KeyEvent.VK_F12)) {
             adbKeyCode = AdbKeyCode.KEYCODE_VOLUME_UP;
