@@ -39,9 +39,10 @@ public class VideoFrame extends JPanel {
     private int imageWidth, imageHeight;
     private boolean isWindowUpdated;
 
-    public VideoFrame(Device device) {
+    public VideoFrame(Device device, AdbBackend adbBackend) {
         this.device = device;
-        this.adbBackend = new AdbBackend();
+//        this.adbBackend = new AdbBackend();
+        this.adbBackend = adbBackend;
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
 
         setLayout(null);
@@ -115,7 +116,8 @@ public class VideoFrame extends JPanel {
         stopThread();
         stopFrame();
         if (commandExecutor != null) commandExecutor.destroy();
-        if (adbBackend != null) adbBackend.shutdown();
+//        if (adbBackend != null) adbBackend.shutdown();
+        if (chimpDevice != null) chimpDevice.dispose();
     }
 
     private void updateWindowSize(int x) {

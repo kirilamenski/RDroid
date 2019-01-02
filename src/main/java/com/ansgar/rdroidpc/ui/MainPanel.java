@@ -1,5 +1,6 @@
 package com.ansgar.rdroidpc.ui;
 
+import com.android.chimpchat.adb.AdbBackend;
 import com.ansgar.rdoidpc.constants.AdbCommandEnum;
 import com.ansgar.rdoidpc.constants.Colors;
 import com.ansgar.rdoidpc.constants.DimensionConst;
@@ -72,6 +73,7 @@ public class MainPanel extends JPanel {
                     device.getDeviceStatus()
             };
         }
+        AdbBackend adbBackend = new AdbBackend();
 
         JTable table = new JTable(data, columns);
         table.setCellEditor(null);
@@ -81,7 +83,7 @@ public class MainPanel extends JPanel {
                 int row = table.rowAtPoint(e.getPoint());
                 if (row >= 0) {
                     Device device = deviceList.get(row);
-                    VideoFrame videoFrame = new VideoFrame(device);
+                    VideoFrame videoFrame = new VideoFrame(device, adbBackend);
                     videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 4, 45));
                 }
             }
