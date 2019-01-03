@@ -13,6 +13,7 @@ import com.ansgar.rdroidpc.ui.components.NavigationBottomPanel;
 import com.ansgar.rdroidpc.utils.listeners.FrameMouseListener;
 import com.ansgar.rdroidpc.utils.listeners.KeyboardListener;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 
@@ -22,6 +23,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VideoFrame extends JPanel {
 
@@ -33,17 +35,16 @@ public class VideoFrame extends JPanel {
     private BufferedImage currentImage;
     private Device device;
     private IChimpDevice chimpDevice;
-    private AdbBackend adbBackend;
     private CommandExecutor commandExecutor;
+    private AtomicBoolean isThreadRunning;
 
     private int imageWidth, imageHeight;
     private boolean isWindowUpdated;
 
     public VideoFrame(Device device, AdbBackend adbBackend) {
         this.device = device;
-//        this.adbBackend = new AdbBackend();
-        this.adbBackend = adbBackend;
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
+        this.isThreadRunning = new AtomicBoolean();
 
         setLayout(null);
         initFrame(device.getDeviceName());
@@ -68,18 +69,20 @@ public class VideoFrame extends JPanel {
 
     public void start(String command) {
         commandExecutor = new CommandExecutor();
+        isThreadRunning.set(true);
+
         try {
             InputStream inputStream = commandExecutor.getInputStream(command);
             frameGrabber = new FFmpegFrameGrabber(inputStream);
             frameGrabber.start();
 
             Java2DFrameConverter converter = new Java2DFrameConverter();
-            while (frameGrabber.grab() != null) {
-                currentImage = converter.getBufferedImage(frameGrabber.grab());
-                repaint();
+            while (isThreadRunning.get() && frameGrabber != null && frameGrabber.grab() != null) {
+                if (isThreadRunning.get()) {
+                    currentImage = converter.getBufferedImage(frameGrabber.grab());
+                    repaint();
+                }
             }
-
-            stop();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,11 +93,11 @@ public class VideoFrame extends JPanel {
         super.paintComponent(g);
         if (currentImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            int width = (int) (currentImage.getWidth() * 0.5f);
+            int width = (int) (currentImage.getWidth() * 0.85f);
             if (imageWidth != width) {
                 imageWidth = width;
             }
-            int height = (int) (currentImage.getHeight() * 0.5f);
+            int height = (int) (currentImage.getHeight() * 0.85f);
             if (imageHeight != height) {
                 imageHeight = height;
             }
@@ -111,13 +114,13 @@ public class VideoFrame extends JPanel {
         return new Dimension(480, 680);
     }
 
-    public void stop() {
-        stopGrabber();
-        stopThread();
-        stopFrame();
+    public void stop(boolean closeFrame) {
         if (commandExecutor != null) commandExecutor.destroy();
-//        if (adbBackend != null) adbBackend.shutdown();
         if (chimpDevice != null) chimpDevice.dispose();
+        stopThread();
+        stopGrabber();
+        restartServer();
+        if (closeFrame) stopFrame();
     }
 
     private void updateWindowSize(int x) {
@@ -133,7 +136,6 @@ public class VideoFrame extends JPanel {
         try {
             if (frameGrabber != null) {
                 frameGrabber.close();
-                frameGrabber.stop();
             }
         } catch (FrameGrabber.Exception e) {
             e.printStackTrace();
@@ -142,8 +144,12 @@ public class VideoFrame extends JPanel {
 
     private void stopThread() {
         if (thread != null && thread.isAlive()) {
-            thread.interrupt();
-            thread = null;
+            isThreadRunning.set(false);
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -152,6 +158,11 @@ public class VideoFrame extends JPanel {
             frame.setVisible(false);
             frame.dispose();
         }
+    }
+
+    private void restartServer() {
+        commandExecutor.execute(AdbCommandEnum.KILL_SERVER);
+        commandExecutor.execute(AdbCommandEnum.START_SERVER);
     }
 
     private void initFrame(String title) {
@@ -165,7 +176,7 @@ public class VideoFrame extends JPanel {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                stop();
+                stop(true);
                 e.getWindow().dispose();
             }
         });
