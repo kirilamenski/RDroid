@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,11 +24,13 @@ public class MainPanel extends JPanel {
     private Color backgroundColor;
     private MenuBar menuBar;
     private JPanel devicesPanel;
+    private HashMap<String, VideoFrame> openedDevices;
 
     public MainPanel() {
         this.backgroundColor = Color.decode(Colors.MAIN_BACKGROUND_COLOR);
         this.menuBar = new MenuBar();
         this.devicesPanel = new JPanel();
+        this.openedDevices = new HashMap<>();
         setUpMainPanel();
     }
 
@@ -83,8 +86,13 @@ public class MainPanel extends JPanel {
                 int row = table.rowAtPoint(e.getPoint());
                 if (row >= 0) {
                     Device device = deviceList.get(row);
-                    VideoFrame videoFrame = new VideoFrame(device, adbBackend);
-                    videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 4, 45));
+                    if (!openedDevices.containsKey(device.getDeviceId())) {
+                        VideoFrame videoFrame = new VideoFrame(device, adbBackend);
+                        videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 4, 45));
+                        openedDevices.put(device.getDeviceId(), videoFrame);
+                    } else {
+                        System.out.println("Device is already opened.");
+                    }
                 }
             }
         });
