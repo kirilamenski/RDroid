@@ -39,6 +39,7 @@ public class NavigationBottomPanel extends JPanel {
         button.setBounds(width * position, 0, width, height);
         ImageIcon icon = new ImageIcon(getResizedIcon(iconPath));
         button.setIcon(icon);
+        button.setFocusable(false);
         button.setBackground(getBackground());
         button.setHorizontalAlignment(JLabel.CENTER);
         button.setVerticalAlignment(JLabel.CENTER);
