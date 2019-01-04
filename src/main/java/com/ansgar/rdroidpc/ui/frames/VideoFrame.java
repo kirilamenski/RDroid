@@ -12,8 +12,8 @@ import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.ui.components.NavigationBottomPanel;
 import com.ansgar.rdroidpc.utils.listeners.FrameMouseListener;
 import com.ansgar.rdroidpc.utils.listeners.KeyboardListener;
+import com.ansgar.rdroidpc.utils.listeners.OnVideoFrameListener;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 
@@ -37,6 +37,7 @@ public class VideoFrame extends JPanel {
     private IChimpDevice chimpDevice;
     private CommandExecutor commandExecutor;
     private AtomicBoolean isThreadRunning;
+    private OnVideoFrameListener onVideoFrameListener;
 
     private int imageWidth, imageHeight;
     private boolean isWindowUpdated;
@@ -93,11 +94,11 @@ public class VideoFrame extends JPanel {
         super.paintComponent(g);
         if (currentImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            int width = (int) (currentImage.getWidth() * 0.85f);
+            int width = (int) (currentImage.getWidth() * 0.6f);
             if (imageWidth != width) {
                 imageWidth = width;
             }
-            int height = (int) (currentImage.getHeight() * 0.85f);
+            int height = (int) (currentImage.getHeight() * 0.6f);
             if (imageHeight != height) {
                 imageHeight = height;
             }
@@ -157,6 +158,7 @@ public class VideoFrame extends JPanel {
         if (frame != null) {
             frame.setVisible(false);
             frame.dispose();
+            if (onVideoFrameListener != null) onVideoFrameListener.onClosed(device);
         }
     }
 
@@ -240,5 +242,9 @@ public class VideoFrame extends JPanel {
 
     public int getFrameHeight() {
         return getHeight() - DimensionConst.NAVIGATION_PANEL_HEIGHT;
+    }
+
+    public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
+        this.onVideoFrameListener = onVideoFrameListener;
     }
 }

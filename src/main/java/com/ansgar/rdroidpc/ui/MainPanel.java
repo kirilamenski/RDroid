@@ -10,6 +10,7 @@ import com.ansgar.rdroidpc.commands.ResponseParserUtil;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.utils.StringUtils;
+import com.ansgar.rdroidpc.utils.listeners.OnVideoFrameListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class MainPanel extends JPanel {
+public class MainPanel extends JPanel implements OnVideoFrameListener {
 
     private Color backgroundColor;
     private MenuBar menuBar;
@@ -88,6 +89,7 @@ public class MainPanel extends JPanel {
                     Device device = deviceList.get(row);
                     if (!openedDevices.containsKey(device.getDeviceId())) {
                         VideoFrame videoFrame = new VideoFrame(device, adbBackend);
+                        videoFrame.setOnVideoFrameListener(MainPanel.this);
                         videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 4, 45));
                         openedDevices.put(device.getDeviceId(), videoFrame);
                     } else {
@@ -108,4 +110,10 @@ public class MainPanel extends JPanel {
         add(devicesPanel);
     }
 
+    @Override
+    public void onClosed(Device device) {
+        if (openedDevices != null) {
+            openedDevices.remove(device.getDeviceId());
+        }
+    }
 }
