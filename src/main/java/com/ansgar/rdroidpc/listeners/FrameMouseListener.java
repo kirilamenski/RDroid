@@ -1,4 +1,4 @@
-package com.ansgar.rdroidpc.utils.listeners;
+package com.ansgar.rdroidpc.listeners;
 
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;

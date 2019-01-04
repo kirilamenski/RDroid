@@ -10,7 +10,7 @@ import com.ansgar.rdroidpc.commands.ResponseParserUtil;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.utils.StringUtils;
-import com.ansgar.rdroidpc.utils.listeners.OnVideoFrameListener;
+import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 
 import javax.swing.*;
 import java.awt.*;

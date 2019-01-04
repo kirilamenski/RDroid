@@ -1,9 +1,8 @@
-package com.ansgar.rdroidpc.utils.listeners;
+package com.ansgar.rdroidpc.listeners;
 
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdoidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
-import com.ansgar.rdroidpc.utils.CollectionsUtil;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

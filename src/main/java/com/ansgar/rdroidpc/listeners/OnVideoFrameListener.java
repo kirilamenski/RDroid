@@ -1,4 +1,4 @@
-package com.ansgar.rdroidpc.utils.listeners;
+package com.ansgar.rdroidpc.listeners;
 
 import com.ansgar.rdoidpc.entities.Device;
 
