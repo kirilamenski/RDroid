@@ -13,6 +13,7 @@ import com.ansgar.rdroidpc.ui.components.NavigationBottomPanel;
 import com.ansgar.rdroidpc.listeners.FrameMouseListener;
 import com.ansgar.rdroidpc.listeners.KeyboardListener;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
+import com.ansgar.rdroidpc.utils.ToolkitUtils;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
@@ -26,9 +27,6 @@ import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VideoFrame extends JPanel {
-
-    private final int Y_OFFSET = 48;
-
     private JFrame frame;
     private Thread thread;
     private FrameGrabber frameGrabber;
@@ -40,6 +38,8 @@ public class VideoFrame extends JPanel {
     private OnVideoFrameListener onVideoFrameListener;
 
     private int imageWidth, imageHeight;
+    private int xCoord;
+
     private boolean isWindowUpdated;
 
     public VideoFrame(Device device, AdbBackend adbBackend) {
@@ -48,6 +48,7 @@ public class VideoFrame extends JPanel {
         this.isThreadRunning = new AtomicBoolean();
 
         setLayout(null);
+        initDimension();
         initFrame(device.getDeviceName());
         initMouseListener();
         initKeyboardListener();
@@ -94,25 +95,12 @@ public class VideoFrame extends JPanel {
         super.paintComponent(g);
         if (currentImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            int width = (int) (currentImage.getWidth() * 0.6f);
-            if (imageWidth != width) {
-                imageWidth = width;
-            }
-            int height = (int) (currentImage.getHeight() * 0.6f);
-            if (imageHeight != height) {
-                imageHeight = height;
-            }
             int x = -(imageWidth / 3 + 10);
             g2d.drawImage(currentImage, x, 0, imageWidth, imageHeight, this);
             g2d.dispose();
 
             if (!isWindowUpdated) updateWindowSize(x);
         }
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(480, 680);
     }
 
     public void stop(boolean closeFrame) {
@@ -125,9 +113,9 @@ public class VideoFrame extends JPanel {
     }
 
     private void updateWindowSize(int x) {
-        frame.setBounds(300, 0,
+        frame.setBounds(xCoord, 0,
                 imageWidth - (imageWidth + x + 20),
-                imageHeight + Y_OFFSET + DimensionConst.NAVIGATION_PANEL_HEIGHT);
+                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + 48);
         add(initNavigationPanel());
         frame.revalidate();
         isWindowUpdated = true;
@@ -175,6 +163,9 @@ public class VideoFrame extends JPanel {
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
         frame.setResizable(false);
+        frame.setBounds(xCoord, 0,
+                DimensionConst.DEFAULT_WIDTH / 2,
+                (int) (DimensionConst.DEFAULT_WIDTH / DimensionConst.SCREEN_RATIO / 2));
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -215,6 +206,18 @@ public class VideoFrame extends JPanel {
             chimpDevice.press(String.valueOf(keyCode), TouchPressType.DOWN_AND_UP);
         }
     };
+
+    /**
+     * Uses a static video frame size equal to 70% of the height of the PC screen to avoid input issues
+     * because {@link KeyboardListener} uses resized value from {@link com.ansgar.rdroidpc.utils.CoordinatesConverter}
+     * which related of device screen size and video frame size.
+     */
+    private void initDimension() {
+        int screenWidth = ToolkitUtils.getWindowSize().width;
+        xCoord = screenWidth / 2 - DimensionConst.DEFAULT_WIDTH / 2;
+        imageHeight = (int) (screenWidth * 0.7f * DimensionConst.SCREEN_RATIO);
+        imageWidth = (int) (imageHeight * 3.2f * DimensionConst.SCREEN_RATIO);
+    }
 
     private void initMouseListener() {
         FrameMouseListener listener = new FrameMouseListener(this);
