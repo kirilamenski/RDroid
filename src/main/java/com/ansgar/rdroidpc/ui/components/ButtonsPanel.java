@@ -1,14 +1,15 @@
 package com.ansgar.rdroidpc.ui.components;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.net.URL;
 
-public class NavigationBottomPanel extends JPanel {
+public class ButtonsPanel extends JPanel {
 
     private int iconWidth = -1, iconHeight = -1;
     private String[] icons;
-    private OnNavigationPanelListener listener;
+    private OnButtonPanelListener listener;
 
     public void setIconSize(int iconWidth, int iconHeight) {
         this.iconWidth = iconWidth;
@@ -19,7 +20,7 @@ public class NavigationBottomPanel extends JPanel {
         this.icons = icons;
     }
 
-    public void setItemClickListener(OnNavigationPanelListener listener) {
+    public void setItemClickListener(OnButtonPanelListener listener) {
         this.listener = listener;
     }
 
@@ -43,6 +44,7 @@ public class NavigationBottomPanel extends JPanel {
         button.setBackground(getBackground());
         button.setHorizontalAlignment(JLabel.CENTER);
         button.setVerticalAlignment(JLabel.CENTER);
+        button.setBorder(new MatteBorder(0, 1, 1, 0, Color.BLACK));
         button.addActionListener(e -> {
             if (listener != null) listener.onItemClick(position);
         });
@@ -56,7 +58,7 @@ public class NavigationBottomPanel extends JPanel {
         return new ImageIcon(iconPath).getImage().getScaledInstance(iconWidth, iconHeight, Image.SCALE_DEFAULT);
     }
 
-    public interface OnNavigationPanelListener {
+    public interface OnButtonPanelListener {
         void onItemClick(int id);
     }
 
