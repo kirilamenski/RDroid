@@ -5,6 +5,7 @@ import com.ansgar.rdoidpc.constants.DimensionConst;
 import com.ansgar.rdoidpc.constants.StringConst;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -20,8 +21,7 @@ public class MenuBar extends JMenuBar {
         setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setBounds(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 25);
-        setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-
+        setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
         displayMenus();
 
         return this;
