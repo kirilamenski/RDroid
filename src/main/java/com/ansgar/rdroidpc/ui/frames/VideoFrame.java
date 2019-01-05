@@ -9,7 +9,7 @@ import com.ansgar.rdoidpc.constants.Colors;
 import com.ansgar.rdoidpc.constants.DimensionConst;
 import com.ansgar.rdoidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
-import com.ansgar.rdroidpc.ui.components.NavigationBottomPanel;
+import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.listeners.FrameMouseListener;
 import com.ansgar.rdroidpc.listeners.KeyboardListener;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
@@ -176,7 +176,7 @@ public class VideoFrame extends JPanel {
     }
 
     private JPanel initNavigationPanel() {
-        NavigationBottomPanel panel = new NavigationBottomPanel();
+        ButtonsPanel panel = new ButtonsPanel();
         panel.setIcons("icons/ic_back.png", "icons/ic_home.png", "icons/ic_square.png");
         panel.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         panel.setBounds(0,
@@ -189,7 +189,7 @@ public class VideoFrame extends JPanel {
         return panel;
     }
 
-    private NavigationBottomPanel.OnNavigationPanelListener listener = id -> {
+    private ButtonsPanel.OnButtonPanelListener listener = id -> {
         int keyCode = AdbKeyCode.KEYCODE_UNKNOWN.getKeyCode();
         switch (id) {
             case 0:
