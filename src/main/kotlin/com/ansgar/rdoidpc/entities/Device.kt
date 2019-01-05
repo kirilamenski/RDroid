@@ -6,8 +6,11 @@ open class Device(var deviceId: String? = null,
                   var width: Int = 0,
                   var height: Int = 0) {
 
-    override fun toString(): String {
-        return "Device(deviceId=$deviceId, deviceStatus=$deviceStatus, deviceName=$deviceName, width=$width, height=$height)"
-    }
+    override fun toString(): String = "[" +
+            "deviceId: $deviceId, " +
+            "deviceStatus: $deviceStatus, " +
+            "deviceName: $deviceName, " +
+            "width: $width, " +
+            "height: $height]"
 
 }
