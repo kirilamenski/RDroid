@@ -6,6 +6,11 @@ RDroid is a free, open source program written in Java to connect to Android devi
 
 To run this programm you need to install [JVM](https://www.oracle.com/technetwork/java/javase/downloads/index.html) and [ADB](https://developer.android.com/studio/releases/platform-tools).
 
+Download [jar](https://ufile.io/6evsv) file. Go to the folder where you downloaded the jar and run the file:
+```shell
+java -jar ~./RDroid.jar
+```
+
 ## Issues
 
 1) Landscape orientation not supported yet. (Will be fixed)
