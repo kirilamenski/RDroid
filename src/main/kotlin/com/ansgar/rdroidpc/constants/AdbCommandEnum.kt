@@ -1,4 +1,4 @@
-package com.ansgar.rdoidpc.constants
+package com.ansgar.rdroidpc.constants
 
 enum class AdbCommandEnum(val command: String) {
     // TODO Make by one shell command

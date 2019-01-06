@@ -1,7 +1,7 @@
 package com.ansgar.rdroidpc.utils;
 
-import com.ansgar.rdoidpc.constants.AdbCommandEnum;
-import com.ansgar.rdoidpc.entities.Device;
+import com.ansgar.rdroidpc.constants.AdbCommandEnum;
+import com.ansgar.rdroidpc.entities.Device;
 
 import java.nio.charset.Charset;
 import java.util.Locale;

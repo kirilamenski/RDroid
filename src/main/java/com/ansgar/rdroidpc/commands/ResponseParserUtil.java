@@ -1,6 +1,6 @@
 package com.ansgar.rdroidpc.commands;
 
-import com.ansgar.rdoidpc.entities.Device;
+import com.ansgar.rdroidpc.entities.Device;
 
 import java.util.ArrayList;
 import java.util.List;

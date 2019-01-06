@@ -1,4 +1,4 @@
-package com.ansgar.rdoidpc.entities
+package com.ansgar.rdroidpc.entities
 
 open class Device(var deviceId: String? = null,
                   var deviceStatus: String? = null,

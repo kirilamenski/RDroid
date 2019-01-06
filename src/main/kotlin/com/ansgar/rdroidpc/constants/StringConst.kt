@@ -1,4 +1,4 @@
-package com.ansgar.rdoidpc.constants
+package com.ansgar.rdroidpc.constants
 
 class StringConst {
 

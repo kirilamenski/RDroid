@@ -1,8 +1,8 @@
 package com.ansgar.rdroidpc.ui.components;
 
-import com.ansgar.rdoidpc.constants.Colors;
-import com.ansgar.rdoidpc.constants.DimensionConst;
-import com.ansgar.rdoidpc.entities.Device;
+import com.ansgar.rdroidpc.constants.Colors;
+import com.ansgar.rdroidpc.constants.DimensionConst;
+import com.ansgar.rdroidpc.entities.Device;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;

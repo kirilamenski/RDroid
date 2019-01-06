@@ -1,7 +1,7 @@
 package com.ansgar.rdroidpc;
 
-import com.ansgar.rdoidpc.constants.DimensionConst;
-import com.ansgar.rdoidpc.constants.ProgrammInf;
+import com.ansgar.rdroidpc.constants.DimensionConst;
+import com.ansgar.rdroidpc.constants.ProgrammInf;
 import com.ansgar.rdroidpc.ui.MainPanel;
 
 import javax.swing.*;

@@ -1,4 +1,4 @@
-package com.ansgar.rdoidpc.entities
+package com.ansgar.rdroidpc.entities
 
 class DeviceOption(
         var deviceId: String? = null,

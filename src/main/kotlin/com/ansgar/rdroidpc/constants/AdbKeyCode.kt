@@ -1,4 +1,4 @@
-package com.ansgar.rdoidpc.constants
+package com.ansgar.rdroidpc.constants
 
 import java.awt.event.KeyEvent
 

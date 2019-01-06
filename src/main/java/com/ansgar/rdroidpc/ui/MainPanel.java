@@ -1,11 +1,11 @@
 package com.ansgar.rdroidpc.ui;
 
 import com.android.chimpchat.adb.AdbBackend;
-import com.ansgar.rdoidpc.constants.AdbCommandEnum;
-import com.ansgar.rdoidpc.constants.Colors;
-import com.ansgar.rdoidpc.constants.DimensionConst;
-import com.ansgar.rdoidpc.constants.StringConst;
-import com.ansgar.rdoidpc.entities.Device;
+import com.ansgar.rdroidpc.constants.AdbCommandEnum;
+import com.ansgar.rdroidpc.constants.Colors;
+import com.ansgar.rdroidpc.constants.DimensionConst;
+import com.ansgar.rdroidpc.constants.StringConst;
+import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.commands.ResponseParserUtil;
 import com.ansgar.rdroidpc.ui.components.DevicesContainer;
