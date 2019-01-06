@@ -12,13 +12,16 @@ java -jar ~./RDroid.jar
 ```
 
 ## Default Hotkeys
-alt + left arrow - go back <br/>
-ctrl + alt + h - go home <br/>
-ctrl + alt + l - open recent app list <br/>
-ctrl + shift + F10 - mute volume <br/>
-ctrl + shift + F11 - volume down <br/>
-ctrl + shift + F12 - volume up <br/>
-left/top/right/bottom arrow - navigation <br/>
+
+| Keyboard shortcut  | Description |
+| ------------- | ------------- |
+| alt + left arrow  | go back  |
+| ctrl + alt + h  | open recent app list  |
+| ctrl + alt + l  | go home  |
+| ctrl + shift + F10  | mute volume  |
+| ctrl + shift + F11  | volume down  |
+| ctrl + shift + F12  | volume up  |
+| left/top/right/bottom arrow  | navigation  |
 
 
 ## Issues
