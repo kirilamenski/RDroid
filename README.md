@@ -11,6 +11,16 @@ Download [jar](https://ufile.io/6evsv) file. Go to the folder where you download
 java -jar ~./RDroid.jar
 ```
 
+## Default Hotkeys
+alt + left arrow - go back <br/>
+ctrl + alt + h - go home <br/>
+ctrl + alt + l - open recent app list <br/>
+ctrl + shift + F10 - mute volume <br/>
+ctrl + shift + F11 - volume down <br/>
+ctrl + shift + F12 - volume up <br/>
+left/top/right/bottom arrow - navigation <br/>
+
+
 ## Issues
 
 1) Landscape orientation not supported yet. (Will be fixed)
