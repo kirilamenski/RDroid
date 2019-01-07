@@ -8,6 +8,7 @@ import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.commands.ResponseParserUtil;
+import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
 import com.ansgar.rdroidpc.ui.components.DevicesContainer;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked {
+public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked, OnMenuItemListener {
 
     private Color backgroundColor;
     private MenuBar menuBar;
@@ -44,7 +45,8 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
         setBounds(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, DimensionConst.MAIN_WINDOW_HEIGHT);
         setBackground(backgroundColor);
         menuBar = new MenuBar();
-        add(menuBar.getMenuBar());
+        menuBar.setListener(this);
+        add(menuBar.getMenuBar(StringConst.Companion.getMenuItems()));
 
         CommandExecutor commandExecutor = new CommandExecutor();
         commandExecutor.setOnFinishExecuteListener((this::showDevices));
@@ -69,7 +71,7 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
     private DevicesContainer createDeviceContainer() {
         DevicesContainer devicesContainer = new DevicesContainer();
         devicesContainer.setBackground(backgroundColor);
-        devicesContainer.setBounds(0, menuBar.getHeight() + 10, getWidth(), getHeight());
+        devicesContainer.setBounds(0, menuBar.getHeight(), getWidth(), getHeight());
         devicesContainer.createContainer(devices, (Object[]) StringConst.Companion.getDEVICES_CONTAINER_HEADER_NAMES());
         devicesContainer.setListener(this);
         return devicesContainer;
@@ -87,7 +89,7 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
         if (!openedDevices.containsKey(device.getDeviceId())) {
             VideoFrame videoFrame = new VideoFrame(device, adbBackend);
             videoFrame.setOnVideoFrameListener(MainPanel.this);
-            videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 4, 45));
+            videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 12, 45));
             openedDevices.put(device.getDeviceId(), videoFrame);
         } else {
             System.out.println("Device is already opened.");
@@ -97,5 +99,18 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
     @Override
     public void onDeviceSettings(int position, Device device) {
 
+    }
+
+    // TODO Can be moved to another listener class
+    @Override
+    public void onItemClicked(String name) {
+        System.out.println(name);
+        switch (name) {
+            case "Exit":
+                // TODO in exit block stop all opened connections and restart adb server
+                adbBackend.shutdown();
+                System.exit(0);
+                break;
+        }
     }
 }
