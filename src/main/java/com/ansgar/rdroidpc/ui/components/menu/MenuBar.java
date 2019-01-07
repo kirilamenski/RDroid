@@ -2,61 +2,86 @@ package com.ansgar.rdroidpc.ui.components.menu;
 
 import com.ansgar.rdroidpc.constants.Colors;
 import com.ansgar.rdroidpc.constants.DimensionConst;
-import com.ansgar.rdroidpc.constants.StringConst;
+import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MenuBar extends JMenuBar {
 
+    private OnMenuItemListener listener;
+
     public MenuBar() {
 
     }
 
-    public MenuBar getMenuBar() {
-        setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+    public MenuBar getMenuBar(Serializable[] menus) {
+        setBackground(Color.decode(Colors.MENU_BACKGROUND_COLOR));
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setBounds(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 25);
         setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
-        displayMenus();
+        displayMenus(menus);
 
         return this;
     }
 
-    private void displayMenus() {
-        for (Menu menu : getMenuList()) {
+    private void displayMenus(Serializable[] menus) {
+        for (Menu menu : parseMenuList(menus)) {
             add(menu);
         }
-
         updateUI();
     }
 
-    private List<Menu> getMenuList() {
+    /**
+     * Parsing Serializable[] property. If structure of {@param menuList} is kind of {"", {"",""}, ""}
+     * it means that the first string value is {@link Menu} following array is {@link JMenuItem} of previous menu item
+     *
+     * @param menuList serializable value which contain menu for display
+     * @return generated List of {@link Menu}
+     */
+    private List<Menu> parseMenuList(Serializable[] menuList) {
         List<Menu> menus = new ArrayList<>();
-
-        Menu menuFile = new Menu(StringConst.MENU_TITLE_FILE);
-        JMenuItem menuItem = new JMenuItem("Exit");
-        menuItem.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
-        menuItem.addActionListener(menuActionListener);
-        menuFile.add(menuItem);
-        Menu menuHelp = new Menu(StringConst.MENU_TITLE_HELP);
-        Menu menuSettings = new Menu(StringConst.MENU_SETTINGS);
-
-        menus.add(menuFile.getMenu());
-        menus.add(menuSettings.getMenu());
-        menus.add(menuHelp.getMenu());
+        Menu menu = null;
+        for (Serializable item : menuList) {
+            if (item instanceof String) {
+                menu = createMenu((String) item);
+            } else if (item instanceof String[]) {
+                if (menu != null) {
+                    String[] items = (String[]) item;
+                    for (String item1 : items) {
+                        menu.add(createMenuItem(item1));
+                    }
+                }
+            }
+            if (menu != null) menus.add(menu.getMenu());
+        }
         return menus;
     }
 
+    private Menu createMenu(String name) {
+        Menu menu = new Menu(name);
+        return menu;
+    }
+
+    private JMenuItem createMenuItem(String name) {
+        JMenuItem menuItem = new JMenuItem(name);
+        menuItem.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        menuItem.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));
+        menuItem.setForeground(Color.WHITE);
+        menuItem.addActionListener(menuActionListener);
+        return menuItem;
+    }
+
     private ActionListener menuActionListener = e -> {
-        switch (e.getActionCommand()) {
-            case "Exit":
-                System.exit(0);
-                break;
-        }
+        if (listener != null) listener.onItemClicked(e.getActionCommand());
     };
+
+    public void setListener(OnMenuItemListener listener) {
+        this.listener = listener;
+    }
 }
