@@ -214,8 +214,9 @@ public class VideoFrame extends JPanel {
      */
     private void initDimension() {
         int screenWidth = ToolkitUtils.getWindowSize().width;
+        int screenHeight = ToolkitUtils.getWindowSize().height;
         xCoord = screenWidth / 2 - DimensionConst.DEFAULT_WIDTH / 2;
-        imageHeight = (int) (screenWidth * 0.7f * DimensionConst.SCREEN_RATIO);
+        imageHeight = (int) (screenHeight * 0.7f);
         imageWidth = (int) (imageHeight * 3.2f * DimensionConst.SCREEN_RATIO);
     }
 
