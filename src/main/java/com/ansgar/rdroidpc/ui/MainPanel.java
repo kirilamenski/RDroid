@@ -1,14 +1,11 @@
 package com.ansgar.rdroidpc.ui;
 
 import com.android.chimpchat.adb.AdbBackend;
-import com.ansgar.rdroidpc.constants.AdbCommandEnum;
-import com.ansgar.rdroidpc.constants.Colors;
-import com.ansgar.rdroidpc.constants.DimensionConst;
-import com.ansgar.rdroidpc.constants.StringConst;
+import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.commands.ResponseParserUtil;
-import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
+import com.ansgar.rdroidpc.listeners.impl.MainPanelMenuListenerImpl;
 import com.ansgar.rdroidpc.ui.components.DevicesContainer;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
@@ -22,14 +19,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked, OnMenuItemListener {
+public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked {
 
     private Color backgroundColor;
     private MenuBar menuBar;
     private HashMap<String, VideoFrame> openedDevices;
     private List<Device> devices;
     private AdbBackend adbBackend;
-
 
     public MainPanel() {
         this.backgroundColor = Color.decode(Colors.MAIN_BACKGROUND_COLOR);
@@ -45,7 +41,7 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
         setBounds(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, DimensionConst.MAIN_WINDOW_HEIGHT);
         setBackground(backgroundColor);
         menuBar = new MenuBar();
-        menuBar.setListener(this);
+        menuBar.setListener(new MainPanelMenuListenerImpl(this));
         add(menuBar.getMenuBar(StringConst.Companion.getMenuItems()));
 
         CommandExecutor commandExecutor = new CommandExecutor();
@@ -101,16 +97,7 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
 
     }
 
-    // TODO Can be moved to another listener class
-    @Override
-    public void onItemClicked(String name) {
-        System.out.println(name);
-        switch (name) {
-            case "Exit":
-                // TODO in exit block stop all opened connections and restart adb server
-                adbBackend.shutdown();
-                System.exit(0);
-                break;
-        }
+    public AdbBackend getAdbBackend() {
+        return adbBackend;
     }
 }
