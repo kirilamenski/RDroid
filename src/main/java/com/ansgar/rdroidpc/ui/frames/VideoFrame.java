@@ -155,6 +155,7 @@ public class VideoFrame extends JPanel {
         commandExecutor.execute(AdbCommandEnum.START_SERVER);
     }
 
+    // TODO Make videoframe extends from {@link BasePanel}
     private void initFrame(String title) {
         frame = new JFrame(title);
         frame.add(this);
