@@ -5,7 +5,7 @@ import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 
 import java.awt.event.*;
 
-import static com.ansgar.rdroidpc.utils.CoordinatesConverter.convertCoordinates;
+import static com.ansgar.rdroidpc.utils.DimensionUtils.convertCoordinates;
 
 public class FrameMouseListener implements MouseMotionListener, MouseListener {
 

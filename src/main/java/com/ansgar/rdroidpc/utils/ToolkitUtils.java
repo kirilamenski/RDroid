@@ -15,4 +15,5 @@ public class ToolkitUtils {
     public static GraphicsDevice getMultiWindowSize() {
         return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     }
+
 }
