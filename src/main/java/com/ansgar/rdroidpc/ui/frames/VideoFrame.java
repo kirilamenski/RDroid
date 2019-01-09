@@ -3,16 +3,14 @@ package com.ansgar.rdroidpc.ui.frames;
 import com.android.chimpchat.adb.AdbBackend;
 import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
-import com.ansgar.rdroidpc.constants.AdbCommandEnum;
-import com.ansgar.rdroidpc.constants.AdbKeyCode;
-import com.ansgar.rdroidpc.constants.Colors;
-import com.ansgar.rdroidpc.constants.DimensionConst;
+import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.listeners.FrameMouseListener;
 import com.ansgar.rdroidpc.listeners.KeyboardListener;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
+import com.ansgar.rdroidpc.utils.DimensionUtils;
 import com.ansgar.rdroidpc.utils.ToolkitUtils;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
@@ -115,7 +113,7 @@ public class VideoFrame extends JPanel {
     private void updateWindowSize(int x) {
         frame.setBounds(xCoord, 0,
                 imageWidth - (imageWidth + x + 20),
-                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + 48);
+                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOfset());
         add(initNavigationPanel());
         frame.revalidate();
         isWindowUpdated = true;
@@ -210,7 +208,7 @@ public class VideoFrame extends JPanel {
 
     /**
      * Uses a static video frame size equal to 70% of the height of the PC screen to avoid input issues
-     * because {@link KeyboardListener} uses resized value from {@link com.ansgar.rdroidpc.utils.CoordinatesConverter}
+     * because {@link KeyboardListener} uses resized value from {@link DimensionUtils}
      * which related of device screen size and video frame size.
      */
     private void initDimension() {
