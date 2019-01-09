@@ -1,10 +1,10 @@
 package com.ansgar.rdroidpc.constants
 
-enum class OsEnum(val osType: String, val heightOfset: Int) {
+enum class OsEnum(val osType: String, val heightOffset: Int) {
 
-    LINUX("", 48),
+    LINUX("Linux", 48),
     MAC_OS("Mac Os X", 22),
-    WINDOWS("", 48);
+    WINDOWS("Windows", 48);
 
     companion object {
         fun getOsType(): OsEnum {

@@ -113,7 +113,7 @@ public class VideoFrame extends JPanel {
     private void updateWindowSize(int x) {
         frame.setBounds(xCoord, 0,
                 imageWidth - (imageWidth + x + 20),
-                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOfset());
+                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset());
         add(initNavigationPanel());
         frame.revalidate();
         isWindowUpdated = true;
