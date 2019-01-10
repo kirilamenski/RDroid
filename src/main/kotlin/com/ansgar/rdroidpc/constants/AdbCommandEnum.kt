@@ -1,5 +1,7 @@
 package com.ansgar.rdroidpc.constants
 
+import com.ansgar.rdroidpc.utils.SharedValues
+
 enum class AdbCommandEnum(val command: String) {
     // TODO Make by one shell command
     DEVICE("adb devices; adb shell wm size; adb shell getprop | grep ro.product.model"),
@@ -18,5 +20,17 @@ enum class AdbCommandEnum(val command: String) {
     SHOW_SCREEN_WITHOUT_TIME("adb -s %s shell screenrecord --bit-rate 64m --output-format=h264 --time-limit 180 --size 1920x1080 - ;" +
             "screenrecord --bit-rate 64m --output-format=h264 --time-limit 180 --size 1920x1080 - ;" +
             "screenrecord --bit-rate 64m --output-format=h264 --time-limit 180 --size 1920x1080 - "),
-    SCREEN_RECORD("screenrecord --bit-rate %dm --output-format=h264 --time-limit 180 --size %dx%d - ")
+    SCREEN_RECORD("screenrecord --bit-rate %dm --output-format=h264 --time-limit 180 --size %dx%d - ");
+
+    companion object {
+        fun getCommandValue(commandEnum: AdbCommandEnum): String {
+            val aheadPath: String = SharedValues.get(SharedValuesKey.ADB_PATH, "")
+                    .replace("adb", "")
+            values().forEach { enum ->
+                if (commandEnum == enum) return "$aheadPath${enum.command}"
+            }
+            return ""
+        }
+    }
+
 }
