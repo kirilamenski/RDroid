@@ -21,7 +21,6 @@ public class MenuBar extends JMenuBar {
     }
 
     public MenuBar getMenuBar(Serializable[] menus) {
-        setBackground(Color.decode(Colors.MENU_BACKGROUND_COLOR));
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setBounds(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 25);
         setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
@@ -70,9 +69,7 @@ public class MenuBar extends JMenuBar {
 
     private JMenuItem createMenuItem(String name) {
         JMenuItem menuItem = new JMenuItem(name);
-        menuItem.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         menuItem.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));
-        menuItem.setForeground(Color.WHITE);
         menuItem.addActionListener(menuActionListener);
         return menuItem;
     }

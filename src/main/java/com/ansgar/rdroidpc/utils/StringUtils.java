@@ -10,10 +10,20 @@ public class StringUtils {
 
     public static String getScreenRecordCommand(Device device, int bitRate, int count) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format(Locale.ENGLISH, AdbCommandEnum.ADB_SHELL.getCommand(), device.getDeviceId()))
-                .append(" ");
-        String option = String.format(Locale.ENGLISH, AdbCommandEnum.SCREEN_RECORD.getCommand(),
-                bitRate, device.getHeight(), device.getWidth());
+        stringBuilder.append(
+                String.format(
+                        Locale.ENGLISH,
+                        AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_SHELL),
+                        device.getDeviceId()
+                )
+        ).append(" ");
+        String option = String.format(
+                Locale.ENGLISH,
+                AdbCommandEnum.SCREEN_RECORD.getCommand(),
+                bitRate,
+                device.getHeight(),
+                device.getWidth()
+        );
 
         for (int i = 0; i <= count; i++) {
             stringBuilder.append(option);

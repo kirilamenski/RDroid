@@ -1,8 +1,5 @@
 package com.ansgar.rdroidpc.ui;
 
-import com.ansgar.rdroidpc.constants.DimensionConst;
-import com.ansgar.rdroidpc.constants.MenuItemsEnum;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -14,7 +11,7 @@ public class BasePanel extends JPanel {
     }
 
     private void initFrame(Rectangle rectangle, String title) {
-        JFrame frame = new JFrame(MenuItemsEnum.SETTINGS.getValue());
+        JFrame frame = new JFrame(title);
         frame.add(this);
         frame.pack();
         frame.setVisible(true);

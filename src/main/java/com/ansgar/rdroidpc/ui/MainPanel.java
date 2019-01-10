@@ -13,7 +13,6 @@ import com.ansgar.rdroidpc.utils.StringUtils;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,14 +20,12 @@ import java.util.Locale;
 
 public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked {
 
-    private Color backgroundColor;
     private MenuBar menuBar;
     private HashMap<String, VideoFrame> openedDevices;
     private List<Device> devices;
     private AdbBackend adbBackend;
 
     public MainPanel() {
-        this.backgroundColor = Color.decode(Colors.MAIN_BACKGROUND_COLOR);
         this.menuBar = new MenuBar();
         this.openedDevices = new HashMap<>();
         this.adbBackend = new AdbBackend();
@@ -39,14 +36,13 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
     private void setUpMainPanel() {
         setLayout(null);
         setBounds(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, DimensionConst.MAIN_WINDOW_HEIGHT);
-        setBackground(backgroundColor);
         menuBar = new MenuBar();
         menuBar.setListener(new MainPanelMenuListenerImpl(this));
         add(menuBar.getMenuBar(StringConst.Companion.getMenuItems()));
 
         CommandExecutor commandExecutor = new CommandExecutor();
         commandExecutor.setOnFinishExecuteListener((this::showDevices));
-        commandExecutor.execute(AdbCommandEnum.DEVICES);
+        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.DEVICES));
     }
 
     private void showDevices(StringBuilder lines) {
@@ -54,10 +50,21 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
         devices = responseUtil.getDevices(lines);
 
         for (Device device : devices) {
-            responseUtil.setDeviceName(device,
-                    String.format(Locale.ENGLISH, AdbCommandEnum.DEVICE_NAME.getCommand(), device.getDeviceId()));
+            responseUtil.setDeviceName(
+                    device,
+                    String.format(
+                            Locale.ENGLISH,
+                            AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.DEVICE_NAME),
+                            device.getDeviceId()
+                    )
+            );
             responseUtil.setDeviceSize(device,
-                    String.format(Locale.ENGLISH, AdbCommandEnum.DEVICE_SCREEN_SIZE.getCommand(), device.getDeviceId()));
+                    String.format(
+                            Locale.ENGLISH,
+                            AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.DEVICE_SCREEN_SIZE),
+                            device.getDeviceId()
+                    )
+            );
         }
 
         add(createDeviceContainer());
@@ -66,7 +73,6 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
 
     private DevicesContainer createDeviceContainer() {
         DevicesContainer devicesContainer = new DevicesContainer();
-        devicesContainer.setBackground(backgroundColor);
         devicesContainer.setBounds(0, menuBar.getHeight(), getWidth(), getHeight());
         devicesContainer.createContainer(devices, (Object[]) StringConst.Companion.getDEVICES_CONTAINER_HEADER_NAMES());
         devicesContainer.setListener(this);
@@ -95,6 +101,25 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
     @Override
     public void onDeviceSettings(int position, Device device) {
 
+    }
+
+    public void closeDevicesConnections() {
+        if (openedDevices.size() > 0) {
+            Object[] values = openedDevices.values().toArray();
+            for (Object obj : values) {
+                if (obj instanceof VideoFrame) {
+                    ((VideoFrame) obj).stop(true);
+                    System.out.println("Stop frame");
+                }
+            }
+        }
+
+        if (adbBackend != null) {
+            adbBackend.shutdown();
+        }
+        System.out.println("Stop");
+        setUpMainPanel();
+//        System.exit(0);
     }
 
     public AdbBackend getAdbBackend() {

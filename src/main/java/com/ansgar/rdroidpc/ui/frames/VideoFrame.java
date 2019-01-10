@@ -68,6 +68,7 @@ public class VideoFrame extends JPanel {
     }
 
     public void start(String command) {
+        System.out.println(command);
         commandExecutor = new CommandExecutor();
         isThreadRunning.set(true);
 
@@ -149,8 +150,8 @@ public class VideoFrame extends JPanel {
     }
 
     private void restartServer() {
-        commandExecutor.execute(AdbCommandEnum.KILL_SERVER);
-        commandExecutor.execute(AdbCommandEnum.START_SERVER);
+        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KILL_SERVER));
+        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.START_SERVER));
     }
 
     // TODO Make videoframe extends from {@link BasePanel}

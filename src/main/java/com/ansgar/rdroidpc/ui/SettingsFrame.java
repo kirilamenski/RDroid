@@ -1,22 +1,22 @@
 package com.ansgar.rdroidpc.ui;
 
-import com.ansgar.rdroidpc.constants.Colors;
 import com.ansgar.rdroidpc.constants.DimensionConst;
+import com.ansgar.rdroidpc.constants.SharedValuesKey;
+import com.ansgar.rdroidpc.constants.StringConst;
+import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
+import com.ansgar.rdroidpc.utils.SharedValues;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 
 public class SettingsFrame extends BasePanel {
 
     private JTextField adbPathTf;
+    private OnMenuItemListener listener;
 
     public SettingsFrame(Rectangle rectangle, String title) {
         super(rectangle, title);
-        setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
 
         addAdbPath();
         addTextField();
@@ -33,42 +33,32 @@ public class SettingsFrame extends BasePanel {
 
     private void addTextField() {
         adbPathTf = new JTextField();
-        adbPathTf.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
-        adbPathTf.setForeground(Color.WHITE);
+        adbPathTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
         adbPathTf.setBounds(150, 10, DimensionConst.SETTINGS_PANEL_WIDTH - 150 - 50, 30);
+        adbPathTf.setText(SharedValues.get(SharedValuesKey.ADB_PATH, ""));
 
         add(adbPathTf);
     }
 
     private void addFileChooserButton() {
-        JButton button = new JButton("...");
+        JToggleButton button = new JToggleButton();
         button.setFocusable(false);
-        button.setBounds(DimensionConst.SETTINGS_PANEL_WIDTH - 50, 10, 30, 30);
+        button.setBounds(DimensionConst.SETTINGS_PANEL_WIDTH - 40, 10, 25, 30);
         button.addActionListener(e -> {
-            UIManager.put("ScrollPane.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
-            UIManager.put("List.background",  Color.decode(Colors.MAIN_BACKGROUND_COLOR));
-            UIManager.put("List.foreground", Color.WHITE);
-
-            JFileChooser chooser = new JFileChooser();
-            chooser.addChoosableFileFilter(new FileFilter() {
-                @Override
-                public boolean accept(File f) {
-                    System.out.println(f.getAbsolutePath());
-                    adbPathTf.setText(f.getAbsolutePath());
-                    return true;
-                }
-
-                @Override
-                public String getDescription() {
-                    return null;
-                }
-            });
+            JFileChooser chooser = new JFileChooser(SharedValues.get(SharedValuesKey.ADB_PATH, ""));
             chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-            chooser.showDialog(this, "Attach");
-            adbPathTf.setText(chooser.getCurrentDirectory().getAbsolutePath());
+            chooser.showDialog(this, StringConst.OK);
+            if (chooser.getSelectedFile() != null) {
+                String path = chooser.getSelectedFile().getAbsolutePath();
+                adbPathTf.setText(path);
+                if (listener != null) listener.onAdbPathChanged(path);
+            }
         });
 
         add(button);
     }
 
+    public void setListener(OnMenuItemListener listener) {
+        this.listener = listener;
+    }
 }

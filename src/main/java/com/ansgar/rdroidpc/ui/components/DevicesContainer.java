@@ -33,7 +33,6 @@ public class DevicesContainer extends JPanel {
 
     private JPanel createChildContainer(int position, int yPos, Object... values) {
         JPanel headerContainer = new JPanel();
-        headerContainer.setBackground(getBackground());
         headerContainer.setBounds(getX(), yPos, getWidth(), DimensionConst.DEVICE_CONTAINER_HEIGHT);
         headerContainer.setLayout(null);
 
@@ -44,7 +43,6 @@ public class DevicesContainer extends JPanel {
             if (obj instanceof String) {
                 JLabel label = new JLabel((String) obj);
                 label.setBounds(itemWidth * i, yPos, itemWidth, headerContainer.getHeight());
-                label.setForeground(Color.WHITE);
                 label.setBorder(new MatteBorder(0, 1, 1, 0, Color.BLACK));
                 label.setFont(new Font(label.getName(), Font.PLAIN, 12));
                 label.setVerticalAlignment(JLabel.CENTER);
@@ -61,7 +59,6 @@ public class DevicesContainer extends JPanel {
     private JPanel createActionButtons(int position, int x, int y, int width, int height) {
         ButtonsPanel panel = new ButtonsPanel();
         panel.setIcons("icons/ic_settings_64.png", "icons/ic_run_64.png");
-        panel.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         panel.setBounds(x, y, width, height);
         panel.setItemClickListener((id) -> {
             if (listener != null) {

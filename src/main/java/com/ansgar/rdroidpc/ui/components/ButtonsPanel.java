@@ -41,7 +41,6 @@ public class ButtonsPanel extends JPanel {
         ImageIcon icon = new ImageIcon(getResizedIcon(iconPath));
         button.setIcon(icon);
         button.setFocusable(false);
-        button.setBackground(getBackground());
         button.setHorizontalAlignment(JLabel.CENTER);
         button.setVerticalAlignment(JLabel.CENTER);
         button.setBorder(new MatteBorder(0, 1, 1, 0, Color.BLACK));
