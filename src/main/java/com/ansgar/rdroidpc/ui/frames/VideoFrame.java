@@ -18,8 +18,13 @@ import org.bytedeco.javacv.Java2DFrameConverter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,6 +55,7 @@ public class VideoFrame extends JPanel {
         initFrame(device.getDeviceName());
         initMouseListener();
         initKeyboardListener();
+        initDragAndDropContainer();
     }
 
     public void start(AdbCommandEnum adbCommandEnum) {
@@ -229,6 +235,24 @@ public class VideoFrame extends JPanel {
     private void initKeyboardListener() {
         KeyboardListener listener = new KeyboardListener(this);
         frame.addKeyListener(listener);
+    }
+
+    private void initDragAndDropContainer() {
+        setDropTarget(new DropTarget() {
+            @Override
+            public synchronized void drop(DropTargetDropEvent dtde) {
+                try {
+                    dtde.acceptDrop(DnDConstants.ACTION_COPY);
+                    java.util.List<File> droppedFiles = (java.util.List<File>) dtde.getTransferable()
+                            .getTransferData(DataFlavor.javaFileListFlavor);
+                    for (File file : droppedFiles) {
+                        System.out.println(file.getAbsolutePath());
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 
 
