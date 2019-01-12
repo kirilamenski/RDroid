@@ -31,7 +31,7 @@ public class MainPanelMenuListenerImpl implements OnMenuItemListener {
                     settingsFrame.setListener(this);
                     break;
                 case EXIT:
-                    panel.closeDevicesConnections();
+                    panel.onCloseApp();
                     break;
             }
         }
