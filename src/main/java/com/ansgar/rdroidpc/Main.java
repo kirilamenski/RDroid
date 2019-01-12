@@ -5,8 +5,9 @@ import com.ansgar.rdroidpc.constants.ProgrammInf;
 import com.ansgar.rdroidpc.ui.MainPanel;
 import com.ansgar.rdroidpc.utils.AppUiCustomizationUtil;
 import com.ansgar.rdroidpc.utils.SharedValues;
+import com.ansgar.rdroidpc.utils.ToolkitUtils;
 
-import javax.swing.*;
+import java.awt.*;
 
 public class Main {
 
@@ -15,16 +16,12 @@ public class Main {
         SharedValues.newInstance();
         AppUiCustomizationUtil.customizeApp();
 
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setTitle(ProgrammInf.NAME + "/" + ProgrammInf.VERSION);
-        frame.add(new MainPanel());
-        frame.setBounds(700, 100,
-                DimensionConst.MAIN_WINDOW_WIDTH,
-                DimensionConst.MAIN_WINDOW_HEIGHT);
-        frame.setVisible(true);
-        frame.setFocusable(true);
-        frame.setResizable(false);
+        int x = ToolkitUtils.getWindowSize().width / 2 - DimensionConst.MAIN_WINDOW_WIDTH / 2;
+        Rectangle rectangle = new Rectangle(x, 100,
+                DimensionConst.MAIN_WINDOW_WIDTH, DimensionConst.MAIN_WINDOW_HEIGHT);
+
+        MainPanel panel = new MainPanel(rectangle, ProgrammInf.NAME + "/" + ProgrammInf.VERSION);
+        panel.updateUI();
     }
 
 }
