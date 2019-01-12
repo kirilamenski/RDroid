@@ -12,20 +12,22 @@ import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.utils.StringUtils;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 
-import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked {
+public class MainPanel extends BasePanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked {
 
     private MenuBar menuBar;
     private HashMap<String, VideoFrame> openedDevices;
     private List<Device> devices;
     private AdbBackend adbBackend;
+    private DevicesContainer devicesContainer;
 
-    public MainPanel() {
+    public MainPanel(Rectangle rectangle, String title) {
+        super(rectangle, title);
         this.menuBar = new MenuBar();
         this.openedDevices = new HashMap<>();
         this.adbBackend = new AdbBackend();
@@ -34,8 +36,6 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
     }
 
     private void setUpMainPanel() {
-        setLayout(null);
-        setBounds(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, DimensionConst.MAIN_WINDOW_HEIGHT);
         menuBar = new MenuBar();
         menuBar.setListener(new MainPanelMenuListenerImpl(this));
         add(menuBar.getMenuBar(StringConst.Companion.getMenuItems()));
@@ -47,7 +47,9 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
 
     private void showDevices(StringBuilder lines) {
         ResponseParserUtil responseUtil = new ResponseParserUtil();
-        devices = responseUtil.getDevices(lines);
+        openedDevices.clear();
+        devices.clear();
+        devices.addAll(responseUtil.getDevices(lines));
 
         for (Device device : devices) {
             responseUtil.setDeviceName(
@@ -68,15 +70,30 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
         }
 
         add(createDeviceContainer());
-
     }
 
     private DevicesContainer createDeviceContainer() {
-        DevicesContainer devicesContainer = new DevicesContainer();
+        if (devicesContainer != null) {
+            remove(devicesContainer);
+        }
+
+        devicesContainer = new DevicesContainer();
         devicesContainer.setBounds(0, menuBar.getHeight(), getWidth(), getHeight());
         devicesContainer.createContainer(devices, (Object[]) StringConst.Companion.getDEVICES_CONTAINER_HEADER_NAMES());
         devicesContainer.setListener(this);
         return devicesContainer;
+    }
+
+    @Override
+    public void onCloseApp() {
+        super.onCloseApp();
+        closeDevicesConnections();
+        try {
+            stopAdbConnection();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        System.exit(0);
     }
 
     @Override
@@ -109,20 +126,17 @@ public class MainPanel extends JPanel implements OnVideoFrameListener, DevicesCo
             for (Object obj : values) {
                 if (obj instanceof VideoFrame) {
                     ((VideoFrame) obj).stop(true);
-                    System.out.println("Stop frame");
                 }
             }
         }
 
+        setUpMainPanel();
+    }
+
+    public void stopAdbConnection() throws Exception {
         if (adbBackend != null) {
             adbBackend.shutdown();
         }
-        System.out.println("Stop");
-        setUpMainPanel();
-//        System.exit(0);
     }
 
-    public AdbBackend getAdbBackend() {
-        return adbBackend;
-    }
 }
