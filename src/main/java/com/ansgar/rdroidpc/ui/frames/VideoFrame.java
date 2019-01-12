@@ -216,7 +216,6 @@ public class VideoFrame extends BasePanel {
      * which related of device screen size and video frame size.
      */
     private void initDimension() {
-
         int screenHeight = ToolkitUtils.getWindowSize().height;
         imageHeight = (int) (screenHeight * 0.7f);
         imageWidth = (int) (imageHeight * 3.2f * DimensionConst.SCREEN_RATIO);
