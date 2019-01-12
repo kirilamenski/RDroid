@@ -6,6 +6,7 @@ import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
+import com.ansgar.rdroidpc.ui.BasePanel;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.listeners.FrameMouseListener;
 import com.ansgar.rdroidpc.listeners.KeyboardListener;
@@ -22,15 +23,14 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class VideoFrame extends JPanel {
-    private JFrame frame;
+public class VideoFrame extends BasePanel {
+
     private Thread thread;
     private FrameGrabber frameGrabber;
     private BufferedImage currentImage;
@@ -41,21 +41,29 @@ public class VideoFrame extends JPanel {
     private OnVideoFrameListener onVideoFrameListener;
 
     private int imageWidth, imageHeight;
-    private int xCoord;
 
     private boolean isWindowUpdated;
 
     public VideoFrame(Device device, AdbBackend adbBackend) {
+        this(device.getDeviceName());
+
         this.device = device;
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
         this.isThreadRunning = new AtomicBoolean();
 
         setLayout(null);
         initDimension();
-        initFrame(device.getDeviceName());
         initMouseListener();
         initKeyboardListener();
         initDragAndDropContainer();
+    }
+
+    public VideoFrame(String title) {
+        super(new Rectangle(
+                0, 0,
+                DimensionConst.DEFAULT_WIDTH / 2,
+                (int) (DimensionConst.DEFAULT_WIDTH / DimensionConst.SCREEN_RATIO / 2)
+        ), title);
     }
 
     public void start(AdbCommandEnum adbCommandEnum) {
@@ -108,6 +116,13 @@ public class VideoFrame extends JPanel {
         }
     }
 
+    @Override
+    protected void onCloseApp() {
+        super.onCloseApp();
+        stop(true);
+        frame.dispose();
+    }
+
     public void stop(boolean closeFrame) {
         if (commandExecutor != null) commandExecutor.destroy();
         if (chimpDevice != null) chimpDevice.dispose();
@@ -118,9 +133,12 @@ public class VideoFrame extends JPanel {
     }
 
     private void updateWindowSize(int x) {
-        frame.setBounds(xCoord, 0,
+        frame.setBounds(
+                ToolkitUtils.getWindowSize().width / 2 - DimensionConst.DEFAULT_WIDTH / 2,
+                0,
                 imageWidth - (imageWidth + x + 20),
-                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset());
+                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
+        );
         add(initNavigationPanel());
         frame.revalidate();
         isWindowUpdated = true;
@@ -158,27 +176,6 @@ public class VideoFrame extends JPanel {
     private void restartServer() {
         commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KILL_SERVER));
         commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.START_SERVER));
-    }
-
-    // TODO Make videoframe extends from {@link BasePanel}
-    private void initFrame(String title) {
-        frame = new JFrame(title);
-        frame.add(this);
-        frame.pack();
-        frame.setVisible(true);
-        frame.setFocusable(true);
-        frame.setFocusTraversalKeysEnabled(false);
-        frame.setResizable(false);
-        frame.setBounds(xCoord, 0,
-                DimensionConst.DEFAULT_WIDTH / 2,
-                (int) (DimensionConst.DEFAULT_WIDTH / DimensionConst.SCREEN_RATIO / 2));
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                stop(true);
-                e.getWindow().dispose();
-            }
-        });
     }
 
     private JPanel initNavigationPanel() {
@@ -219,9 +216,8 @@ public class VideoFrame extends JPanel {
      * which related of device screen size and video frame size.
      */
     private void initDimension() {
-        int screenWidth = ToolkitUtils.getWindowSize().width;
+
         int screenHeight = ToolkitUtils.getWindowSize().height;
-        xCoord = screenWidth / 2 - DimensionConst.DEFAULT_WIDTH / 2;
         imageHeight = (int) (screenHeight * 0.7f);
         imageWidth = (int) (imageHeight * 3.2f * DimensionConst.SCREEN_RATIO);
     }
