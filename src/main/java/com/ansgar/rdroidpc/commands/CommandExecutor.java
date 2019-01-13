@@ -3,6 +3,7 @@ package com.ansgar.rdroidpc.commands;
 import com.ansgar.rdroidpc.constants.AdbCommandEnum;
 
 import java.io.*;
+import java.util.List;
 
 public class CommandExecutor {
 
@@ -30,6 +31,22 @@ public class CommandExecutor {
     public void execute(String command) {
         try {
             process = Runtime.getRuntime().exec(command);
+
+            executeInputStream();
+            executeErrorStream();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void execute(List<String> cmd) {
+        try {
+//            process = Runtime.getRuntime().exec(cmd);
+
+            ProcessBuilder builder = new ProcessBuilder(cmd);
+            builder.redirectErrorStream(true);
+            process = builder.start();
 
             executeInputStream();
             executeErrorStream();
