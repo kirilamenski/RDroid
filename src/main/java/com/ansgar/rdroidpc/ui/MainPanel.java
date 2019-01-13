@@ -24,7 +24,6 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
     private HashMap<String, VideoFrame> openedDevices;
     private List<Device> devices;
     private AdbBackend adbBackend;
-    private DevicesContainer devicesContainer;
 
     public MainPanel(Rectangle rectangle, String title) {
         super(rectangle, title);
@@ -73,7 +72,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
     }
 
     private DevicesContainer createDeviceContainer() {
-        devicesContainer = new DevicesContainer();
+        DevicesContainer devicesContainer = new DevicesContainer();
         devicesContainer.setBounds(0, menuBar.getHeight(), getWidth(), getHeight());
         devicesContainer.createContainer(devices, (Object[]) StringConst.Companion.getDEVICES_CONTAINER_HEADER_NAMES());
         devicesContainer.setListener(this);
