@@ -16,8 +16,8 @@ java -jar ~./RDroid.jar
 | Keyboard shortcut  | Description |
 | ------------- | ------------- |
 | alt + left arrow  | go back  |
-| ctrl + alt + h  | open recent app list  |
-| ctrl + alt + l  | go home  |
+| ctrl + alt + h  | go home  |
+| ctrl + alt + l  | open recent app list  |
 | ctrl + shift + F10  | mute volume  |
 | ctrl + shift + F11  | volume down  |
 | ctrl + shift + F12  | volume up  |
