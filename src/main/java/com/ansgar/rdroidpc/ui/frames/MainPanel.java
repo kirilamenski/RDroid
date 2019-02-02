@@ -1,16 +1,18 @@
-package com.ansgar.rdroidpc.ui;
+package com.ansgar.rdroidpc.ui.frames;
 
 import com.android.chimpchat.adb.AdbBackend;
 import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.commands.ResponseParserUtil;
+import com.ansgar.rdroidpc.entities.DeviceOption;
+import com.ansgar.rdroidpc.listeners.OnDeviceOptionsListener;
 import com.ansgar.rdroidpc.listeners.impl.MainPanelMenuListenerImpl;
 import com.ansgar.rdroidpc.ui.components.DevicesContainer;
-import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.utils.StringUtils;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,17 +20,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class MainPanel extends BasePanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked {
+public class MainPanel extends BasePanel
+        implements OnVideoFrameListener, DevicesContainer.OnItemClicked, OnDeviceOptionsListener {
 
     private MenuBar menuBar;
     private HashMap<String, VideoFrame> openedDevices;
     private List<Device> devices;
     private AdbBackend adbBackend;
+    private List<DeviceOption> deviceOptions;
 
     public MainPanel(Rectangle rectangle, String title) {
         super(rectangle, title);
         this.menuBar = new MenuBar();
         this.openedDevices = new HashMap<>();
+        this.deviceOptions = new ArrayList<>();
         this.adbBackend = new AdbBackend();
         this.devices = new ArrayList<>();
         setUpMainPanel();
@@ -103,7 +108,14 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         if (!openedDevices.containsKey(device.getDeviceId())) {
             VideoFrame videoFrame = new VideoFrame(device, adbBackend);
             videoFrame.setOnVideoFrameListener(MainPanel.this);
-            videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 12, 45));
+
+            DeviceOption deviceOption = getDeviceOptions(device.getDeviceId());
+            if (deviceOption != null) {
+                // TODO when you try to set screen resolution bigger then original than you can get exception related with count params
+                videoFrame.startNewThread(StringUtils.getScreenRecordCommand(deviceOption, 45));
+            } else {
+                videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 12, 45));
+            }
             openedDevices.put(device.getDeviceId(), videoFrame);
         } else {
             System.out.println("Device is already opened.");
@@ -112,7 +124,21 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
 
     @Override
     public void onDeviceSettings(int position, Device device) {
+        Rectangle rectangle = new Rectangle(getRectangle().x + 200, getRectangle().y, 400, 400);
+        DeviceOptionsFrame frame = new DeviceOptionsFrame(device, rectangle, StringConst.DEVICE_OPTIONS);
+        frame.setListener(this);
+    }
 
+    @Override
+    public void onDeviceOptionsSelected(DeviceOption deviceOption) {
+        for (int i = 0; i < deviceOptions.size(); i++) {
+            DeviceOption dOp = deviceOptions.get(i);
+            if (dOp.getDeviceId() != null && dOp.getDeviceId().equals(deviceOption.getDeviceId())) {
+                deviceOptions.remove(i);
+                break;
+            }
+        }
+        deviceOptions.add(deviceOption);
     }
 
     public void closeDevicesConnections() {
@@ -132,6 +158,16 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         if (adbBackend != null) {
             adbBackend.shutdown();
         }
+    }
+
+    @Nullable
+    private DeviceOption getDeviceOptions(String deviceId) {
+        if (deviceOptions.size() > 0) {
+            for (DeviceOption deviceOption : deviceOptions) {
+                if (deviceId.equals(deviceOption.getDeviceId())) return deviceOption;
+            }
+        }
+        return null;
     }
 
 }
