@@ -1,6 +1,5 @@
 package com.ansgar.rdroidpc.ui.components;
 
-import com.ansgar.rdroidpc.constants.Colors;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.entities.Device;
 
@@ -62,10 +61,13 @@ public class DevicesContainer extends JPanel {
         panel.setBounds(x, y, width, height);
         panel.setItemClickListener((id) -> {
             if (listener != null) {
-                if (id == 0) {
-
-                } else if (id == 1) {
-                    listener.onStartDevice(position, devices.get(position));
+                switch (id) {
+                    case 0:
+                        listener.onDeviceSettings(position, devices.get(position));
+                        break;
+                    case 1:
+                        listener.onStartDevice(position, devices.get(position));
+                        break;
                 }
             }
         });

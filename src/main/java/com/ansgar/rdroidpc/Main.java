@@ -2,7 +2,7 @@ package com.ansgar.rdroidpc;
 
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.ProgrammInf;
-import com.ansgar.rdroidpc.ui.MainPanel;
+import com.ansgar.rdroidpc.ui.frames.MainPanel;
 import com.ansgar.rdroidpc.utils.AppUiCustomizationUtil;
 import com.ansgar.rdroidpc.utils.SharedValues;
 import com.ansgar.rdroidpc.utils.ToolkitUtils;

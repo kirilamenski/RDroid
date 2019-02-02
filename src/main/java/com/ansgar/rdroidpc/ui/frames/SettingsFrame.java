@@ -1,4 +1,4 @@
-package com.ansgar.rdroidpc.ui;
+package com.ansgar.rdroidpc.ui.frames;
 
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
@@ -25,7 +25,6 @@ public class SettingsFrame extends BasePanel {
 
     private void addAdbPath() {
         JLabel label = new JLabel("Adb path");
-        label.setForeground(Color.WHITE);
         label.setBounds(25, 0, 125, 50);
 
         add(label);

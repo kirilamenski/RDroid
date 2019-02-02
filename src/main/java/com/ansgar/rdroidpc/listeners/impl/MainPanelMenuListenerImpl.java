@@ -4,8 +4,8 @@ import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.MenuItemsEnum;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
-import com.ansgar.rdroidpc.ui.MainPanel;
-import com.ansgar.rdroidpc.ui.SettingsFrame;
+import com.ansgar.rdroidpc.ui.frames.MainPanel;
+import com.ansgar.rdroidpc.ui.frames.SettingsFrame;
 import com.ansgar.rdroidpc.utils.SharedValues;
 
 import java.awt.*;

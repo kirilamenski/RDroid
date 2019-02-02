@@ -6,7 +6,6 @@ import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
-import com.ansgar.rdroidpc.ui.BasePanel;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.listeners.FrameMouseListener;
 import com.ansgar.rdroidpc.listeners.KeyboardListener;
@@ -115,7 +114,6 @@ public class VideoFrame extends BasePanel {
     protected void onCloseApp() {
         super.onCloseApp();
         stop(true);
-        frame.dispose();
     }
 
     public void stop(boolean closeFrame) {
