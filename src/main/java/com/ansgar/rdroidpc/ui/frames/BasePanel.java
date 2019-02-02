@@ -1,4 +1,4 @@
-package com.ansgar.rdroidpc.ui;
+package com.ansgar.rdroidpc.ui.frames;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,9 +8,11 @@ import java.awt.event.WindowListener;
 public class BasePanel extends JPanel implements WindowListener {
 
     protected JFrame frame;
+    private Rectangle rectangle;
 
     public BasePanel(Rectangle rectangle, String title) {
         setLayout(null);
+        this.rectangle = rectangle;
         initFrame(rectangle, title);
     }
 
@@ -28,6 +30,13 @@ public class BasePanel extends JPanel implements WindowListener {
 
     protected void onCloseApp() {
 
+    }
+
+    protected void closeFrame() {
+        if (frame != null) {
+            frame.setVisible(false);
+            frame.dispose();
+        }
     }
 
     @Override
@@ -63,5 +72,9 @@ public class BasePanel extends JPanel implements WindowListener {
     @Override
     public void windowDeactivated(WindowEvent e) {
 
+    }
+
+    public Rectangle getRectangle() {
+        return rectangle;
     }
 }
