@@ -2,7 +2,7 @@ package com.ansgar.rdroidpc.utils;
 
 import com.ansgar.rdroidpc.constants.AdbCommandEnum;
 import com.ansgar.rdroidpc.entities.Device;
-import com.ansgar.rdroidpc.entities.DeviceOption;
+import com.ansgar.rdroidpc.entities.Option;
 
 import java.nio.charset.Charset;
 import java.util.Locale;
@@ -18,7 +18,7 @@ public class StringUtils {
                         device.getDeviceId()
                 )
         ).append(" ");
-        DeviceOption option = device.getOption();
+        Option option = device.getOption();
         int _bitRate = option != null ? option.getBitRate() : bitRate;
         int height = option != null ? option.getHeight() : device.getHeight();
         int width = option != null ? option.getWidth() : device.getWidth();

@@ -6,7 +6,7 @@ open class Device(
         var deviceName: String? = null,
         var width: Int = 0,
         var height: Int = 0,
-        var option: DeviceOption? = null
+        var option: Option? = null
 ) {
 
     override fun toString(): String = "[" +

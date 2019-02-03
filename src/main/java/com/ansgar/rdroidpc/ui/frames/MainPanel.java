@@ -73,7 +73,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
     private DevicesContainer createDeviceContainer() {
         DevicesContainer devicesContainer = new DevicesContainer();
         devicesContainer.setBounds(0, menuBar.getHeight(), getWidth(), getHeight());
-        devicesContainer.createContainer(devices, (Object[]) StringConst.Companion.getDEVICES_CONTAINER_HEADER_NAMES());
+        devicesContainer.createContainer(devices, (Object[]) StringConst.Companion.getDeviceHeaderNames());
         devicesContainer.setListener(this);
         return devicesContainer;
     }

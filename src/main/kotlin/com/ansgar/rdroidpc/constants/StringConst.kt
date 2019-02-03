@@ -1,15 +1,13 @@
 package com.ansgar.rdroidpc.constants
 
-import org.jetbrains.annotations.NotNull
-
 class StringConst {
 
     companion object {
         var menuItems = arrayOf(
                 MenuItemsEnum.FILE.value, arrayOf(MenuItemsEnum.SETTINGS.value, MenuItemsEnum.EXIT.value),
                 MenuItemsEnum.HELP.value)
-        val DEVICES_CONTAINER_HEADER_NAMES = arrayOf("name", "size", "device id", "status", "")
-        val SCREEN_RESOLUTION_ARRAY_LIST = arrayOf("540x960", "720x1280", "1080x1920", "1440x24560")
+        val deviceHeaderNames = arrayOf("name", "size", "device id", "status", "")
+        val defaultScreenSizes = arrayOf("540x960", "720x1280", "1080x1920", "1440x24560")
         val bitRates = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
                 "11", "12", "13", "14", "15", "15", "16", "17", "18", "19", "20",
                 "21", "22", "24", "25", "26", "27", "28", "29", "30",

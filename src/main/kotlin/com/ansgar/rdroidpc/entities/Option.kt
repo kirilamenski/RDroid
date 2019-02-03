@@ -1,6 +1,6 @@
 package com.ansgar.rdroidpc.entities
 
-class DeviceOption(
+class Option(
         var bitRate: Int = 4,
         var width: Int = 720,
         var height: Int = 1280) {

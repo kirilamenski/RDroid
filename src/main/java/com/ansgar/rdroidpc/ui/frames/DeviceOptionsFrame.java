@@ -1,17 +1,19 @@
 package com.ansgar.rdroidpc.ui.frames;
 
+import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
-import com.ansgar.rdroidpc.entities.DeviceOption;
+import com.ansgar.rdroidpc.entities.Option;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DeviceOptionsFrame extends BasePanel {
 
-    private JComboBox bitRateTf;
-    private JComboBox screenResolutionCb;
     private Device device;
+    private int bitRate = 4;
+    private int deviceWidth = DimensionConst.DEFAULT_WIDTH;
+    private int deviceHeight = DimensionConst.DEVICE_CONTAINER_HEIGHT;
 
     public DeviceOptionsFrame(Device device, Rectangle rectangle, String title) {
         super(rectangle, title);
@@ -27,17 +29,26 @@ public class DeviceOptionsFrame extends BasePanel {
         JLabel screenResolutionLabel = new JLabel(StringConst.SCREEN_RESOLUTION_L);
         screenResolutionLabel.setBounds(0, componentHeight + 5, labelWidth, componentHeight);
 
-        String[] bitRates = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "15", "16", "17", "18", "19", "20"};
-        bitRateTf = new JComboBox(bitRates);
-        bitRateTf.setSelectedIndex(3);
-        bitRateTf.setBounds(labelWidth + 5, 0, 120, componentHeight);
+        JComboBox bitRateCb = new JComboBox<>(StringConst.Companion.getBitRates());
+        bitRateCb.setSelectedIndex(3);
+        bitRateCb.setBounds(labelWidth + 5, 0, 120, componentHeight);
+        bitRateCb.addActionListener(e -> {
+            int index = bitRateCb.getSelectedIndex();
+            bitRate = Integer.valueOf(StringConst.Companion.getBitRates()[index]);
+        });
 
-        screenResolutionCb = new JComboBox(StringConst.Companion.getSCREEN_RESOLUTION_ARRAY_LIST());
+        JComboBox screenResolutionCb = new JComboBox<>(StringConst.Companion.getDefaultScreenSizes());
         screenResolutionCb.setSelectedIndex(getSelectedIndex());
         screenResolutionCb.setBounds(labelWidth + 5,
                 componentHeight + 5,
                 120,
                 componentHeight);
+        screenResolutionCb.addActionListener(e -> {
+            int index = screenResolutionCb.getSelectedIndex();
+            String[] sizes = StringConst.Companion.getDefaultScreenSizes()[index].split("x");
+            deviceWidth = Integer.valueOf(sizes[0]);
+            deviceHeight = Integer.valueOf(sizes[1]);
+        });
 
         JButton okBtn = new JButton(StringConst.OK);
         System.out.println(getRectangle().width + " x " + getRectangle().getWidth());
@@ -55,29 +66,22 @@ public class DeviceOptionsFrame extends BasePanel {
 
         add(bitRateLabel);
         add(screenResolutionLabel);
-        add(bitRateTf);
+        add(bitRateCb);
         add(screenResolutionCb);
         add(cancelBtn);
         add(okBtn);
     }
 
-    private DeviceOption createDeviceOption() {
-        DeviceOption deviceOption = new DeviceOption();
-
-        double bitRate = Double.valueOf((String) bitRateTf.getSelectedItem());
-        deviceOption.setBitRate((int) bitRate);
-
-        String[] resolutionsParams = StringConst.Companion
-                .getSCREEN_RESOLUTION_ARRAY_LIST()[screenResolutionCb.getSelectedIndex()]
-                .split("x");
-        deviceOption.setWidth(Integer.valueOf(resolutionsParams[0]));
-        deviceOption.setHeight(Integer.valueOf(resolutionsParams[1]));
-
-        return deviceOption;
+    private Option createDeviceOption() {
+        Option option = new Option();
+        option.setBitRate(bitRate);
+        option.setWidth(deviceWidth);
+        option.setHeight(deviceHeight);
+        return option;
     }
 
     private int getSelectedIndex() {
-        String[] screens = StringConst.Companion.getSCREEN_RESOLUTION_ARRAY_LIST();
+        String[] screens = StringConst.Companion.getDefaultScreenSizes();
         for (int i = 0; i < screens.length; i++) {
             String[] screenSizes = screens[i].split("x");
             boolean widthEqual = device.getWidth() == Integer.valueOf(screenSizes[0]);
