@@ -40,7 +40,7 @@ public class VideoFrame extends BasePanel {
     private boolean isWindowUpdated;
 
     public VideoFrame(Device device, AdbBackend adbBackend) {
-        this(device.getDeviceName());
+        this(String.format("%s(%dx%d)", device.getDeviceName(), device.getWidth(), device.getHeight()));
         this.device = device;
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
         this.isThreadRunning = new AtomicBoolean();
