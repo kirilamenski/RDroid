@@ -1,6 +1,5 @@
 package com.ansgar.rdroidpc.ui.frames;
 
-import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.entities.Option;
@@ -12,11 +11,11 @@ public class DeviceOptionsFrame extends BasePanel {
 
     private Device device;
     private int bitRate = 4;
-    private int deviceWidth = DimensionConst.DEFAULT_WIDTH;
-    private int deviceHeight = DimensionConst.DEVICE_CONTAINER_HEIGHT;
+    private int deviceWidth;
+    private int deviceHeight;
 
     public DeviceOptionsFrame(Device device, Rectangle rectangle, String title) {
-        super(rectangle, title);
+        super(rectangle, String.format("%s(%s)", title, device.getDeviceName()));
         this.device = device;
         createFrame();
     }
@@ -29,26 +28,28 @@ public class DeviceOptionsFrame extends BasePanel {
         JLabel screenResolutionLabel = new JLabel(StringConst.SCREEN_RESOLUTION_L);
         screenResolutionLabel.setBounds(0, componentHeight + 5, labelWidth, componentHeight);
 
-        JComboBox bitRateCb = new JComboBox<>(StringConst.Companion.getBitRates());
-        bitRateCb.setSelectedIndex(3);
+        String[] bitRates = StringConst.Companion.getBitRates();
+        JComboBox bitRateCb = new JComboBox<>(bitRates);
         bitRateCb.setBounds(labelWidth + 5, 0, 120, componentHeight);
         bitRateCb.addActionListener(e -> {
             int index = bitRateCb.getSelectedIndex();
             bitRate = Integer.valueOf(StringConst.Companion.getBitRates()[index]);
         });
+        bitRateCb.setSelectedIndex(3); // TODO change when will be added possibility to save device option in file
 
-        JComboBox screenResolutionCb = new JComboBox<>(StringConst.Companion.getDefaultScreenSizes());
-        screenResolutionCb.setSelectedIndex(getSelectedIndex());
+        String[] screenSizes = StringConst.Companion.getDefaultScreenSizes();
+        JComboBox screenResolutionCb = new JComboBox<>(screenSizes);
         screenResolutionCb.setBounds(labelWidth + 5,
                 componentHeight + 5,
                 120,
                 componentHeight);
         screenResolutionCb.addActionListener(e -> {
             int index = screenResolutionCb.getSelectedIndex();
-            String[] sizes = StringConst.Companion.getDefaultScreenSizes()[index].split("x");
+            String[] sizes = screenSizes[index].split("x");
             deviceWidth = Integer.valueOf(sizes[0]);
             deviceHeight = Integer.valueOf(sizes[1]);
         });
+        screenResolutionCb.setSelectedIndex(getSelectedIndex());
 
         JButton okBtn = new JButton(StringConst.OK);
         System.out.println(getRectangle().width + " x " + getRectangle().getWidth());
