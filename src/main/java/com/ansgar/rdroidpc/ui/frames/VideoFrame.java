@@ -53,11 +53,7 @@ public class VideoFrame extends BasePanel {
     }
 
     public VideoFrame(String title) {
-        super(new Rectangle(
-                0, 0,
-                DimensionConst.DEFAULT_WIDTH / 2,
-                (int) (DimensionConst.DEFAULT_WIDTH / DimensionConst.SCREEN_RATIO / 2)
-        ), title);
+        super(DimensionConst.Companion.getVideoFrameRectangle(), title);
     }
 
     public void start(AdbCommandEnum adbCommandEnum) {

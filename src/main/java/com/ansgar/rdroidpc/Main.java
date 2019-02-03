@@ -17,8 +17,8 @@ public class Main {
         AppUiCustomizationUtil.customizeApp();
 
         int x = ToolkitUtils.getWindowSize().width / 2 - DimensionConst.MAIN_WINDOW_WIDTH / 2;
-        Rectangle rectangle = new Rectangle(x, 100,
-                DimensionConst.MAIN_WINDOW_WIDTH, DimensionConst.MAIN_WINDOW_HEIGHT);
+        Rectangle rectangle = DimensionConst.Companion.getMainFrameRect();
+        rectangle.x = x;
 
         MainPanel panel = new MainPanel(rectangle, ProgrammInf.NAME + "/" + ProgrammInf.VERSION);
         panel.updateUI();
