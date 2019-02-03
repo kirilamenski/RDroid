@@ -15,7 +15,7 @@ public class ResponseParserUtil {
         for (String line : lines) {
             String[] deviceInf = line.split("\t");
             if (deviceInf.length == 2) {
-                devices.add(new Device(deviceInf[0], deviceInf[1], null, 0, 0));
+                devices.add(new Device(deviceInf[0], deviceInf[1], null, 0, 0, null));
             }
         }
 

@@ -3,7 +3,6 @@ package com.ansgar.rdroidpc.ui.frames;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.entities.DeviceOption;
-import com.ansgar.rdroidpc.listeners.OnDeviceOptionsListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +11,6 @@ public class DeviceOptionsFrame extends BasePanel {
 
     private JComboBox bitRateTf;
     private JComboBox screenResolutionCb;
-    private OnDeviceOptionsListener listener;
     private Device device;
 
     public DeviceOptionsFrame(Device device, Rectangle rectangle, String title) {
@@ -32,7 +30,7 @@ public class DeviceOptionsFrame extends BasePanel {
         String[] bitRates = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "15", "16", "17", "18", "19", "20"};
         bitRateTf = new JComboBox(bitRates);
         bitRateTf.setSelectedIndex(3);
-        bitRateTf.setBounds(labelWidth + 5, 0, 50, componentHeight);
+        bitRateTf.setBounds(labelWidth + 5, 0, 120, componentHeight);
 
         screenResolutionCb = new JComboBox(StringConst.Companion.getSCREEN_RESOLUTION_ARRAY_LIST());
         screenResolutionCb.setSelectedIndex(getSelectedIndex());
@@ -42,14 +40,12 @@ public class DeviceOptionsFrame extends BasePanel {
                 componentHeight);
 
         JButton okBtn = new JButton(StringConst.OK);
-        System.out.println(getRectangle().width + " x " +getRectangle().getWidth());
+        System.out.println(getRectangle().width + " x " + getRectangle().getWidth());
         okBtn.setBounds(getRectangle().width - 225, getRectangle().height - 100, 100, 50);
         okBtn.setFocusable(false);
         okBtn.addActionListener(e -> {
-            if (listener != null) {
-                listener.onDeviceOptionsSelected(createDeviceOption());
-                closeFrame();
-            }
+            device.setOption(createDeviceOption());
+            closeFrame();
         });
 
         JButton cancelBtn = new JButton(StringConst.CANCEL);
@@ -67,8 +63,6 @@ public class DeviceOptionsFrame extends BasePanel {
 
     private DeviceOption createDeviceOption() {
         DeviceOption deviceOption = new DeviceOption();
-        deviceOption.setDeviceId(device.getDeviceId());
-        deviceOption.setDeviceName(device.getDeviceName());
 
         double bitRate = Double.valueOf((String) bitRateTf.getSelectedItem());
         deviceOption.setBitRate((int) bitRate);
@@ -85,18 +79,13 @@ public class DeviceOptionsFrame extends BasePanel {
     private int getSelectedIndex() {
         String[] screens = StringConst.Companion.getSCREEN_RESOLUTION_ARRAY_LIST();
         for (int i = 0; i < screens.length; i++) {
-            String[] splittedScreenRes = screens[i].split("x");
-            boolean widthEqual = device.getWidth() == Integer.valueOf(splittedScreenRes[0]);
-            boolean heightEqual = device.getHeight() == Integer.valueOf(splittedScreenRes[1]);
-            if (widthEqual && heightEqual) {
-                return i;
-            }
+            String[] screenSizes = screens[i].split("x");
+            boolean widthEqual = device.getWidth() == Integer.valueOf(screenSizes[0]);
+            boolean heightEqual = device.getHeight() == Integer.valueOf(screenSizes[1]);
+            if (widthEqual && heightEqual) return i;
         }
 
         return 0;
     }
 
-    public void setListener(OnDeviceOptionsListener listener) {
-        this.listener = listener;
-    }
 }
