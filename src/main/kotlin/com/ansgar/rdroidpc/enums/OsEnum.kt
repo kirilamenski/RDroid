@@ -1,4 +1,4 @@
-package com.ansgar.rdroidpc.constants
+package com.ansgar.rdroidpc.enums
 
 enum class OsEnum(val osType: String, val heightOffset: Int) {
 

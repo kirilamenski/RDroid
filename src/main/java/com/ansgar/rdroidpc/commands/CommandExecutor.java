@@ -1,6 +1,6 @@
 package com.ansgar.rdroidpc.commands;
 
-import com.ansgar.rdroidpc.constants.AdbCommandEnum;
+import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 
 import java.io.*;
 import java.util.List;

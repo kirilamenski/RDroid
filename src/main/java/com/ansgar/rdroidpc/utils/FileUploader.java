@@ -1,7 +1,7 @@
 package com.ansgar.rdroidpc.utils;
 
 import com.ansgar.rdroidpc.commands.CommandExecutor;
-import com.ansgar.rdroidpc.constants.AdbCommandEnum;
+import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.entities.Device;
 
@@ -13,9 +13,7 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 

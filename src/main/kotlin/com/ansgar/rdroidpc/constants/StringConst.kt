@@ -1,5 +1,7 @@
 package com.ansgar.rdroidpc.constants
 
+import com.ansgar.rdroidpc.enums.MenuItemsEnum
+
 class StringConst {
 
     companion object {

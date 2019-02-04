@@ -1,5 +1,6 @@
-package com.ansgar.rdroidpc.constants
+package com.ansgar.rdroidpc.enums
 
+import com.ansgar.rdroidpc.constants.SharedValuesKey
 import com.ansgar.rdroidpc.utils.SharedValues
 
 enum class AdbCommandEnum(val command: String) {
