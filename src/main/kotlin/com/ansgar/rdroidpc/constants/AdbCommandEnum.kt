@@ -12,6 +12,7 @@ enum class AdbCommandEnum(val command: String) {
     DEVICE_SCREEN_SIZE("adb -s %s shell wm size"),
     KILL_SERVER("adb kill-server"),
     START_SERVER("adb start-server"),
+    ORIENTATION("adb -s %s shell dumpsys input | grep 'SurfaceOrientation' | awk '{ print \$2 }'"),
 
     SHOW_SCREEN("adb shell screenrecord --bit-rate=4m --output-format=h264 --size 1920x1080 - "),
     /**adb screenrecorder has time limit - 180 s (3 min). To solve this problem and don't get exception limit range you need to use 'hack'.
