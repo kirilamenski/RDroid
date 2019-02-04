@@ -6,12 +6,15 @@ import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
+import com.ansgar.rdroidpc.enums.OrientationEnum;
+import com.ansgar.rdroidpc.listeners.OnDeviceOrientationListener;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.listeners.FrameMouseListener;
 import com.ansgar.rdroidpc.listeners.KeyboardListener;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 import com.ansgar.rdroidpc.utils.DimensionUtils;
 import com.ansgar.rdroidpc.utils.FileUploader;
+import com.ansgar.rdroidpc.utils.OrientationUtil;
 import com.ansgar.rdroidpc.utils.ToolkitUtils;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
@@ -24,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class VideoFrame extends BasePanel {
+public class VideoFrame extends BasePanel implements OnDeviceOrientationListener {
 
     private Thread thread;
     private FrameGrabber frameGrabber;
@@ -34,6 +37,7 @@ public class VideoFrame extends BasePanel {
     private CommandExecutor commandExecutor;
     private AtomicBoolean isThreadRunning;
     private OnVideoFrameListener onVideoFrameListener;
+    private OrientationUtil orientationUtil;
 
     private int imageWidth, imageHeight;
 
@@ -44,6 +48,7 @@ public class VideoFrame extends BasePanel {
         this.device = device;
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
         this.isThreadRunning = new AtomicBoolean();
+        this.orientationUtil = new OrientationUtil(device, this);
         new FileUploader(this, device);
 
         setLayout(null);
@@ -75,6 +80,7 @@ public class VideoFrame extends BasePanel {
         System.out.println(command);
         commandExecutor = new CommandExecutor();
         isThreadRunning.set(true);
+        orientationUtil.start(5000, 5000);
 
         try {
             InputStream inputStream = commandExecutor.getInputStream(command);
@@ -113,6 +119,7 @@ public class VideoFrame extends BasePanel {
     }
 
     public void stop(boolean closeFrame) {
+        if (orientationUtil != null) orientationUtil.stop();
         if (commandExecutor != null) commandExecutor.destroy();
         if (chimpDevice != null) chimpDevice.dispose();
         stopThread();
@@ -239,5 +246,10 @@ public class VideoFrame extends BasePanel {
 
     public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
         this.onVideoFrameListener = onVideoFrameListener;
+    }
+
+    @Override
+    public void onOrientationChanged(OrientationEnum orientation) {
+        System.out.println("Device Orientation is: " + orientation.name());
     }
 }
