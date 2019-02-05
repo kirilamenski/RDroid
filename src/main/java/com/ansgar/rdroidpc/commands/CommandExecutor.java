@@ -42,8 +42,6 @@ public class CommandExecutor {
 
     public void execute(List<String> cmd) {
         try {
-//            process = Runtime.getRuntime().exec(cmd);
-
             ProcessBuilder builder = new ProcessBuilder(cmd);
             builder.redirectErrorStream(true);
             process = builder.start();
