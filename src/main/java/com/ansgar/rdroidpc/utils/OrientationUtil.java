@@ -11,15 +11,12 @@ import java.util.TimerTask;
 
 public class OrientationUtil extends TimerTask implements CommandExecutor.OnFinishExecuteListener {
 
-    private Device device;
     private Timer timer;
-    private TimerTask timerTask;
     private CommandExecutor executor;
     private String command;
     private OnDeviceOrientationListener listener;
 
     public OrientationUtil(Device device, OnDeviceOrientationListener listener) {
-        this.device = device;
         this.executor = new CommandExecutor();
         this.timer = new Timer();
         this.command = String.format(AdbCommandEnum.ORIENTATION.getCommand(), device.getDeviceId());
@@ -45,7 +42,9 @@ public class OrientationUtil extends TimerTask implements CommandExecutor.OnFini
 
     @Override
     public void onFinish(StringBuilder result) {
-        OrientationEnum orientationEnum = OrientationEnum.Companion.getFromValue(result.toString().trim());
+        String [] strings = result.toString().trim().split(" ");
+        OrientationEnum orientationEnum = OrientationEnum.Companion.getFromValue(strings[strings.length - 1]);
         if (listener != null && orientationEnum != null) listener.onOrientationChanged(orientationEnum);
     }
+
 }
