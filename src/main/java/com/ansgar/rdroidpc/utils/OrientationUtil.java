@@ -16,6 +16,8 @@ public class OrientationUtil extends TimerTask implements CommandExecutor.OnFini
     private String command;
     private OnDeviceOrientationListener listener;
 
+    private OrientationEnum prevOrientation;
+
     public OrientationUtil(Device device, OnDeviceOrientationListener listener) {
         this.executor = new CommandExecutor();
         this.timer = new Timer();
@@ -42,9 +44,12 @@ public class OrientationUtil extends TimerTask implements CommandExecutor.OnFini
 
     @Override
     public void onFinish(StringBuilder result) {
-        String [] strings = result.toString().trim().split(" ");
+        String[] strings = result.toString().trim().split(" ");
         OrientationEnum orientationEnum = OrientationEnum.Companion.getFromValue(strings[strings.length - 1]);
-        if (listener != null && orientationEnum != null) listener.onOrientationChanged(orientationEnum);
+        if (listener != null && prevOrientation != orientationEnum) {
+            listener.onOrientationChanged(orientationEnum);
+            prevOrientation = orientationEnum;
+        }
     }
 
 }
