@@ -1,6 +1,7 @@
 package com.ansgar.rdroidpc.listeners;
 
 import com.android.chimpchat.core.TouchPressType;
+import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 
 import java.awt.event.*;
@@ -17,9 +18,7 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        int x = (int) convertCoordinates(frame.getDeviceWidth(), frame.getWidth(), e.getX());
-        int y = (int) convertCoordinates(frame.getDeviceHeight(), frame.getFrameHeight(), e.getY());
-        frame.getChimpDevice().touch(x, y, TouchPressType.MOVE);
+        handleMouseListener(e.getX(), e.getY(), TouchPressType.MOVE);
     }
 
     @Override
@@ -32,16 +31,12 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        int x = (int) convertCoordinates(frame.getDeviceWidth(), frame.getWidth(), e.getX());
-        int y = (int) convertCoordinates(frame.getDeviceHeight(), frame.getFrameHeight(), e.getY());
-        frame.getChimpDevice().touch(x, y, TouchPressType.DOWN);
+        handleMouseListener(e.getX(), e.getY(), TouchPressType.DOWN);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        int x = (int) convertCoordinates(frame.getDeviceWidth(), frame.getWidth(), e.getX());
-        int y = (int) convertCoordinates(frame.getDeviceHeight(), frame.getFrameHeight(), e.getY());
-        frame.getChimpDevice().touch(x, y, TouchPressType.UP);
+        handleMouseListener(e.getX(), e.getY(), TouchPressType.UP);
     }
 
     @Override
@@ -50,6 +45,24 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+
+    private void handleMouseListener(int x, int y, TouchPressType type) {
+        int _x = (int) convertCoordinates(getOriginalScreenSize()[0], frame.getWidth(), x);
+        int _y = (int) convertCoordinates(getOriginalScreenSize()[1], frame.getFrameHeight(), y);
+        frame.getChimpDevice().touch(_x, _y, type);
+    }
+
+    private int[] getOriginalScreenSize() {
+        int[] originalSize = new int[2];
+        if (frame.getCurrentOrientation() == OrientationEnum.PORTRAIT) {
+            originalSize[0] = frame.getDeviceWidth();
+            originalSize[1] = frame.getDeviceHeight();
+        } else {
+            originalSize[0] = frame.getDeviceHeight();
+            originalSize[1] = frame.getDeviceWidth();
+        }
+        return originalSize;
     }
 
 }
