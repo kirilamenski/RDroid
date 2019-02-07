@@ -14,13 +14,11 @@ import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.listeners.FrameMouseListener;
 import com.ansgar.rdroidpc.listeners.KeyboardListener;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
-import com.ansgar.rdroidpc.utils.DimensionUtils;
-import com.ansgar.rdroidpc.utils.FileUploader;
-import com.ansgar.rdroidpc.utils.OrientationUtil;
-import com.ansgar.rdroidpc.utils.ToolkitUtils;
+import com.ansgar.rdroidpc.utils.*;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,8 +38,9 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private AtomicBoolean isThreadRunning;
     private OnVideoFrameListener onVideoFrameListener;
     private OrientationUtil orientationUtil;
+    private OrientationEnum currentOrientation;
 
-    private int imageWidth, imageHeight;
+    private int imageWidth, imageHeight, x, y;
 
     private boolean isWindowUpdated;
 
@@ -54,7 +53,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         new FileUploader(this, device);
 
         setLayout(null);
-        initDimension();
+        changeOrientation(OrientationEnum.PORTRAIT);
         initMouseListener();
         initKeyboardListener();
     }
@@ -106,11 +105,8 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         super.paintComponent(g);
         if (currentImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            int x = -(imageWidth / 3 + 10);
             g2d.drawImage(currentImage, x, 0, imageWidth, imageHeight, this);
             g2d.dispose();
-
-            if (!isWindowUpdated) updateWindowSize(x);
         }
     }
 
@@ -118,6 +114,11 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     protected void onCloseApp() {
         super.onCloseApp();
         stop(true);
+    }
+
+    @Override
+    public void onOrientationChanged(OrientationEnum orientation) {
+        changeOrientation(orientation);
     }
 
     public void stop(boolean closeFrame) {
@@ -128,18 +129,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         stopGrabber();
         restartServer();
         if (closeFrame) stopFrame();
-    }
-
-    private void updateWindowSize(int x) {
-        frame.setBounds(
-                ToolkitUtils.getWindowSize().width / 2 - DimensionConst.DEFAULT_WIDTH / 2,
-                0,
-                imageWidth - (imageWidth + x + 20),
-                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
-        );
-        add(initNavigationPanel());
-        frame.revalidate();
-        isWindowUpdated = true;
     }
 
     private void stopGrabber() {
@@ -208,17 +197,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         }
     };
 
-    /**
-     * Uses a static video frame size equal to 70% of the height of the PC screen to avoid input issues
-     * because {@link KeyboardListener} uses resized value from {@link DimensionUtils}
-     * which related of device screen size and video frame size.
-     */
-    private void initDimension() {
-        int screenHeight = ToolkitUtils.getWindowSize().height;
-        imageHeight = (int) (screenHeight * 0.7f);
-        imageWidth = (int) (imageHeight * 3.2f * DimensionConst.SCREEN_RATIO);
-    }
-
     private void initMouseListener() {
         FrameMouseListener listener = new FrameMouseListener(this);
         addMouseListener(listener);
@@ -228,6 +206,48 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private void initKeyboardListener() {
         KeyboardListener listener = new KeyboardListener(this);
         frame.addKeyListener(listener);
+    }
+
+    private void changeOrientation(OrientationEnum orientationEnum) {
+        Rectangle rectangle = new Rectangle(0, 0, DimensionConst.DEFAULT_WIDTH / 2,
+                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset());
+        if (orientationEnum == OrientationEnum.PORTRAIT) {
+            initPortraitOrientationSize();
+            rectangle.width = imageWidth - (imageWidth + x + 20);
+        } else {
+            initLandscapeOrientationSize();
+            rectangle.width = imageWidth;
+        }
+        updateWindowSize(rectangle);
+        currentOrientation = orientationEnum;
+    }
+
+    /**
+     * Uses a static video frame size equal to 70% of the height of the PC screen to avoid input issues
+     * because {@link KeyboardListener} uses resized value from {@link DimensionUtils}
+     * which related of device screen size and video frame size.
+     */
+    private void initPortraitOrientationSize() {
+        int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
+        imageHeight = (int) (screenHeight * 0.7f);
+        imageWidth = (int) (imageHeight * 3.2f * DimensionConst.SCREEN_RATIO);
+
+        x = -(imageWidth / 3 + 10);
+    }
+
+    private void initLandscapeOrientationSize() {
+        int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
+        imageHeight = (int) (screenHeight * 0.7f);
+        imageWidth = (int) (imageHeight / DimensionConst.SCREEN_RATIO);
+
+        x = 0;
+    }
+
+    private void updateWindowSize(@NotNull Rectangle rectangle) {
+        frame.setBounds(rectangle);
+        add(initNavigationPanel());
+        frame.revalidate();
+        isWindowUpdated = true;
     }
 
     public IChimpDevice getChimpDevice() {
@@ -246,12 +266,11 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         return getHeight() - DimensionConst.NAVIGATION_PANEL_HEIGHT;
     }
 
-    public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
-        this.onVideoFrameListener = onVideoFrameListener;
+    public OrientationEnum getCurrentOrientation() {
+        return currentOrientation;
     }
 
-    @Override
-    public void onOrientationChanged(OrientationEnum orientation) {
-        System.out.println("Device Orientation is: " + orientation.name());
+    public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
+        this.onVideoFrameListener = onVideoFrameListener;
     }
 }
