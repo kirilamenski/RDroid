@@ -20,7 +20,6 @@ import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -39,6 +38,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private OnVideoFrameListener onVideoFrameListener;
     private OrientationUtil orientationUtil;
     private OrientationEnum currentOrientation;
+    private ButtonsPanel panel;
 
     private int imageWidth, imageHeight, x, y;
 
@@ -165,10 +165,10 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.START_SERVER));
     }
 
-    private JPanel initNavigationPanel() {
-        ButtonsPanel panel = new ButtonsPanel();
+    private void addNavigationPanel() {
+        if (panel != null) remove(panel);
+        panel = new ButtonsPanel();
         panel.setIcons("icons/ic_back.png", "icons/ic_home.png", "icons/ic_square.png");
-        panel.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         panel.setBounds(0,
                 imageHeight,
                 frame.getWidth(),
@@ -176,7 +176,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         panel.setItemClickListener(listener);
         panel.createPanel();
 
-        return panel;
+        add(panel);
     }
 
     private ButtonsPanel.OnButtonPanelListener listener = id -> {
@@ -245,7 +245,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
 
     private void updateWindowSize(@NotNull Rectangle rectangle) {
         frame.setBounds(rectangle);
-        add(initNavigationPanel());
+        addNavigationPanel();
         frame.revalidate();
         isWindowUpdated = true;
     }
