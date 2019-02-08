@@ -16,7 +16,7 @@ class DimensionConst {
 
         val mainFrameRect = Rectangle(0, 100, DimensionConst.MAIN_WINDOW_WIDTH, DimensionConst.MAIN_WINDOW_HEIGHT)
         val videoFrameRectangle = Rectangle(0, 0, DEFAULT_WIDTH / 2, ((DEFAULT_WIDTH / SCREEN_RATIO / 2).toInt()))
-        val settingFrameRect = Rectangle(700, 100, DimensionConst.SETTINGS_PANEL_WIDTH, DimensionConst.SETTINGS_PANEL_HEIGHT)
+        val settingFrameRect = Rectangle(0, 0, DimensionConst.SETTINGS_PANEL_WIDTH, DimensionConst.SETTINGS_PANEL_HEIGHT)
     }
 
 }

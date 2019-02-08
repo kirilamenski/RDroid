@@ -112,7 +112,11 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
 
     @Override
     public void onDeviceSettings(int position, Device device) {
-        Rectangle rectangle = new Rectangle(getRectangle().x + 200, getRectangle().y, 400, 400);
+        Rectangle rectangle = new Rectangle(
+                getRectangle().x,
+                getRectangle().y,
+                400, 400
+        );
         new DeviceOptionsFrame(device, rectangle, StringConst.DEVICE_OPTIONS);
     }
 

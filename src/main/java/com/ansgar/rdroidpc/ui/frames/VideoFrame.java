@@ -42,8 +42,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
 
     private int imageWidth, imageHeight, x, y;
 
-    private boolean isWindowUpdated;
-
     public VideoFrame(Device device, AdbBackend adbBackend) {
         this(String.format("%s(%dx%d)", device.getDeviceName(), device.getWidth(), device.getHeight()));
         this.device = device;
@@ -209,8 +207,12 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     }
 
     private void changeOrientation(OrientationEnum orientationEnum) {
-        Rectangle rectangle = new Rectangle(0, 0, DimensionConst.DEFAULT_WIDTH / 2,
-                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset());
+        Rectangle rectangle = new Rectangle(
+                getRectangle().x,
+                getRectangle().y,
+                DimensionConst.DEFAULT_WIDTH / 2,
+                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
+        );
         if (orientationEnum == OrientationEnum.PORTRAIT) {
             initPortraitOrientationSize();
             rectangle.width = imageWidth - (imageWidth + x + 20);
@@ -247,7 +249,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         frame.setBounds(rectangle);
         addNavigationPanel();
         frame.revalidate();
-        isWindowUpdated = true;
     }
 
     public IChimpDevice getChimpDevice() {

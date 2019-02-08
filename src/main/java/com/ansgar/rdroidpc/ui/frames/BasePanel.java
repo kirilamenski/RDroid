@@ -2,6 +2,8 @@ package com.ansgar.rdroidpc.ui.frames;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -9,6 +11,7 @@ public class BasePanel extends JPanel implements WindowListener {
 
     protected JFrame frame;
     private Rectangle rectangle;
+
 
     public BasePanel(Rectangle rectangle, String title) {
         setLayout(null);
@@ -26,6 +29,14 @@ public class BasePanel extends JPanel implements WindowListener {
         frame.setBounds(rectangle);
         frame.add(this);
         frame.addWindowListener(this);
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                Component component = e.getComponent();
+                rectangle.x = component.getX();
+                rectangle.y = component.getY();
+            }
+        });
     }
 
     protected void onCloseApp() {

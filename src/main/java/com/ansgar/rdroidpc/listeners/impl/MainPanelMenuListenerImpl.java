@@ -8,6 +8,8 @@ import com.ansgar.rdroidpc.ui.frames.MainPanel;
 import com.ansgar.rdroidpc.ui.frames.SettingsFrame;
 import com.ansgar.rdroidpc.utils.SharedValues;
 
+import java.awt.*;
+
 public class MainPanelMenuListenerImpl implements OnMenuItemListener {
 
     private MainPanel panel;
@@ -18,12 +20,14 @@ public class MainPanelMenuListenerImpl implements OnMenuItemListener {
 
     @Override
     public void onItemClicked(String name) {
-        System.out.println(name);
         MenuItemsEnum menuItemsEnum = MenuItemsEnum.Companion.getMenuItemEnumByValue(name);
         if (menuItemsEnum != null) {
             switch (menuItemsEnum) {
                 case SETTINGS:
-                    SettingsFrame settingsFrame = new SettingsFrame(DimensionConst.Companion.getSettingFrameRect(),
+                    Rectangle rectangle = DimensionConst.Companion.getSettingFrameRect();
+                    rectangle.x = panel.getRectangle().x;
+                    rectangle.y = panel.getRectangle().y;
+                    SettingsFrame settingsFrame = new SettingsFrame(rectangle,
                             MenuItemsEnum.SETTINGS.getValue());
                     settingsFrame.setListener(this);
                     break;
