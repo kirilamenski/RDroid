@@ -14,8 +14,8 @@ public class DeviceOptionsFrame extends BasePanel {
     private int deviceWidth;
     private int deviceHeight;
 
-    public DeviceOptionsFrame(Device device, Rectangle rectangle, String title) {
-        super(rectangle, String.format("%s(%s)", title, device.getDeviceName()));
+    public DeviceOptionsFrame(Device device, Rectangle rectangle) {
+        super(rectangle, String.format("%s Options", device.getDeviceName()));
         this.device = device;
         createFrame();
     }
@@ -24,13 +24,18 @@ public class DeviceOptionsFrame extends BasePanel {
         int labelWidth = getRectangle().width - 200;
         int componentHeight = 20;
         JLabel bitRateLabel = new JLabel(StringConst.BIT_RATE_L);
-        bitRateLabel.setBounds(0, 0, labelWidth, componentHeight);
+        bitRateLabel.setBounds(5, 0, labelWidth, componentHeight);
         JLabel screenResolutionLabel = new JLabel(StringConst.SCREEN_RESOLUTION_L);
-        screenResolutionLabel.setBounds(0, componentHeight + 5, labelWidth, componentHeight);
+        screenResolutionLabel.setBounds(5, componentHeight + 5, labelWidth, componentHeight);
 
         String[] bitRates = StringConst.Companion.getBitRates();
         JComboBox bitRateCb = new JComboBox<>(bitRates);
-        bitRateCb.setBounds(labelWidth + 5, 0, 120, componentHeight);
+        bitRateCb.setBounds(
+                getRectangle().width - 135,
+                0,
+                120,
+                componentHeight
+        );
         bitRateCb.addActionListener(e -> {
             int index = bitRateCb.getSelectedIndex();
             bitRate = Integer.valueOf(StringConst.Companion.getBitRates()[index]);
@@ -39,10 +44,12 @@ public class DeviceOptionsFrame extends BasePanel {
 
         String[] screenSizes = StringConst.Companion.getDefaultScreenSizes();
         JComboBox screenResolutionCb = new JComboBox<>(screenSizes);
-        screenResolutionCb.setBounds(labelWidth + 5,
+        screenResolutionCb.setBounds(
+                getRectangle().width - 135,
                 componentHeight + 5,
                 120,
-                componentHeight);
+                componentHeight
+        );
         screenResolutionCb.addActionListener(e -> {
             int index = screenResolutionCb.getSelectedIndex();
             String[] sizes = screenSizes[index].split("x");

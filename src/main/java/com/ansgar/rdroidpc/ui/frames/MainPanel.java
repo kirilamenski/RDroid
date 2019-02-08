@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
+
 public class MainPanel extends BasePanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked {
 
     private MenuBar menuBar;
@@ -100,8 +102,14 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
 
     @Override
     public void onStartDevice(int position, Device device) {
+        Rectangle rectangle = new Rectangle(
+                getRectangle().x,
+                getRectangle().y,
+                DEFAULT_WIDTH / 2,
+                (int) (DEFAULT_WIDTH / DimensionConst.SCREEN_RATIO / 2)
+        );
         if (!openedDevices.containsKey(device.getDeviceId())) {
-            VideoFrame videoFrame = new VideoFrame(device, adbBackend);
+            VideoFrame videoFrame = new VideoFrame(device, adbBackend, rectangle);
             videoFrame.setOnVideoFrameListener(MainPanel.this);
             videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 12, 45));
             openedDevices.put(device.getDeviceId(), videoFrame);
@@ -117,7 +125,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
                 getRectangle().y,
                 400, 400
         );
-        new DeviceOptionsFrame(device, rectangle, StringConst.DEVICE_OPTIONS);
+        new DeviceOptionsFrame(device, rectangle);
     }
 
     public void closeDevicesConnections() {

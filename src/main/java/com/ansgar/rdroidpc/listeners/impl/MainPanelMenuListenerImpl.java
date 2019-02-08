@@ -24,9 +24,12 @@ public class MainPanelMenuListenerImpl implements OnMenuItemListener {
         if (menuItemsEnum != null) {
             switch (menuItemsEnum) {
                 case SETTINGS:
-                    Rectangle rectangle = DimensionConst.Companion.getSettingFrameRect();
-                    rectangle.x = panel.getRectangle().x;
-                    rectangle.y = panel.getRectangle().y;
+                    Rectangle rectangle = new Rectangle(
+                            panel.getRectangle().x,
+                            panel.getRectangle().y,
+                            DimensionConst.SETTINGS_PANEL_WIDTH,
+                            DimensionConst.SETTINGS_PANEL_HEIGHT
+                    );
                     SettingsFrame settingsFrame = new SettingsFrame(rectangle,
                             MenuItemsEnum.SETTINGS.getValue());
                     settingsFrame.setListener(this);

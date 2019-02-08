@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
+
 public class VideoFrame extends BasePanel implements OnDeviceOrientationListener {
 
     private Thread thread;
@@ -42,8 +44,8 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
 
     private int imageWidth, imageHeight, x, y;
 
-    public VideoFrame(Device device, AdbBackend adbBackend) {
-        this(String.format("%s(%dx%d)", device.getDeviceName(), device.getWidth(), device.getHeight()));
+    public VideoFrame(Device device, AdbBackend adbBackend, Rectangle rectangle) {
+        super(rectangle, String.format("%s(%dx%d)", device.getDeviceName(), device.getWidth(), device.getHeight()));
         this.device = device;
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
         this.isThreadRunning = new AtomicBoolean();
@@ -56,46 +58,10 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         initKeyboardListener();
     }
 
-    public VideoFrame(String title) {
-        super(DimensionConst.Companion.getVideoFrameRectangle(), title);
-    }
-
-    public void start(AdbCommandEnum adbCommandEnum) {
-        start(adbCommandEnum.getCommand());
-    }
-
-    public void startNewThread(AdbCommandEnum adbCommandEnum) {
-        startNewThread(adbCommandEnum.getCommand());
-    }
-
     public void startNewThread(String command) {
         if (thread != null) return;
-
         thread = new Thread(() -> start(command));
         thread.start();
-    }
-
-    public void start(String command) {
-        System.out.println(command);
-        commandExecutor = new CommandExecutor();
-        isThreadRunning.set(true);
-        orientationUtil.start(5000, 5000);
-
-        try {
-            InputStream inputStream = commandExecutor.getInputStream(command);
-            frameGrabber = new FFmpegFrameGrabber(inputStream);
-            frameGrabber.start();
-
-            Java2DFrameConverter converter = new Java2DFrameConverter();
-            while (isThreadRunning.get() && frameGrabber != null && frameGrabber.grab() != null) {
-                if (isThreadRunning.get()) {
-                    currentImage = converter.getBufferedImage(frameGrabber.grab());
-                    repaint();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -127,6 +93,29 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         stopGrabber();
         restartServer();
         if (closeFrame) stopFrame();
+    }
+
+    private void start(String command) {
+        System.out.println(command);
+        commandExecutor = new CommandExecutor();
+        isThreadRunning.set(true);
+        orientationUtil.start(5000, 5000);
+
+        try {
+            InputStream inputStream = commandExecutor.getInputStream(command);
+            frameGrabber = new FFmpegFrameGrabber(inputStream);
+            frameGrabber.start();
+
+            Java2DFrameConverter converter = new Java2DFrameConverter();
+            while (isThreadRunning.get() && frameGrabber != null && frameGrabber.grab() != null) {
+                if (isThreadRunning.get()) {
+                    currentImage = converter.getBufferedImage(frameGrabber.grab());
+                    repaint();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void stopGrabber() {
@@ -210,7 +199,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         Rectangle rectangle = new Rectangle(
                 getRectangle().x,
                 getRectangle().y,
-                DimensionConst.DEFAULT_WIDTH / 2,
+                DEFAULT_WIDTH / 2,
                 imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
         );
         if (orientationEnum == OrientationEnum.PORTRAIT) {

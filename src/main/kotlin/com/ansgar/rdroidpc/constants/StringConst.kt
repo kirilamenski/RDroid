@@ -19,7 +19,6 @@ class StringConst {
         const val SCREEN_RESOLUTION_L = "Screen Resolution"
         const val OK = "Ok"
         const val CANCEL = "Cancel"
-        const val DEVICE_OPTIONS = "Device Options"
 
         const val SHARED_VAL_SCREEN_WIDTH = "shared_val_screen_width"
         const val SHARED_VAL_SCREEN_HEIGHT = "shared_val_screen_height"
