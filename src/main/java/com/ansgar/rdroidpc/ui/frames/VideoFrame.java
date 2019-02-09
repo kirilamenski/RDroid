@@ -91,7 +91,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         if (chimpDevice != null) chimpDevice.dispose();
         stopThread();
         stopGrabber();
-        restartServer();
         if (closeFrame) stopFrame();
     }
 
@@ -145,11 +144,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
             frame.dispose();
             if (onVideoFrameListener != null) onVideoFrameListener.onClosed(device);
         }
-    }
-
-    private void restartServer() {
-        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KILL_SERVER));
-        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.START_SERVER));
     }
 
     private void addNavigationPanel() {
