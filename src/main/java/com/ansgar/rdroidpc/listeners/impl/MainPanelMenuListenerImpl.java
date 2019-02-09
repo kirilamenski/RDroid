@@ -19,7 +19,7 @@ public class MainPanelMenuListenerImpl implements OnMenuItemListener {
     }
 
     @Override
-    public void onItemClicked(String name) {
+    public void onMenuItemClicked(String name) {
         MenuItemsEnum menuItemsEnum = MenuItemsEnum.Companion.getMenuItemEnumByValue(name);
         if (menuItemsEnum != null) {
             switch (menuItemsEnum) {

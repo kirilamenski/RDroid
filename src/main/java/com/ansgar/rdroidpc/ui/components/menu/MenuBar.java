@@ -1,6 +1,5 @@
 package com.ansgar.rdroidpc.ui.components.menu;
 
-import com.ansgar.rdroidpc.constants.Colors;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
 
@@ -75,7 +74,7 @@ public class MenuBar extends JMenuBar {
     }
 
     private ActionListener menuActionListener = e -> {
-        if (listener != null) listener.onItemClicked(e.getActionCommand());
+        if (listener != null) listener.onMenuItemClicked(e.getActionCommand());
     };
 
     public void setListener(OnMenuItemListener listener) {
