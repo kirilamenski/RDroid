@@ -6,7 +6,7 @@ import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
-import com.ansgar.rdroidpc.enums.AdbCommandEnum;
+import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.enums.OsEnum;
 import com.ansgar.rdroidpc.listeners.OnDeviceOrientationListener;
@@ -40,7 +40,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private OnVideoFrameListener onVideoFrameListener;
     private OrientationUtil orientationUtil;
     private OrientationEnum currentOrientation;
-    private ButtonsPanel panel;
+    private ButtonsPanel bottomPanel, rightPanel;
 
     private int imageWidth, imageHeight, x, y;
 
@@ -146,21 +146,31 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         }
     }
 
-    private void addNavigationPanel() {
-        if (panel != null) remove(panel);
-        panel = new ButtonsPanel();
-        panel.setIcons("icons/ic_back.png", "icons/ic_home.png", "icons/ic_square.png");
-        panel.setBounds(0,
-                imageHeight,
-                frame.getWidth(),
-                DimensionConst.NAVIGATION_PANEL_HEIGHT);
-        panel.setItemClickListener(listener);
-        panel.createPanel();
+    private void addBottomPanel() {
+        if (bottomPanel != null) remove(bottomPanel);
+        bottomPanel = new ButtonsPanel();
+        bottomPanel.setIcons("icons/ic_back.png", "icons/ic_home.png", "icons/ic_square.png");
+        bottomPanel.setBounds(0, imageHeight, getFrameWidth(), DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT);
+        bottomPanel.setItemClickListener(bottomActionsListener);
+        bottomPanel.createPanel();
 
-        add(panel);
+        add(bottomPanel);
     }
 
-    private ButtonsPanel.OnButtonPanelListener listener = id -> {
+    private void addRightPanel() {
+        if (rightPanel != null) remove(rightPanel);
+        rightPanel = new ButtonsPanel();
+        rightPanel.setIcons("icons/ic_rotate_64.png", "icons/ic_screen_capture_64.png", "icons/ic_screen_record_64.png");
+        rightPanel.setState(ButtonsPanelStateEnum.VERTICAL);
+        rightPanel.setIconSize(42, 42);
+        rightPanel.setBounds(getFrameWidth(), 0, DimensionConst.RIGHT_ACTION_PANEL_WIDTH, frame.getHeight());
+        rightPanel.setItemClickListener(rightActionsListener);
+        rightPanel.createPanel();
+
+        add(rightPanel);
+    }
+
+    private ButtonsPanel.OnButtonPanelListener bottomActionsListener = id -> {
         int keyCode = AdbKeyCode.KEYCODE_UNKNOWN.getKeyCode();
         switch (id) {
             case 0:
@@ -176,6 +186,18 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         if (keyCode != AdbKeyCode.KEYCODE_UNKNOWN.getKeyCode()) {
             chimpDevice.press(String.valueOf(keyCode), TouchPressType.DOWN_AND_UP);
         }
+    };
+
+    private ButtonsPanel.OnButtonPanelListener rightActionsListener = id -> {
+        switch (id) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+        System.out.println(id);
     };
 
     private void initMouseListener() {
@@ -194,14 +216,14 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
                 getRectangle().x,
                 getRectangle().y,
                 DEFAULT_WIDTH / 2,
-                imageHeight + DimensionConst.NAVIGATION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
+                imageHeight + DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
         );
         if (orientationEnum == OrientationEnum.PORTRAIT) {
             initPortraitOrientationSize();
-            rectangle.width = imageWidth - (imageWidth + x + 20);
+            rectangle.width = imageWidth - (imageWidth + x + 20) + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
         } else {
             initLandscapeOrientationSize();
-            rectangle.width = imageWidth;
+            rectangle.width = imageWidth + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
         }
         updateWindowSize(rectangle);
         currentOrientation = orientationEnum;
@@ -230,7 +252,8 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
 
     private void updateWindowSize(@NotNull Rectangle rectangle) {
         frame.setBounds(rectangle);
-        addNavigationPanel();
+        addBottomPanel();
+        addRightPanel();
         frame.revalidate();
     }
 
@@ -247,7 +270,11 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     }
 
     public int getFrameHeight() {
-        return getHeight() - DimensionConst.NAVIGATION_PANEL_HEIGHT;
+        return getHeight() - DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT;
+    }
+
+    public int getFrameWidth() {
+        return getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
     }
 
     public OrientationEnum getCurrentOrientation() {

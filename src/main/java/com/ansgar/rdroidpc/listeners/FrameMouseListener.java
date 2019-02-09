@@ -48,7 +48,7 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
     }
 
     private void handleMouseListener(int x, int y, TouchPressType type) {
-        int _x = (int) convertCoordinates(getOriginalScreenSize()[0], frame.getWidth(), x);
+        int _x = (int) convertCoordinates(getOriginalScreenSize()[0], frame.getFrameWidth(), x);
         int _y = (int) convertCoordinates(getOriginalScreenSize()[1], frame.getFrameHeight(), y);
         frame.getChimpDevice().touch(_x, _y, type);
     }
