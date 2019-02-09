@@ -1,5 +1,7 @@
 package com.ansgar.rdroidpc.ui.components;
 
+import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
+
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
@@ -11,9 +13,68 @@ public class ButtonsPanel extends JPanel {
     private String[] icons;
     private OnButtonPanelListener listener;
     private MatteBorder border;
+    private ButtonsPanelStateEnum state;
 
     public ButtonsPanel() {
         this.border = new MatteBorder(0, 1, 1, 0, Color.BLACK);
+        this.state = ButtonsPanelStateEnum.HORIZONTAL;
+    }
+
+    public void createPanel() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        setLayout(null);
+        if (icons != null) {
+            for (int i = 0; i < icons.length; i++) {
+                int width = getWidth();
+                int height = getHeight();
+                int x = 0;
+                int y = 0;
+                if (state == ButtonsPanelStateEnum.HORIZONTAL) {
+                    width = getWidth() / icons.length;
+                    x = width * i;
+                } else {
+                    height = getHeight() / icons.length;
+                    y = height * i;
+                }
+                add(createItem(i, x, y, width, height, classLoader.getResource(icons[i])));
+            }
+        }
+    }
+
+    private JButton createItem(int position, int x, int y, int width, int height, URL iconPath) {
+        JButton button = new JButton();
+        button.setBounds(x, y, width, height);
+        ImageIcon icon = new ImageIcon(getResizedIcon(iconPath));
+        button.setIcon(icon);
+        button.setFocusable(false);
+        button.setHorizontalAlignment(JLabel.CENTER);
+        button.setVerticalAlignment(JLabel.CENTER);
+        button.setBorder(border);
+        button.addActionListener(e -> {
+            if (listener != null) listener.onActionItemClicked(position);
+        });
+        return button;
+    }
+
+    private Image getResizedIcon(URL iconPath) {
+        if (iconWidth == -1 || iconHeight == -1) {
+            iconWidth = iconHeight = (int) ((state == ButtonsPanelStateEnum.HORIZONTAL ? getHeight() : getWidth()) * 0.3);
+        }
+        return new ImageIcon(iconPath)
+                .getImage()
+                .getScaledInstance(iconWidth, iconHeight, Image.SCALE_DEFAULT);
+    }
+
+    public interface OnButtonPanelListener {
+        void onActionItemClicked(int position);
+    }
+
+    public void setBorder(MatteBorder border) {
+        this.border = border;
+    }
+
+    public void setState(ButtonsPanelStateEnum state) {
+        this.state = state;
     }
 
     public void setIconSize(int iconWidth, int iconHeight) {
@@ -29,46 +90,4 @@ public class ButtonsPanel extends JPanel {
         this.listener = listener;
     }
 
-    public void createPanel() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        setLayout(null);
-        if (icons != null) {
-            int itemWidth = getWidth() / icons.length;
-            for (int i = 0; i < icons.length; i++) {
-                add(createItem(i, itemWidth, getHeight(), classLoader.getResource(icons[i])));
-            }
-        }
-    }
-
-    private JButton createItem(int position, int width, int height, URL iconPath) {
-        JButton button = new JButton();
-        button.setBounds(width * position, 0, width, height);
-        ImageIcon icon = new ImageIcon(getResizedIcon(iconPath));
-        button.setIcon(icon);
-        button.setFocusable(false);
-        button.setHorizontalAlignment(JLabel.CENTER);
-        button.setVerticalAlignment(JLabel.CENTER);
-        button.setBorder(border);
-        button.addActionListener(e -> {
-            if (listener != null) listener.onActionItemClicked(position);
-        });
-        return button;
-    }
-
-    private Image getResizedIcon(URL iconPath) {
-        if (iconWidth == -1 || iconHeight == -1) {
-            iconWidth = iconHeight = (int) (getHeight() * 0.3);
-        }
-        return new ImageIcon(iconPath)
-                .getImage()
-                .getScaledInstance(iconWidth, iconHeight, Image.SCALE_DEFAULT);
-    }
-
-    public interface OnButtonPanelListener {
-        void onActionItemClicked(int position);
-    }
-
-    public void setBorder(MatteBorder border) {
-        this.border = border;
-    }
 }
