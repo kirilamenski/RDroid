@@ -33,6 +33,9 @@ public class DevicesContainer extends JPanel {
     private JPanel createChildContainer(int position, int yPos, Object... values) {
         JPanel headerContainer = new JPanel();
         headerContainer.setBounds(getX(), yPos, getWidth(), DimensionConst.DEVICE_CONTAINER_HEIGHT);
+        if (position == -1) {
+            headerContainer.setBorder(new MatteBorder(1, 0, 0, 0, Color.BLACK));
+        }
         headerContainer.setLayout(null);
 
         int itemWidth = headerContainer.getWidth() / values.length;

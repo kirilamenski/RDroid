@@ -6,12 +6,16 @@ import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.commands.ResponseParserUtil;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
+import com.ansgar.rdroidpc.listeners.MainActionPanelsListener;
 import com.ansgar.rdroidpc.listeners.impl.MainPanelMenuListenerImpl;
+import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.DevicesContainer;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.utils.StringUtils;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 
+import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +27,8 @@ import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 public class MainPanel extends BasePanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked {
 
     private MenuBar menuBar;
+    private DevicesContainer devicesContainer;
+    private MainActionPanelsListener listener;
     private HashMap<String, VideoFrame> openedDevices;
     private List<Device> devices;
     private AdbBackend adbBackend;
@@ -33,6 +39,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         this.openedDevices = new HashMap<>();
         this.adbBackend = new AdbBackend();
         this.devices = new ArrayList<>();
+        this.listener = new MainActionPanelsListener(this);
         setUpMainPanel();
     }
 
@@ -40,7 +47,11 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         menuBar = new MenuBar();
         menuBar.setListener(new MainPanelMenuListenerImpl(this));
         add(menuBar.getMenuBar(StringConst.Companion.getMenuItems()));
+        add(getActionsPanel());
+        executeAdbDevices();
+    }
 
+    public void executeAdbDevices() {
         CommandExecutor commandExecutor = new CommandExecutor();
         commandExecutor.setOnFinishExecuteListener((this::showDevices));
         commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.DEVICES));
@@ -69,16 +80,28 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
                     )
             );
         }
-
-        add(createDeviceContainer());
+        createDeviceContainer();
     }
 
-    private DevicesContainer createDeviceContainer() {
-        DevicesContainer devicesContainer = new DevicesContainer();
-        devicesContainer.setBounds(0, menuBar.getHeight(), getWidth(), getHeight());
+    private ButtonsPanel getActionsPanel() {
+        ButtonsPanel panel = new ButtonsPanel();
+        panel.setIcons("icons/ic_restart_64.png");
+        panel.setBounds(0, menuBar.getHeight(), 48, 48);
+        panel.setIconSize(30, 30);
+        panel.setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
+        panel.setItemClickListener(listener);
+        panel.createPanel();
+        return panel;
+    }
+
+    private void createDeviceContainer() {
+        if (devicesContainer != null) remove(devicesContainer);
+        devicesContainer = new DevicesContainer();
+        devicesContainer.setBounds(0, menuBar.getHeight() + 48, getWidth(), getHeight());
         devicesContainer.createContainer(devices, (Object[]) StringConst.Companion.getDeviceHeaderNames());
         devicesContainer.setListener(this);
-        return devicesContainer;
+        add(devicesContainer);
+        updateUI();
     }
 
     @Override
@@ -90,6 +113,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+        restartServer();
         System.exit(0);
     }
 
@@ -145,6 +169,12 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         if (adbBackend != null) {
             adbBackend.shutdown();
         }
+    }
+
+    public void restartServer() {
+        CommandExecutor commandExecutor = new CommandExecutor();
+        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KILL_SERVER));
+        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.START_SERVER));
     }
 
 }
