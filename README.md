@@ -30,4 +30,3 @@ java -jar ~./RDroid.jar
 2) You can input only english letters :disappointed: (Will be fixed)
 3) Xiaomi devices by default blocked input simulation. To use MonkeyRunner, you must enable this option in the developer settings.
 4) Multiple connection working but after start connection with first device you should wait until the Android screen appears. After that you can connect with another.
-5) When multiple connection opened if you close one connection it close input connection with another. Need to restart. (Will be fixed)
