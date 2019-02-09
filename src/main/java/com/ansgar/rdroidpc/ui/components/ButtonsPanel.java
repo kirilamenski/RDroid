@@ -10,6 +10,11 @@ public class ButtonsPanel extends JPanel {
     private int iconWidth = -1, iconHeight = -1;
     private String[] icons;
     private OnButtonPanelListener listener;
+    private MatteBorder border;
+
+    public ButtonsPanel() {
+        this.border = new MatteBorder(0, 1, 1, 0, Color.BLACK);
+    }
 
     public void setIconSize(int iconWidth, int iconHeight) {
         this.iconWidth = iconWidth;
@@ -43,9 +48,9 @@ public class ButtonsPanel extends JPanel {
         button.setFocusable(false);
         button.setHorizontalAlignment(JLabel.CENTER);
         button.setVerticalAlignment(JLabel.CENTER);
-        button.setBorder(new MatteBorder(0, 1, 1, 0, Color.BLACK));
+        button.setBorder(border);
         button.addActionListener(e -> {
-            if (listener != null) listener.onItemClick(position);
+            if (listener != null) listener.onActionItemClicked(position);
         });
         return button;
     }
@@ -54,11 +59,16 @@ public class ButtonsPanel extends JPanel {
         if (iconWidth == -1 || iconHeight == -1) {
             iconWidth = iconHeight = (int) (getHeight() * 0.3);
         }
-        return new ImageIcon(iconPath).getImage().getScaledInstance(iconWidth, iconHeight, Image.SCALE_DEFAULT);
+        return new ImageIcon(iconPath)
+                .getImage()
+                .getScaledInstance(iconWidth, iconHeight, Image.SCALE_DEFAULT);
     }
 
     public interface OnButtonPanelListener {
-        void onItemClick(int id);
+        void onActionItemClicked(int position);
     }
 
+    public void setBorder(MatteBorder border) {
+        this.border = border;
+    }
 }
