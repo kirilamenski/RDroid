@@ -5,16 +5,12 @@ import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
-import com.ansgar.rdroidpc.commands.CommandExecutor;
-import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.enums.OsEnum;
-import com.ansgar.rdroidpc.listeners.OnDeviceOrientationListener;
+import com.ansgar.rdroidpc.listeners.*;
+import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
-import com.ansgar.rdroidpc.listeners.FrameMouseListener;
-import com.ansgar.rdroidpc.listeners.KeyboardListener;
-import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 import com.ansgar.rdroidpc.utils.*;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
@@ -29,22 +25,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
-public class VideoFrame extends BasePanel implements OnDeviceOrientationListener, CommandExecutor.OnExecuteNextListener,
-        CommandExecutor.OnFinishExecuteListener, CommandExecutor.onExecuteErrorListener {
+public class VideoFrame extends BasePanel implements OnDeviceOrientationListener {
 
     private Thread thread;
     private FrameGrabber frameGrabber;
     private BufferedImage currentImage;
     private Device device;
     private IChimpDevice chimpDevice;
-    private CommandExecutor commandExecutor;
     private AtomicBoolean isThreadRunning;
     private OnVideoFrameListener onVideoFrameListener;
     private OrientationUtil orientationUtil;
     private OrientationEnum currentOrientation;
     private ButtonsPanel bottomPanel, rightPanel;
+    private DeviceActions deviceActions;
 
-    private boolean accelerometerDisabled = false;
     private int imageWidth, imageHeight, x, y;
 
     public VideoFrame(Device device, AdbBackend adbBackend, Rectangle rectangle) {
@@ -53,6 +47,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
         this.isThreadRunning = new AtomicBoolean();
         this.orientationUtil = new OrientationUtil(device, this);
+        this.deviceActions = new DeviceActionsImpl(device);
         new FileUploader(this, device);
 
         setLayout(null);
@@ -90,9 +85,9 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
 
     public void stop(boolean closeFrame) {
         if (orientationUtil != null) orientationUtil.stop();
-        if (commandExecutor != null) {
-            commandExecutor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ACCELEROMETER_ENABLE), device.getDeviceId(), 1));
-            commandExecutor.destroy();
+        if (deviceActions != null) {
+            deviceActions.disableAccelerometer(1);
+            deviceActions.destroy();
         }
         if (chimpDevice != null) chimpDevice.dispose();
         stopThread();
@@ -101,13 +96,11 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     }
 
     private void start(String command) {
-        System.out.println(command);
-        commandExecutor = new CommandExecutor(this, this, this);
         isThreadRunning.set(true);
         orientationUtil.start(5000, 5000);
 
         try {
-            InputStream inputStream = commandExecutor.getInputStream(command);
+            InputStream inputStream = deviceActions.getInputStream(command);
             frameGrabber = new FFmpegFrameGrabber(inputStream);
             frameGrabber.start();
 
@@ -197,20 +190,13 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private ButtonsPanel.OnButtonPanelListener rightActionsListener = id -> {
         switch (id) {
             case 0:
-                if (!accelerometerDisabled) {
-                    commandExecutor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ACCELEROMETER_ENABLE), device.getDeviceId(), 0));
-                    accelerometerDisabled = true;
-                }
-                int orientation = currentOrientation == OrientationEnum.PORTRAIT ? 1 : 0;
-                System.out.println(currentOrientation.name() + ", " + orientation);
-                commandExecutor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ROTATE_DEVICE), device.getDeviceId(), orientation));
+                deviceActions.changeOrientation(currentOrientation == OrientationEnum.PORTRAIT ? 1 : 0);
                 break;
             case 1:
                 break;
             case 2:
                 break;
         }
-        System.out.println(id);
     };
 
     private void initMouseListener() {
@@ -298,17 +284,17 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         this.onVideoFrameListener = onVideoFrameListener;
     }
 
-    @Override
-    public void onNext(String line) {
-    }
-
-    @Override
-    public void onFinish(StringBuilder result) {
-        System.out.println("Finish: " + result.toString());
-    }
-
-    @Override
-    public void onError(Throwable error) {
-        System.out.println("Error: " + error);
-    }
+//    @Override
+//    public void onNext(String line) {
+//    }
+//
+//    @Override
+//    public void onFinish(StringBuilder result) {
+//        System.out.println("Finish: " + result.toString());
+//    }
+//
+//    @Override
+//    public void onError(Throwable error) {
+//        System.out.println("Error: " + error);
+//    }
 }
