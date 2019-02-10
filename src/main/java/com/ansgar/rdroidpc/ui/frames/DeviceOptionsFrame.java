@@ -59,7 +59,6 @@ public class DeviceOptionsFrame extends BasePanel {
         screenResolutionCb.setSelectedIndex(getSelectedIndex());
 
         JButton okBtn = new JButton(StringConst.OK);
-        System.out.println(getRectangle().width + " x " + getRectangle().getWidth());
         okBtn.setBounds(getRectangle().width - 225, getRectangle().height - 100, 100, 50);
         okBtn.setFocusable(false);
         okBtn.addActionListener(e -> {
