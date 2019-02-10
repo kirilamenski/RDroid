@@ -39,7 +39,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private ButtonsPanel bottomPanel, rightPanel;
     private DeviceActions deviceActions;
 
-    private int imageWidth, imageHeight, x, y;
+    private int imageWidth, imageHeight, imageCoordinateX;
 
     public VideoFrame(Device device, AdbBackend adbBackend, Rectangle rectangle) {
         super(rectangle, String.format("%s(%dx%d)", device.getDeviceName(), device.getWidth(), device.getHeight()));
@@ -67,7 +67,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         super.paintComponent(g);
         if (currentImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.drawImage(currentImage, x, 0, imageWidth, imageHeight, this);
+            g2d.drawImage(currentImage, imageCoordinateX, 0, imageWidth, imageHeight, this);
             g2d.dispose();
         }
     }
@@ -219,7 +219,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         );
         if (orientationEnum == OrientationEnum.PORTRAIT) {
             initPortraitOrientationSize();
-            rectangle.width = imageWidth - (imageWidth + x + 20) + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+            rectangle.width = imageWidth - (imageWidth + imageCoordinateX + 20) + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
         } else {
             initLandscapeOrientationSize();
             rectangle.width = imageWidth + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
@@ -237,23 +237,22 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
         imageHeight = (int) (screenHeight * 0.7f);
         imageWidth = (int) (imageHeight * 3.2f * DimensionConst.SCREEN_RATIO);
-
-        x = -(imageWidth / 3 + 10);
+        imageCoordinateX = -(imageWidth / 3 + 10);
     }
 
     private void initLandscapeOrientationSize() {
         int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
         imageHeight = (int) (screenHeight * 0.7f);
         imageWidth = (int) (imageHeight / DimensionConst.SCREEN_RATIO);
-
-        x = 0;
+        imageCoordinateX = 0;
     }
 
     private void updateWindowSize(@NotNull Rectangle rectangle) {
         frame.setBounds(rectangle);
         addBottomPanel();
         addRightPanel();
-        frame.revalidate();
+//        frame.revalidate();
+        repaint();
     }
 
     public IChimpDevice getChimpDevice() {
@@ -284,17 +283,4 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         this.onVideoFrameListener = onVideoFrameListener;
     }
 
-//    @Override
-//    public void onNext(String line) {
-//    }
-//
-//    @Override
-//    public void onFinish(StringBuilder result) {
-//        System.out.println("Finish: " + result.toString());
-//    }
-//
-//    @Override
-//    public void onError(Throwable error) {
-//        System.out.println("Error: " + error);
-//    }
 }
