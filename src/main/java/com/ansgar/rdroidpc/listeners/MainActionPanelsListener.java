@@ -13,7 +13,6 @@ public class MainActionPanelsListener implements ButtonsPanel.OnButtonPanelListe
 
     @Override
     public void onActionItemClicked(int position) {
-        System.out.println("Pos: " + position);
         switch (position) {
             case 0:
                 panel.executeAdbDevices();
