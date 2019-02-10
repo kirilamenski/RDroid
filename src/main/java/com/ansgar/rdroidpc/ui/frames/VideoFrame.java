@@ -6,6 +6,7 @@ import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
+import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.enums.OsEnum;
@@ -28,7 +29,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
-public class VideoFrame extends BasePanel implements OnDeviceOrientationListener {
+public class VideoFrame extends BasePanel implements OnDeviceOrientationListener, CommandExecutor.OnExecuteNextListener,
+        CommandExecutor.OnFinishExecuteListener, CommandExecutor.onExecuteErrorListener {
 
     private Thread thread;
     private FrameGrabber frameGrabber;
@@ -42,6 +44,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private OrientationEnum currentOrientation;
     private ButtonsPanel bottomPanel, rightPanel;
 
+    private boolean accelerometerDisabled = false;
     private int imageWidth, imageHeight, x, y;
 
     public VideoFrame(Device device, AdbBackend adbBackend, Rectangle rectangle) {
@@ -87,7 +90,10 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
 
     public void stop(boolean closeFrame) {
         if (orientationUtil != null) orientationUtil.stop();
-        if (commandExecutor != null) commandExecutor.destroy();
+        if (commandExecutor != null) {
+            commandExecutor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ACCELEROMETER_ENABLE), device.getDeviceId(), 1));
+            commandExecutor.destroy();
+        }
         if (chimpDevice != null) chimpDevice.dispose();
         stopThread();
         stopGrabber();
@@ -96,7 +102,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
 
     private void start(String command) {
         System.out.println(command);
-        commandExecutor = new CommandExecutor();
+        commandExecutor = new CommandExecutor(this, this, this);
         isThreadRunning.set(true);
         orientationUtil.start(5000, 5000);
 
@@ -191,6 +197,13 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private ButtonsPanel.OnButtonPanelListener rightActionsListener = id -> {
         switch (id) {
             case 0:
+                if (!accelerometerDisabled) {
+                    commandExecutor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ACCELEROMETER_ENABLE), device.getDeviceId(), 0));
+                    accelerometerDisabled = true;
+                }
+                int orientation = currentOrientation == OrientationEnum.PORTRAIT ? 1 : 0;
+                System.out.println(currentOrientation.name() + ", " + orientation);
+                commandExecutor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ROTATE_DEVICE), device.getDeviceId(), orientation));
                 break;
             case 1:
                 break;
@@ -283,5 +296,19 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
 
     public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
         this.onVideoFrameListener = onVideoFrameListener;
+    }
+
+    @Override
+    public void onNext(String line) {
+    }
+
+    @Override
+    public void onFinish(StringBuilder result) {
+        System.out.println("Finish: " + result.toString());
+    }
+
+    @Override
+    public void onError(Throwable error) {
+        System.out.println("Error: " + error);
     }
 }
