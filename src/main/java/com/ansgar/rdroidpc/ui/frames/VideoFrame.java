@@ -47,7 +47,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
         this.isThreadRunning = new AtomicBoolean();
         this.orientationUtil = new OrientationUtil(device, this);
-        this.deviceActions = new DeviceActionsImpl(device);
+        this.deviceActions = new DeviceActionsImpl(this);
         new FileUploader(this, device);
 
         setLayout(null);
@@ -193,6 +193,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
                 deviceActions.changeOrientation(currentOrientation == OrientationEnum.PORTRAIT ? 1 : 0);
                 break;
             case 1:
+                deviceActions.screenCapture();
                 break;
             case 2:
                 break;
@@ -253,6 +254,10 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         addRightPanel();
 //        frame.revalidate();
         repaint();
+    }
+
+    public Device getDevice() {
+        return device;
     }
 
     public IChimpDevice getChimpDevice() {
