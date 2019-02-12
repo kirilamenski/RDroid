@@ -252,7 +252,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         frame.setBounds(rectangle);
         addBottomPanel();
         addRightPanel();
-//        frame.revalidate();
         repaint();
     }
 
