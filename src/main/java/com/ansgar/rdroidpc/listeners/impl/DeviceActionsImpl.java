@@ -1,6 +1,8 @@
 package com.ansgar.rdroidpc.listeners.impl;
 
+import com.android.chimpchat.adb.AdbChimpImage;
 import com.android.chimpchat.core.IChimpImage;
+import com.android.ddmlib.RawImage;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
@@ -53,9 +55,15 @@ public class DeviceActionsImpl implements DeviceActions, CommandExecutor.OnExecu
 
     @Override
     public void screenCapture() {
-        String path = "/home/kirill/" + System.currentTimeMillis() + ".png";
-        IChimpImage image = frame.getChimpDevice().takeSnapshot();
-        boolean saved = image.writeToFile(path, "png");
+        String fileName = System.currentTimeMillis() + ".png";
+        String pcPath = String.format("%s%s", "/home/kirill/Games/", fileName);
+        String devicePath = String.format("%s%s", "/sdcard/", fileName);
+        executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_TAKE_SNAPSHOT),
+                frame.getDevice().getDeviceId(), devicePath));
+        executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_PULL_SNAPSHOT),
+                frame.getDevice().getDeviceId(), devicePath, pcPath));
+        executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_REMOVE_FILE),
+                frame.getDevice().getDeviceId(), devicePath));
     }
 
     @Override
@@ -70,28 +78,11 @@ public class DeviceActionsImpl implements DeviceActions, CommandExecutor.OnExecu
 
     @Override
     public void onFinish(StringBuilder result) {
-//        System.out.println("Finish: " + result.toString());
+        System.out.println("Finish: " + result.toString());
     }
 
     @Override
     public void onError(Throwable error) {
-//        System.out.println("Error: " + error);
-    }
-
-    private List<String> getCmds(String filePath) {
-        List<String> cmd = new ArrayList<>();
-        String adbPath = SharedValues.get(SharedValuesKey.ADB_PATH, "");
-        if (!adbPath.isEmpty()) cmd.add(adbPath);
-        else cmd.add("adb");
-        cmd.add("-s");
-        cmd.add(frame.getDevice().getDeviceId());
-        cmd.add("exec-out");
-        cmd.add("screencap");
-        cmd.add("-p");
-        cmd.add(">");
-        cmd.add("'");
-        cmd.add(filePath);
-        cmd.add("'");
-        return cmd;
+        System.out.println("Error: " + error);
     }
 }
