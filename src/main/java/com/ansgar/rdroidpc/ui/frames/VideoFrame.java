@@ -9,13 +9,16 @@ import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.enums.OsEnum;
 import com.ansgar.rdroidpc.listeners.*;
-import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
+import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
+import com.ansgar.rdroidpc.ui.frames.presenters.VideoFramePresenter;
+import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
 import com.ansgar.rdroidpc.utils.*;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -25,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
-public class VideoFrame extends BasePanel implements OnDeviceOrientationListener {
+public class VideoFrame extends BasePanel implements OnDeviceOrientationListener, VideoFrameView {
 
     private Thread thread;
     private FrameGrabber frameGrabber;
@@ -37,7 +40,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private OrientationUtil orientationUtil;
     private OrientationEnum currentOrientation;
     private ButtonsPanel bottomPanel, rightPanel;
-    private DeviceActions deviceActions;
+    private VideoFramePresenter presenter;
 
     private int imageWidth, imageHeight, imageCoordinateX;
 
@@ -47,7 +50,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
         this.isThreadRunning = new AtomicBoolean();
         this.orientationUtil = new OrientationUtil(device, this);
-        this.deviceActions = new DeviceActionsImpl(this);
         new FileUploader(this, device);
 
         setLayout(null);
@@ -85,22 +87,86 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
 
     public void stop(boolean closeFrame) {
         if (orientationUtil != null) orientationUtil.stop();
-        if (deviceActions != null) {
-            deviceActions.disableAccelerometer(1);
-            deviceActions.destroy();
-        }
         if (chimpDevice != null) chimpDevice.dispose();
         stopThread();
         stopGrabber();
         if (closeFrame) stopFrame();
     }
 
+    public Device getDevice() {
+        return device;
+    }
+
+    public IChimpDevice getChimpDevice() {
+        return chimpDevice;
+    }
+
+    public int getDeviceWidth() {
+        return device.getWidth();
+    }
+
+    public int getDeviceHeight() {
+        return device.getHeight();
+    }
+
+    public int getFrameHeight() {
+        return getHeight() - DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT;
+    }
+
+    public int getFrameWidth() {
+        return getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+    }
+
+    public OrientationEnum getCurrentOrientation() {
+        return currentOrientation;
+    }
+
+    @Override
+    public void press(String value, TouchPressType type) {
+        chimpDevice.press(value, TouchPressType.DOWN_AND_UP);
+    }
+
+    public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
+        this.onVideoFrameListener = onVideoFrameListener;
+    }
+
+    @Override
+    public void createPresenter() {
+        presenter = new VideoFramePresenter(this, this);
+    }
+
+    @Nullable
+    @Override
+    public BasePresenter getPresenter() {
+        return super.getPresenter();
+    }
+
+    @Override
+    public void changeOrientation(OrientationEnum orientationEnum) {
+        Rectangle rectangle = new Rectangle(
+                getRectangle().x,
+                getRectangle().y,
+                DEFAULT_WIDTH / 2,
+                imageHeight + DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
+        );
+        if (orientationEnum == OrientationEnum.PORTRAIT) {
+            initPortraitOrientationSize();
+            rectangle.width = imageWidth - (imageWidth + imageCoordinateX + 20) + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+        } else {
+            initLandscapeOrientationSize();
+            rectangle.width = imageWidth + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+        }
+        updateWindowSize(rectangle);
+        currentOrientation = orientationEnum;
+    }
+
+
     private void start(String command) {
         isThreadRunning.set(true);
         orientationUtil.start(5000, 5000);
 
         try {
-            InputStream inputStream = deviceActions.getInputStream(command);
+            InputStream inputStream = presenter.getInputScream(command);
             frameGrabber = new FFmpegFrameGrabber(inputStream);
             frameGrabber.start();
 
@@ -150,7 +216,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         bottomPanel = new ButtonsPanel();
         bottomPanel.setIcons("icons/ic_back.png", "icons/ic_home.png", "icons/ic_square.png");
         bottomPanel.setBounds(0, imageHeight, getFrameWidth(), DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT);
-        bottomPanel.setItemClickListener(bottomActionsListener);
+        bottomPanel.setItemClickListener(presenter.bottomActionsListener);
         bottomPanel.createPanel();
 
         add(bottomPanel);
@@ -163,42 +229,11 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         rightPanel.setState(ButtonsPanelStateEnum.VERTICAL);
         rightPanel.setIconSize(42, 42);
         rightPanel.setBounds(getFrameWidth(), 0, DimensionConst.RIGHT_ACTION_PANEL_WIDTH, frame.getHeight());
-        rightPanel.setItemClickListener(rightActionsListener);
+        rightPanel.setItemClickListener(presenter.rightActionsListener);
         rightPanel.createPanel();
 
         add(rightPanel);
     }
-
-    private ButtonsPanel.OnButtonPanelListener bottomActionsListener = id -> {
-        int keyCode = AdbKeyCode.KEYCODE_UNKNOWN.getKeyCode();
-        switch (id) {
-            case 0:
-                keyCode = AdbKeyCode.KEYCODE_BACK.getKeyCode();
-                break;
-            case 1:
-                keyCode = AdbKeyCode.KEYCODE_HOME.getKeyCode();
-                break;
-            case 2:
-                keyCode = AdbKeyCode.KEYCODE_APP_SWITCH.getKeyCode();
-                break;
-        }
-        if (keyCode != AdbKeyCode.KEYCODE_UNKNOWN.getKeyCode()) {
-            chimpDevice.press(String.valueOf(keyCode), TouchPressType.DOWN_AND_UP);
-        }
-    };
-
-    private ButtonsPanel.OnButtonPanelListener rightActionsListener = id -> {
-        switch (id) {
-            case 0:
-                deviceActions.changeOrientation(currentOrientation == OrientationEnum.PORTRAIT ? 1 : 0);
-                break;
-            case 1:
-                deviceActions.screenCapture();
-                break;
-            case 2:
-                break;
-        }
-    };
 
     private void initMouseListener() {
         FrameMouseListener listener = new FrameMouseListener(this);
@@ -209,24 +244,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private void initKeyboardListener() {
         KeyboardListener listener = new KeyboardListener(this);
         frame.addKeyListener(listener);
-    }
-
-    private void changeOrientation(OrientationEnum orientationEnum) {
-        Rectangle rectangle = new Rectangle(
-                getRectangle().x,
-                getRectangle().y,
-                DEFAULT_WIDTH / 2,
-                imageHeight + DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
-        );
-        if (orientationEnum == OrientationEnum.PORTRAIT) {
-            initPortraitOrientationSize();
-            rectangle.width = imageWidth - (imageWidth + imageCoordinateX + 20) + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
-        } else {
-            initLandscapeOrientationSize();
-            rectangle.width = imageWidth + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
-        }
-        updateWindowSize(rectangle);
-        currentOrientation = orientationEnum;
     }
 
     /**
@@ -253,38 +270,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         addBottomPanel();
         addRightPanel();
         repaint();
-    }
-
-    public Device getDevice() {
-        return device;
-    }
-
-    public IChimpDevice getChimpDevice() {
-        return chimpDevice;
-    }
-
-    public int getDeviceWidth() {
-        return device.getWidth();
-    }
-
-    public int getDeviceHeight() {
-        return device.getHeight();
-    }
-
-    public int getFrameHeight() {
-        return getHeight() - DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT;
-    }
-
-    public int getFrameWidth() {
-        return getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
-    }
-
-    public OrientationEnum getCurrentOrientation() {
-        return currentOrientation;
-    }
-
-    public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
-        this.onVideoFrameListener = onVideoFrameListener;
     }
 
 }
