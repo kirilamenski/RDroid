@@ -3,14 +3,16 @@ package com.ansgar.rdroidpc.ui.frames;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.constants.StringConst;
+import com.ansgar.rdroidpc.listeners.OnFileChooserListener;
 import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
+import com.ansgar.rdroidpc.ui.components.FileChooser;
 import com.ansgar.rdroidpc.utils.SharedValues;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
-public class SettingsFrame extends BasePanel {
+public class SettingsFrame extends BasePanel implements OnFileChooserListener {
 
     private JTextField adbPathTf;
     private OnMenuItemListener listener;
@@ -44,14 +46,8 @@ public class SettingsFrame extends BasePanel {
         button.setFocusable(false);
         button.setBounds(DimensionConst.SETTINGS_PANEL_WIDTH - 40, 10, 25, 30);
         button.addActionListener(e -> {
-            JFileChooser chooser = new JFileChooser(SharedValues.get(SharedValuesKey.ADB_PATH, ""));
-            chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-            chooser.showDialog(this, StringConst.OK);
-            if (chooser.getSelectedFile() != null) {
-                String path = chooser.getSelectedFile().getAbsolutePath();
-                adbPathTf.setText(path);
-                if (listener != null) listener.onAdbPathChanged(path);
-            }
+            FileChooser fileChooser = new FileChooser(this);
+            fileChooser.open(JFileChooser.FILES_AND_DIRECTORIES);
         });
 
         add(button);
@@ -59,5 +55,11 @@ public class SettingsFrame extends BasePanel {
 
     public void setListener(OnMenuItemListener listener) {
         this.listener = listener;
+    }
+
+    @Override
+    public void onPathSelected(String path) {
+        adbPathTf.setText(path);
+        if (listener != null) listener.onAdbPathChanged(path);
     }
 }

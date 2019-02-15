@@ -16,7 +16,10 @@ enum class AdbCommandEnum(val command: String) {
     ORIENTATION("adb -s %s shell dumpsys input | grep 'SurfaceOrientation'"),
     ACCELEROMETER_ENABLE("adb -s %s shell settings put system accelerometer_rotation %d"),
     ROTATE_DEVICE("adb -s %s shell settings put system user_rotation %d"),
-
+    TAKE_SNAPSHOT("adb -s %s exec-out screencap -p > %s"),
+    ADB_TAKE_SNAPSHOT("adb -s %s shell screencap -p %s"),
+    ADB_PULL_SNAPSHOT("adb -s %s pull %s %s"),
+    ADB_REMOVE_FILE("adb -s %s shell rm -f %s"),
     SHOW_SCREEN("adb shell screenrecord --bit-rate=4m --output-format=h264 --size 1920x1080 - "),
     /**adb screenrecorder has time limit - 180 s (3 min). To solve this problem and don't get exception limit range you need to use 'hack'.
      * repeat string with screenrecord several time. Video will be streaming line * 180 s.

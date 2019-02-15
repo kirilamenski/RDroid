@@ -13,7 +13,7 @@ public interface DeviceActions {
 
     void screenRecord(int width, int height, int time, int bitRate);
 
-    void screenCapture(int width, int height);
+    void screenCapture(String fileName, String path);
 
     void destroy();
 
