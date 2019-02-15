@@ -30,9 +30,9 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
     public ButtonsPanel.OnButtonPanelListener rightActionsListener = id -> {
         switch (id) {
             case 0:
-                OrientationEnum orientationEnum = view.getCurrentOrientation() == OrientationEnum.PORTRAIT
-                        ? OrientationEnum.LANDSCAPE : OrientationEnum.PORTRAIT;
-                view.changeOrientation(orientationEnum);
+                int orientationEnum = view.getCurrentOrientation() == OrientationEnum.PORTRAIT
+                        ? 1 : 0;
+                deviceActions.changeOrientation(orientationEnum);
                 break;
             case 1:
                 openFileChooser();
