@@ -6,6 +6,7 @@ import com.ansgar.rdroidpc.listeners.DeviceActions;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.utils.DateUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -50,6 +51,10 @@ public class DeviceActionsImpl implements DeviceActions, CommandExecutor.OnExecu
 
     @Override
     public void screenCapture(String fileName, String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         String devicePath = String.format("%s%s", "/sdcard/", fileName);
         WeakReference<Thread> thread = new WeakReference<>(
                 new Thread(() -> {
