@@ -1,19 +1,14 @@
 package com.ansgar.rdroidpc.listeners.impl;
 
-import com.android.chimpchat.adb.AdbChimpImage;
-import com.android.chimpchat.core.IChimpImage;
-import com.android.ddmlib.RawImage;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
-import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.listeners.DeviceActions;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
-import com.ansgar.rdroidpc.utils.SharedValues;
+import com.ansgar.rdroidpc.utils.DateUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.ref.WeakReference;
 
 public class DeviceActionsImpl implements DeviceActions, CommandExecutor.OnExecuteNextListener,
         CommandExecutor.OnFinishExecuteListener, CommandExecutor.onExecuteErrorListener {
@@ -54,16 +49,19 @@ public class DeviceActionsImpl implements DeviceActions, CommandExecutor.OnExecu
     }
 
     @Override
-    public void screenCapture() {
-        String fileName = System.currentTimeMillis() + ".png";
-        String pcPath = String.format("%s%s", "/home/kirill/Games/", fileName);
+    public void screenCapture(String fileName, String path) {
         String devicePath = String.format("%s%s", "/sdcard/", fileName);
-        executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_TAKE_SNAPSHOT),
-                frame.getDevice().getDeviceId(), devicePath));
-        executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_PULL_SNAPSHOT),
-                frame.getDevice().getDeviceId(), devicePath, pcPath));
-        executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_REMOVE_FILE),
-                frame.getDevice().getDeviceId(), devicePath));
+        WeakReference<Thread> thread = new WeakReference<>(
+                new Thread(() -> {
+                    executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_TAKE_SNAPSHOT),
+                            frame.getDevice().getDeviceId(), devicePath));
+                    executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_PULL_SNAPSHOT),
+                            frame.getDevice().getDeviceId(), devicePath, path));
+                    executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_REMOVE_FILE),
+                            frame.getDevice().getDeviceId(), devicePath));
+                })
+        );
+        thread.get().start();
     }
 
     @Override
