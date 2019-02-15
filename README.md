@@ -21,7 +21,7 @@ java -jar ~./RDroid.jar
 | ctrl + shift + F10  | mute volume  |
 | ctrl + shift + F11  | volume down  |
 | ctrl + shift + F12  | volume up  |
-| left/top/right/bottom arrow  | navigation  |
+| left/top/right/bottom arrows  | navigation  |
 
 
 ## Issues
