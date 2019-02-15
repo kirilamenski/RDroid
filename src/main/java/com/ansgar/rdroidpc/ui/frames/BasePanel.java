@@ -1,5 +1,8 @@
 package com.ansgar.rdroidpc.ui.frames;
 
+import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -9,14 +12,14 @@ import java.awt.event.WindowListener;
 
 public class BasePanel extends JPanel implements WindowListener {
 
-    protected JFrame frame;
     private Rectangle rectangle;
-
+    protected JFrame frame;
 
     public BasePanel(Rectangle rectangle, String title) {
         setLayout(null);
         this.rectangle = rectangle;
         initFrame(rectangle, title);
+        createPresenter();
     }
 
     private void initFrame(Rectangle rectangle, String title) {
@@ -44,6 +47,9 @@ public class BasePanel extends JPanel implements WindowListener {
     }
 
     protected void closeFrame() {
+        if (getPresenter() != null) {
+            getPresenter().destroy();
+        }
         if (frame != null) {
             frame.setVisible(false);
             frame.dispose();
@@ -52,7 +58,6 @@ public class BasePanel extends JPanel implements WindowListener {
 
     @Override
     public void windowOpened(WindowEvent e) {
-
     }
 
     @Override
@@ -88,4 +93,13 @@ public class BasePanel extends JPanel implements WindowListener {
     public Rectangle getRectangle() {
         return rectangle;
     }
+
+    public void createPresenter() {
+    }
+
+    @Nullable
+    public BasePresenter getPresenter() {
+        return null;
+    }
+
 }
