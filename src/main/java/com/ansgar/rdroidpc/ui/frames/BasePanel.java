@@ -1,6 +1,7 @@
 package com.ansgar.rdroidpc.ui.frames;
 
 import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
+import com.ansgar.rdroidpc.ui.frames.views.BaseFrameView;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class BasePanel extends JPanel implements WindowListener {
+public abstract class BasePanel extends JPanel implements WindowListener, BaseFrameView {
 
     private Rectangle rectangle;
     protected JFrame frame;
@@ -42,10 +43,6 @@ public class BasePanel extends JPanel implements WindowListener {
         });
     }
 
-    protected void onCloseApp() {
-
-    }
-
     protected void closeFrame() {
         if (getPresenter() != null) {
             getPresenter().destroy();
@@ -57,12 +54,17 @@ public class BasePanel extends JPanel implements WindowListener {
     }
 
     @Override
+    public void onCloseFrame() {
+
+    }
+
+    @Override
     public void windowOpened(WindowEvent e) {
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-        onCloseApp();
+        onCloseFrame();
     }
 
     @Override
