@@ -20,6 +20,7 @@ import org.bytedeco.javacv.Java2DFrameConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -28,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
-public class VideoFrame extends BasePanel implements OnDeviceOrientationListener, VideoFrameView {
+public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private Thread thread;
     private FrameGrabber frameGrabber;
@@ -37,7 +38,6 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     private IChimpDevice chimpDevice;
     private AtomicBoolean isThreadRunning;
     private OnVideoFrameListener onVideoFrameListener;
-    private OrientationUtil orientationUtil;
     private OrientationEnum currentOrientation;
     private ButtonsPanel bottomPanel, rightPanel;
     private VideoFramePresenter presenter;
@@ -49,13 +49,10 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         this.device = device;
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
         this.isThreadRunning = new AtomicBoolean();
-        this.orientationUtil = new OrientationUtil(device, this);
         new FileUploader(this, device);
 
         setLayout(null);
         changeOrientation(OrientationEnum.PORTRAIT);
-        initMouseListener();
-        initKeyboardListener();
     }
 
     public void startNewThread(String command) {
@@ -75,50 +72,15 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
     }
 
     @Override
-    protected void onCloseApp() {
-        super.onCloseApp();
+    public void onCloseFrame() {
         stop(true);
     }
 
-    @Override
-    public void onOrientationChanged(OrientationEnum orientation) {
-        changeOrientation(orientation);
-    }
-
     public void stop(boolean closeFrame) {
-        if (orientationUtil != null) orientationUtil.stop();
         if (chimpDevice != null) chimpDevice.dispose();
-        stopThread();
+        stoStreaming();
         stopGrabber();
         if (closeFrame) stopFrame();
-    }
-
-    public Device getDevice() {
-        return device;
-    }
-
-    public IChimpDevice getChimpDevice() {
-        return chimpDevice;
-    }
-
-    public int getDeviceWidth() {
-        return device.getWidth();
-    }
-
-    public int getDeviceHeight() {
-        return device.getHeight();
-    }
-
-    public int getFrameHeight() {
-        return getHeight() - DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT;
-    }
-
-    public int getFrameWidth() {
-        return getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
-    }
-
-    public OrientationEnum getCurrentOrientation() {
-        return currentOrientation;
     }
 
     @Override
@@ -160,10 +122,9 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         currentOrientation = orientationEnum;
     }
 
-
     private void start(String command) {
         isThreadRunning.set(true);
-        orientationUtil.start(5000, 5000);
+        presenter.startCheckOrientation(device, 5000, 5000);
 
         try {
             InputStream inputStream = presenter.getInputScream(command);
@@ -192,7 +153,7 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         }
     }
 
-    private void stopThread() {
+    private void stoStreaming() {
         if (thread != null && thread.isAlive()) {
             isThreadRunning.set(false);
             try {
@@ -215,35 +176,43 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         if (bottomPanel != null) remove(bottomPanel);
         bottomPanel = new ButtonsPanel();
         bottomPanel.setIcons("icons/ic_back.png", "icons/ic_home.png", "icons/ic_square.png");
-        bottomPanel.setBounds(0, imageHeight, getFrameWidth(), DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT);
+        bottomPanel.setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK));
+        bottomPanel.setBounds(
+                0,
+                imageHeight,
+                getFrameWidth(),
+                DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT
+        );
         bottomPanel.setItemClickListener(presenter.bottomActionsListener);
         bottomPanel.createPanel();
 
         add(bottomPanel);
+        repaint();
     }
 
     private void addRightPanel() {
         if (rightPanel != null) remove(rightPanel);
         rightPanel = new ButtonsPanel();
-        rightPanel.setIcons("icons/ic_rotate_64.png", "icons/ic_screen_capture_64.png", "icons/ic_screen_record_64.png");
+        rightPanel.setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK));
+        rightPanel.setIcons(
+                "icons/ic_rotate_device_64.png",
+                "icons/ic_screen_capture_64.png",
+                "icons/ic_screen_record_64.png",
+                "icons/ic_reboot_64.png"
+        );
         rightPanel.setState(ButtonsPanelStateEnum.VERTICAL);
         rightPanel.setIconSize(42, 42);
-        rightPanel.setBounds(getFrameWidth(), 0, DimensionConst.RIGHT_ACTION_PANEL_WIDTH, frame.getHeight());
+        rightPanel.setBounds(
+                getFrameWidth(),
+                0,
+                DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
+                imageHeight
+        );
         rightPanel.setItemClickListener(presenter.rightActionsListener);
         rightPanel.createPanel();
 
         add(rightPanel);
-    }
-
-    private void initMouseListener() {
-        FrameMouseListener listener = new FrameMouseListener(this);
-        addMouseListener(listener);
-        addMouseMotionListener(listener);
-    }
-
-    private void initKeyboardListener() {
-        KeyboardListener listener = new KeyboardListener(this);
-        frame.addKeyListener(listener);
+        repaint();
     }
 
     /**
@@ -269,7 +238,34 @@ public class VideoFrame extends BasePanel implements OnDeviceOrientationListener
         frame.setBounds(rectangle);
         addBottomPanel();
         addRightPanel();
-        repaint();
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public IChimpDevice getChimpDevice() {
+        return chimpDevice;
+    }
+
+    public int getDeviceWidth() {
+        return device.getWidth();
+    }
+
+    public int getDeviceHeight() {
+        return device.getHeight();
+    }
+
+    public int getFrameHeight() {
+        return getHeight() - DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT;
+    }
+
+    public int getFrameWidth() {
+        return getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+    }
+
+    public OrientationEnum getCurrentOrientation() {
+        return currentOrientation;
     }
 
 }
