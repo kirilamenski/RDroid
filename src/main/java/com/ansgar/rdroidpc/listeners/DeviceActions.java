@@ -15,6 +15,8 @@ public interface DeviceActions {
 
     void screenCapture(String fileName, String path);
 
+    void restart();
+
     void destroy();
 
 }

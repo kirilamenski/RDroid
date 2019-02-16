@@ -70,6 +70,11 @@ public class DeviceActionsImpl implements DeviceActions, CommandExecutor.OnExecu
     }
 
     @Override
+    public void restart() {
+        frame.getChimpDevice().reboot("None");
+    }
+
+    @Override
     public void destroy() {
         if (executor != null) executor.destroy();
     }
