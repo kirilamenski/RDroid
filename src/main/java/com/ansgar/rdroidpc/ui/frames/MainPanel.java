@@ -14,7 +14,6 @@ import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.utils.StringUtils;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 
-import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.ArrayList;
@@ -105,13 +104,11 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
     }
 
     @Override
-    public void onCloseApp() {
-        super.onCloseApp();
+    public void onCloseFrame() {
         closeDevicesConnections();
         try {
             stopAdbConnection();
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (NullPointerException ignored) {
         }
         restartServer();
         System.exit(0);
@@ -165,7 +162,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         setUpMainPanel();
     }
 
-    public void stopAdbConnection() throws Exception {
+    public void stopAdbConnection() throws NullPointerException {
         if (adbBackend != null) {
             adbBackend.shutdown();
         }
