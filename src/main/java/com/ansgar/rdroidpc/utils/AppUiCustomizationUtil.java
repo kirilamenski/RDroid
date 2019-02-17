@@ -13,6 +13,7 @@ public class AppUiCustomizationUtil {
         UIManager.put("List.foreground", Color.WHITE);
 
         UIManager.put("Panel.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("Panel.foreground", Color.WHITE);
         UIManager.put("MenuItem.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         UIManager.put("MenuItem.foreground", Color.WHITE);
         UIManager.put("MenuBar.background", Color.decode(Colors.MENU_BACKGROUND_COLOR));
@@ -28,6 +29,9 @@ public class AppUiCustomizationUtil {
 
         UIManager.put("Viewport.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         UIManager.put("Viewport.foreground", Color.WHITE);
+
+        UIManager.put("OptionPane.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
     }
 
 }
