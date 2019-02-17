@@ -1,5 +1,7 @@
 package com.ansgar.rdroidpc.listeners;
 
+import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -11,7 +13,7 @@ public interface DeviceActions {
 
     void changeOrientation(int orientation);
 
-    void screenRecord(int width, int height, int time, int bitRate);
+    void screenRecord(ScreenRecordOptions options, String name);
 
     void screenCapture(String fileName, String path);
 

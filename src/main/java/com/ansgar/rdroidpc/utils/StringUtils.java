@@ -24,7 +24,7 @@ public class StringUtils {
         int width = option != null ? option.getWidth() : device.getWidth();
         String command = String.format(
                 Locale.ENGLISH,
-                AdbCommandEnum.SCREEN_RECORD.getCommand(),
+                AdbCommandEnum.SCREEN_STREAMING.getCommand(),
                 _bitRate,
                 height,
                 width

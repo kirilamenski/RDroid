@@ -16,6 +16,8 @@ class StringConst {
                 "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
                 "41", "42", "43", "44", "45", "46", "48", "49", "50")
         const val BIT_RATE_L = "Bit Rate"
+        const val DOWNLOAD_FOLDER = "Download Folder"
+        const val TIME_L = "Time"
         const val SCREEN_RESOLUTION_L = "Screen Resolution"
         const val OK = "Ok"
         const val CANCEL = "Cancel"
@@ -24,5 +26,7 @@ class StringConst {
         const val SHARED_VAL_SCREEN_HEIGHT = "shared_val_screen_height"
 
         const val ASK_REBOOT = "Do you want to reboot device?"
+
+        const val DEFAULT_DEVICE_FOLDER = "/sdcard/"
     }
 }
