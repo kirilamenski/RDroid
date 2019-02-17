@@ -92,6 +92,7 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
 
     }
 
+    @Override
     public Rectangle getRectangle() {
         return rectangle;
     }
