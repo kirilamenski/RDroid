@@ -2,24 +2,29 @@ package com.ansgar.rdroidpc.ui.frames.presenters;
 
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.AdbKeyCode;
+import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
+import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
+import com.ansgar.rdroidpc.enums.MenuItemsEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.FileChooser;
 import com.ansgar.rdroidpc.ui.components.OptionDialog;
+import com.ansgar.rdroidpc.ui.frames.ScreenRecordOptionsFrame;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
 import com.ansgar.rdroidpc.utils.DateUtil;
 import com.ansgar.rdroidpc.utils.OrientationUtil;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class VideoFramePresenter extends BasePresenter implements OnFileChooserListener, OnDeviceOrientationListener {
+public class VideoFramePresenter extends BasePresenter implements OnFileChooserListener, OnDeviceOrientationListener, OnScreenRecordOptionsListener {
 
     private VideoFrame frame;
     private VideoFrameView view;
@@ -46,6 +51,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 openFileChooser();
                 break;
             case 2:
+                openScreenRecordOptions();
                 break;
             case 3:
                 confirmReboot();
@@ -99,6 +105,11 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         view.changeOrientation(orientation);
     }
 
+    @Override
+    public void onOptionsSelected(ScreenRecordOptions options) {
+        deviceActions.screenRecord(options, DateUtil.getCurrentDate() + ".mp4");
+    }
+
     private void initMouseListener() {
         FrameMouseListener listener = new FrameMouseListener(frame);
         frame.addMouseListener(listener);
@@ -113,6 +124,18 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
     private void openFileChooser() {
         FileChooser chooser = new FileChooser(this);
         chooser.open(JFileChooser.DIRECTORIES_ONLY);
+    }
+
+    private void openScreenRecordOptions() {
+        Rectangle rectangle = new Rectangle(
+                view.getRectangle().x,
+                view.getRectangle().y,
+                DimensionConst.SETTINGS_PANEL_WIDTH,
+                DimensionConst.SETTINGS_PANEL_HEIGHT
+        );
+        ScreenRecordOptionsFrame settingsFrame = new ScreenRecordOptionsFrame(rectangle,
+                MenuItemsEnum.SETTINGS.getValue());
+        settingsFrame.setListener(this);
     }
 
     private void confirmReboot() {
