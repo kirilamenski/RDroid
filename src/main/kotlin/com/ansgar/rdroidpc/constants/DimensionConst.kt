@@ -11,6 +11,7 @@ class DimensionConst {
         const val RIGHT_ACTION_PANEL_WIDTH = 60
         const val SCREEN_RATIO = 0.5625f
         const val DEFAULT_WIDTH = 720
+        const val DEFAULT_HEIGHT = 1280
         const val DEVICE_CONTAINER_HEIGHT = 50
     }
 
