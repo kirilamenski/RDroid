@@ -2,12 +2,14 @@ package com.ansgar.rdroidpc.ui.frames.presenters;
 
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.AdbKeyCode;
+import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.FileChooser;
+import com.ansgar.rdroidpc.ui.components.OptionDialog;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
 import com.ansgar.rdroidpc.utils.DateUtil;
@@ -37,8 +39,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
     public ButtonsPanel.OnButtonPanelListener rightActionsListener = id -> {
         switch (id) {
             case 0:
-                int orientationEnum = view.getCurrentOrientation() == OrientationEnum.PORTRAIT
-                        ? 1 : 0;
+                int orientationEnum = view.getCurrentOrientation() == OrientationEnum.PORTRAIT ? 1 : 0;
                 deviceActions.changeOrientation(orientationEnum);
                 break;
             case 1:
@@ -47,8 +48,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
             case 2:
                 break;
             case 3:
-                view.onCloseFrame();
-                deviceActions.restart();
+                confirmReboot();
                 break;
         }
     };
@@ -113,6 +113,17 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
     private void openFileChooser() {
         FileChooser chooser = new FileChooser(this);
         chooser.open(JFileChooser.DIRECTORIES_ONLY);
+    }
+
+    private void confirmReboot() {
+        int value = new OptionDialog()
+                .setDialogTitle(StringConst.ASK_REBOOT)
+                .setMainTitle("")
+                .showDialog(frame, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (value == 0) {
+            view.onCloseFrame();
+            deviceActions.restart();
+        }
     }
 
 }
