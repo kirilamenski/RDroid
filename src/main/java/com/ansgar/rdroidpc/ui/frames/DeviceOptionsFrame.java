@@ -80,11 +80,7 @@ public class DeviceOptionsFrame extends BasePanel {
     }
 
     private Option createDeviceOption() {
-        Option option = new Option();
-        option.setBitRate(bitRate);
-        option.setWidth(deviceWidth);
-        option.setHeight(deviceHeight);
-        return option;
+        return new Option(bitRate, deviceWidth, deviceHeight);
     }
 
     private int getSelectedIndex() {
