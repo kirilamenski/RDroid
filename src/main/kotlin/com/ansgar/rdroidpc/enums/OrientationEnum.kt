@@ -6,6 +6,7 @@ enum class OrientationEnum {
 
     companion object {
         fun getFromValue(value: String): OrientationEnum {
+            if (value.isEmpty()) return PORTRAIT
             val c = value[0]
             return if (value.isNotEmpty() && Character.isDigit(c)) {
                 if (c == '0') {
