@@ -24,7 +24,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class VideoFramePresenter extends BasePresenter implements OnFileChooserListener, OnDeviceOrientationListener, OnScreenRecordOptionsListener {
+public class VideoFramePresenter extends BasePresenter implements OnFileChooserListener,
+        OnDeviceOrientationListener, OnScreenRecordOptionsListener {
 
     private VideoFrame frame;
     private VideoFrameView view;
@@ -118,7 +119,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
 
     private void initKeyboardListener() {
         KeyboardListener listener = new KeyboardListener(frame);
-        frame.addKeyListener(listener);
+        view.setKeyboardListener(listener);
     }
 
     private void openFileChooser() {

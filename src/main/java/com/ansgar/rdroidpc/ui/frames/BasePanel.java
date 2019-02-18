@@ -6,10 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 
 public abstract class BasePanel extends JPanel implements WindowListener, BaseFrameView {
 
@@ -95,6 +92,11 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
     @Override
     public Rectangle getRectangle() {
         return rectangle;
+    }
+
+    @Override
+    public void setKeyboardListener(KeyListener listener) {
+        frame.addKeyListener(listener);
     }
 
     public void createPresenter() {
