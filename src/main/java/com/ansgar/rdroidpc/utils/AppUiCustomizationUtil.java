@@ -32,6 +32,9 @@ public class AppUiCustomizationUtil {
 
         UIManager.put("OptionPane.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         UIManager.put("OptionPane.messageForeground", Color.WHITE);
+
+        UIManager.put("FormattedTextField.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("FormattedTextField.foreground", Color.WHITE);
     }
 
 }

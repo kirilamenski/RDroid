@@ -6,77 +6,29 @@ import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
 import com.ansgar.rdroidpc.listeners.OnFileChooserListener;
 import com.ansgar.rdroidpc.listeners.OnScreenRecordOptionsListener;
 import com.ansgar.rdroidpc.ui.components.FileChooser;
+import com.ansgar.rdroidpc.utils.KeyListenerAdapter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooserListener {
 
     private OnScreenRecordOptionsListener listener;
     private int screenRecordWidth = DimensionConst.DEFAULT_WIDTH;
     private int screenRecordHeight = DimensionConst.DEFAULT_HEIGHT;
-    private int bitRate = 4;
-    private int time = 180;
-    private JTextField downloadFolderTf;
+    private JTextField downloadFolderTf, bitRateFtf, timeFtf;
 
     public ScreenRecordOptionsFrame(Rectangle rectangle, String title) {
         super(rectangle, title);
 
-        addLabels();
-        addComboBoxes();
         addActionButtons();
-        addTextFields();
-        addToggleBoxes();
-    }
-
-    private void addLabels() {
-        int margin = 5;
-        int height = 25;
-        int width = 150;
-        JLabel screenSize = new JLabel(StringConst.SCREEN_RESOLUTION_L);
-        screenSize.setBounds(margin, margin, width, height);
-        add(screenSize);
-
-        JLabel bitRateL = new JLabel(StringConst.BIT_RATE_L);
-        bitRateL.setBounds(margin, height + margin * 2, width, height);
-        add(bitRateL);
-
-        JLabel timeL = new JLabel(StringConst.TIME_L);
-        timeL.setBounds(margin, (height + margin) * 2, width, height);
-        add(timeL);
-
-        JLabel downloadFolderL = new JLabel(StringConst.DOWNLOAD_FOLDER);
-        downloadFolderL.setBounds(margin, (height + margin) * 2 + margin + height, width, height);
-        add(downloadFolderL);
-    }
-
-    private void addComboBoxes() {
-        int marginLeft = 155;
-        int margin = 5;
-        int width = 100;
-        int height = 25;
-
-        String[] screenSizes = StringConst.Companion.getDefaultScreenSizes();
-        JComboBox screenResolutionCb = new JComboBox<>(screenSizes);
-        screenResolutionCb.setBounds(marginLeft, margin, width, height);
-        screenResolutionCb.addActionListener(e -> {
-            int index = screenResolutionCb.getSelectedIndex();
-            String[] sizes = screenSizes[index].split("x");
-            screenRecordWidth = Integer.valueOf(sizes[0]);
-            screenRecordHeight = Integer.valueOf(sizes[1]);
-        });
-        screenResolutionCb.setSelectedIndex(2);
-        add(screenResolutionCb);
-    }
-
-    private void addTextFields() {
-        downloadFolderTf = new JTextField();
-        downloadFolderTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
-        downloadFolderTf.setBounds(155, 90, 100, 25);
-
-        add(downloadFolderTf);
+        addScreenSize();
+        addBitRate();
+        addTime();
+        addDownloadFolder();
     }
 
     private void addActionButtons() {
@@ -101,10 +53,65 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         add(cancelBtn);
     }
 
-    private void addToggleBoxes() {
+    private void addScreenSize() {
+        JLabel screenSize = new JLabel(StringConst.SCREEN_RESOLUTION_L);
+        screenSize.setBounds(5, 5, 150, 25);
+        add(screenSize);
+
+        String[] screenSizes = StringConst.Companion.getDefaultScreenSizes();
+        JComboBox screenResolutionCb = new JComboBox<>(screenSizes);
+        screenResolutionCb.setBounds(160, 5, 100, 25);
+        screenResolutionCb.addActionListener(e -> {
+            int index = screenResolutionCb.getSelectedIndex();
+            String[] sizes = screenSizes[index].split("x");
+            screenRecordWidth = Integer.valueOf(sizes[0]);
+            screenRecordHeight = Integer.valueOf(sizes[1]);
+        });
+        screenResolutionCb.setSelectedIndex(2);
+        add(screenResolutionCb);
+    }
+
+    private void addBitRate() {
+        JLabel bitRateL = new JLabel(StringConst.BIT_RATE_L);
+        bitRateL.setBounds(5, 35, 150, 25);
+        add(bitRateL);
+
+        bitRateFtf = new JTextField();
+        bitRateFtf.setText("4");
+        bitRateFtf.setColumns(2);
+        bitRateFtf.addKeyListener(getKeyListener());
+        bitRateFtf.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
+        bitRateFtf.setBounds(160, 35, 100, 25);
+        add(bitRateFtf);
+    }
+
+    private void addTime() {
+        JLabel timeL = new JLabel(StringConst.TIME_L);
+        timeL.setBounds(5, 65, 100, 25);
+        add(timeL);
+
+        timeFtf = new JTextField();
+        timeFtf.setText("180");
+        timeFtf.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
+        timeFtf.setColumns(3);
+        timeFtf.addKeyListener(getKeyListener());
+        timeFtf.setBounds(160, 65, 100, 25);
+        add(timeFtf);
+    }
+
+    private void addDownloadFolder() {
+        JLabel downloadFolderL = new JLabel(StringConst.DOWNLOAD_FOLDER);
+        downloadFolderL.setBounds(5, 95, 100, 25);
+        add(downloadFolderL);
+
+        downloadFolderTf = new JTextField();
+        downloadFolderTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
+        downloadFolderTf.setBounds(160, 95, 100, 25);
+        add(downloadFolderTf);
+
         JToggleButton button = new JToggleButton();
         button.setFocusable(false);
-        button.setBounds(255, 90, 25, 25);
+        button.setBounds(260, 95, 25, 25);
         button.addActionListener(e -> {
             FileChooser fileChooser = new FileChooser(this);
             fileChooser.open(JFileChooser.FILES_AND_DIRECTORIES);
@@ -113,14 +120,34 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         add(button);
     }
 
+    private KeyListenerAdapter getKeyListener() {
+        return new KeyListenerAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char eChar = e.getKeyChar();
+                if ((!(Character.isDigit(eChar)
+                        || (eChar == KeyEvent.VK_BACK_SPACE)
+                        || (eChar == KeyEvent.VK_DELETE)))) {
+                    e.consume();
+                }
+            }
+        };
+    }
+
     @Nullable
     private ScreenRecordOptions createScreenOptions() {
-        if (!downloadFolderTf.getText().isEmpty()) {
+        if (bitRateFtf.getText().isEmpty()) {
+
+        } else if (timeFtf.getText().isEmpty()) {
+
+        } else if (downloadFolderTf.getText().isEmpty()) {
+
+        } else {
             return new ScreenRecordOptions(
                     screenRecordWidth,
                     screenRecordHeight,
-                    bitRate,
-                    time,
+                    Integer.valueOf(bitRateFtf.getText()),
+                    Integer.valueOf(timeFtf.getText()),
                     downloadFolderTf.getText()
             );
         }
