@@ -177,6 +177,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         bottomPanel = new ButtonsPanel();
         bottomPanel.setIcons("icons/ic_back.png", "icons/ic_home.png", "icons/ic_square.png");
         bottomPanel.setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK));
+        System.out.println("Frame width: " + getFrameWidth());
         bottomPanel.setBounds(
                 0,
                 imageHeight,
@@ -257,11 +258,11 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     }
 
     public int getFrameHeight() {
-        return getHeight() - DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT;
+        return frame.getHeight() - DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT;
     }
 
     public int getFrameWidth() {
-        return getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+        return frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
     }
 
     public OrientationEnum getCurrentOrientation() {
