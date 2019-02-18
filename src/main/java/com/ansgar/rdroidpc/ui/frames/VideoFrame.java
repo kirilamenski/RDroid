@@ -177,11 +177,10 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         bottomPanel = new ButtonsPanel();
         bottomPanel.setIcons("icons/ic_back.png", "icons/ic_home.png", "icons/ic_square.png");
         bottomPanel.setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK));
-        System.out.println("Frame width: " + getFrameWidth());
         bottomPanel.setBounds(
                 0,
                 imageHeight,
-                getFrameWidth(),
+                frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH - 10,
                 DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT
         );
         bottomPanel.setItemClickListener(presenter.bottomActionsListener);
@@ -204,7 +203,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         rightPanel.setState(ButtonsPanelStateEnum.VERTICAL);
         rightPanel.setIconSize(42, 42);
         rightPanel.setBounds(
-                getFrameWidth(),
+                frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH - 10,
                 0,
                 DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
                 imageHeight
@@ -258,11 +257,11 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     }
 
     public int getFrameHeight() {
-        return frame.getHeight() - DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT;
+        return getHeight() - DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT;
     }
 
     public int getFrameWidth() {
-        return frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+        return getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
     }
 
     public OrientationEnum getCurrentOrientation() {
