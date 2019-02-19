@@ -60,6 +60,10 @@ public class SettingsFrame extends BasePanel implements OnFileChooserListener {
     @Override
     public void onPathSelected(String path) {
         adbPathTf.setText(path);
-        if (listener != null) listener.onAdbPathChanged(path);
+        if (listener != null && path.contains("adb")) {
+            listener.onAdbPathChanged(path);
+        } else {
+
+        }
     }
 }
