@@ -108,7 +108,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         Rectangle rectangle = new Rectangle(
                 getRectangle().x,
                 getRectangle().y,
-                DEFAULT_WIDTH / 2,
+                DEFAULT_WIDTH / 2 + 10,
                 imageHeight + DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
         );
         if (orientationEnum == OrientationEnum.PORTRAIT) {
