@@ -17,9 +17,7 @@ public class Main {
 
         SharedValues.newInstance();
         initScreenSize();
-        if (OsEnum.Companion.getOsType() != OsEnum.MAC_OS) {
-            AppUiCustomizationUtil.customizeApp();
-        }
+        AppUiCustomizationUtil.customizeApp();
 
         Rectangle rectangle = new Rectangle(
                 SharedValues.get(StringConst.SHARED_VAL_SCREEN_WIDTH, 400) / 2 - DimensionConst.MAIN_WINDOW_WIDTH / 2,

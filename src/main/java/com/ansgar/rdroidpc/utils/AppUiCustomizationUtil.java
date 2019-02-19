@@ -8,6 +8,11 @@ import java.awt.*;
 public class AppUiCustomizationUtil {
 
     public static void customizeApp() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
         UIManager.put("ScrollPane.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         UIManager.put("List.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         UIManager.put("List.foreground", Color.WHITE);
