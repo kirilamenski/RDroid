@@ -113,7 +113,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         );
         if (orientationEnum == OrientationEnum.PORTRAIT) {
             initPortraitOrientationSize();
-            rectangle.width = imageWidth - (imageWidth + imageCoordinateX + 20) + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+            rectangle.width = imageWidth - (imageWidth + imageCoordinateX + 30) + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
         } else {
             initLandscapeOrientationSize();
             rectangle.width = imageWidth + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
@@ -180,7 +180,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         bottomPanel.setBounds(
                 0,
                 imageHeight,
-                frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH - 10,
+                frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
                 DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT
         );
         bottomPanel.setItemClickListener(presenter.bottomActionsListener);
@@ -203,7 +203,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         rightPanel.setState(ButtonsPanelStateEnum.VERTICAL);
         rightPanel.setIconSize(42, 42);
         rightPanel.setBounds(
-                frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH - 10,
+                frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
                 0,
                 DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
                 imageHeight
