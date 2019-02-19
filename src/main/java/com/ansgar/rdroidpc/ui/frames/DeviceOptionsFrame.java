@@ -24,15 +24,15 @@ public class DeviceOptionsFrame extends BasePanel {
         int labelWidth = getRectangle().width - 200;
         int componentHeight = 20;
         JLabel bitRateLabel = new JLabel(StringConst.BIT_RATE_L);
-        bitRateLabel.setBounds(5, 0, labelWidth, componentHeight);
+        bitRateLabel.setBounds(10, 10, labelWidth, componentHeight);
         JLabel screenResolutionLabel = new JLabel(StringConst.SCREEN_RESOLUTION_L);
-        screenResolutionLabel.setBounds(5, componentHeight + 5, labelWidth, componentHeight);
+        screenResolutionLabel.setBounds(10, componentHeight + 15, labelWidth, componentHeight);
 
         String[] bitRates = StringConst.Companion.getBitRates();
         JComboBox bitRateCb = new JComboBox<>(bitRates);
         bitRateCb.setBounds(
                 getRectangle().width - 135,
-                0,
+                10,
                 120,
                 componentHeight
         );
@@ -46,7 +46,7 @@ public class DeviceOptionsFrame extends BasePanel {
         JComboBox screenResolutionCb = new JComboBox<>(screenSizes);
         screenResolutionCb.setBounds(
                 getRectangle().width - 135,
-                componentHeight + 5,
+                componentHeight + 15,
                 120,
                 componentHeight
         );
@@ -59,7 +59,7 @@ public class DeviceOptionsFrame extends BasePanel {
         screenResolutionCb.setSelectedIndex(getSelectedIndex());
 
         JButton okBtn = new JButton(StringConst.OK);
-        okBtn.setBounds(getRectangle().width - 225, getRectangle().height - 100, 100, 50);
+        okBtn.setBounds(getRectangle().width - 225, getRectangle().height - 90, 100, 50);
         okBtn.setFocusable(false);
         okBtn.addActionListener(e -> {
             device.setOption(createDeviceOption());
@@ -67,7 +67,7 @@ public class DeviceOptionsFrame extends BasePanel {
         });
 
         JButton cancelBtn = new JButton(StringConst.CANCEL);
-        cancelBtn.setBounds(getRectangle().width - 115, getRectangle().height - 100, 100, 50);
+        cancelBtn.setBounds(getRectangle().width - 115, getRectangle().height - 90, 100, 50);
         cancelBtn.setFocusable(false);
         cancelBtn.addActionListener(e -> closeFrame());
 
