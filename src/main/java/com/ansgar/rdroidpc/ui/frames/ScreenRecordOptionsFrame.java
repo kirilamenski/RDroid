@@ -29,11 +29,12 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         addBitRate();
         addTime();
         addDownloadFolder();
+        setLayout(new BorderLayout());
     }
 
     private void addActionButtons() {
         JButton okBtn = new JButton(StringConst.OK);
-        okBtn.setBounds(getRectangle().width - 225, getRectangle().height - 100, 100, 50);
+        okBtn.setBounds(getRectangle().width - 230, getRectangle().height - 95, 100, 50);
         okBtn.setFocusable(false);
         okBtn.addActionListener(e -> {
             ScreenRecordOptions options = createScreenOptions();
@@ -47,7 +48,7 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         add(okBtn);
 
         JButton cancelBtn = new JButton(StringConst.CANCEL);
-        cancelBtn.setBounds(getRectangle().width - 115, getRectangle().height - 100, 100, 50);
+        cancelBtn.setBounds(getRectangle().width - 120, getRectangle().height - 95, 100, 50);
         cancelBtn.setFocusable(false);
         cancelBtn.addActionListener(e -> closeFrame());
         add(cancelBtn);
@@ -55,12 +56,12 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
 
     private void addScreenSize() {
         JLabel screenSize = new JLabel(StringConst.SCREEN_RESOLUTION_L);
-        screenSize.setBounds(5, 5, 150, 25);
+        screenSize.setBounds(5, 5, 200, 25);
         add(screenSize);
 
         String[] screenSizes = StringConst.Companion.getDefaultScreenSizes();
         JComboBox screenResolutionCb = new JComboBox<>(screenSizes);
-        screenResolutionCb.setBounds(160, 5, 100, 25);
+        screenResolutionCb.setBounds(getRectangle().width - 230, 5, 205, 25);
         screenResolutionCb.addActionListener(e -> {
             int index = screenResolutionCb.getSelectedIndex();
             String[] sizes = screenSizes[index].split("x");
@@ -73,51 +74,51 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
 
     private void addBitRate() {
         JLabel bitRateL = new JLabel(StringConst.BIT_RATE_L);
-        bitRateL.setBounds(5, 35, 150, 25);
+        bitRateL.setBounds(5, 35, 200, 25);
         add(bitRateL);
 
         bitRateFtf = new JTextField();
         bitRateFtf.setText("4");
         bitRateFtf.setColumns(2);
         bitRateFtf.addKeyListener(getKeyListener());
-        bitRateFtf.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
-        bitRateFtf.setBounds(160, 35, 100, 25);
+        bitRateFtf.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
+        bitRateFtf.setBounds(getRectangle().width - 230, 35, 205, 25);
         add(bitRateFtf);
     }
 
     private void addTime() {
         JLabel timeL = new JLabel(StringConst.TIME_L);
-        timeL.setBounds(5, 65, 100, 25);
+        timeL.setBounds(5, 65, 200, 25);
         add(timeL);
 
         timeFtf = new JTextField();
         timeFtf.setText("180");
-        timeFtf.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
+        timeFtf.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
         timeFtf.setColumns(3);
         timeFtf.addKeyListener(getKeyListener());
-        timeFtf.setBounds(160, 65, 100, 25);
+        timeFtf.setBounds(getRectangle().width - 230, 65, 205, 25);
         add(timeFtf);
     }
 
     private void addDownloadFolder() {
         JLabel downloadFolderL = new JLabel(StringConst.DOWNLOAD_FOLDER);
-        downloadFolderL.setBounds(5, 95, 100, 25);
+        downloadFolderL.setBounds(5, 95, 200, 25);
         add(downloadFolderL);
 
         downloadFolderTf = new JTextField();
-        downloadFolderTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
-        downloadFolderTf.setBounds(160, 95, 100, 25);
+        downloadFolderTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
+        downloadFolderTf.setBounds(getRectangle().width - 230, 95, 185, 25);
         add(downloadFolderTf);
 
-        JToggleButton button = new JToggleButton();
-        button.setFocusable(false);
-        button.setBounds(260, 95, 25, 25);
-        button.addActionListener(e -> {
+        JToggleButton toggleBtn = new JToggleButton("...");
+        toggleBtn.setFocusable(false);
+        toggleBtn.setBounds(getRectangle().width - 230 + 185, 95, 20, 25);
+        toggleBtn.addActionListener(e -> {
             FileChooser fileChooser = new FileChooser(this);
-            fileChooser.open(JFileChooser.FILES_AND_DIRECTORIES);
+            fileChooser.open(this, JFileChooser.FILES_AND_DIRECTORIES);
         });
 
-        add(button);
+        add(toggleBtn);
     }
 
     private KeyListenerAdapter getKeyListener() {
