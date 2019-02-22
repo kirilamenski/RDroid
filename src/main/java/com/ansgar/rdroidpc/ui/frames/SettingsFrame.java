@@ -2,7 +2,6 @@ package com.ansgar.rdroidpc.ui.frames;
 
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
-import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.listeners.OnFileChooserListener;
 import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
 import com.ansgar.rdroidpc.ui.components.FileChooser;
@@ -19,38 +18,30 @@ public class SettingsFrame extends BasePanel implements OnFileChooserListener {
 
     public SettingsFrame(Rectangle rectangle, String title) {
         super(rectangle, title);
-
-        addAdbPath();
-        addTextField();
-        addFileChooserButton();
+        addAdbFilePathOption();
+        setLayout(new BorderLayout());
     }
 
-    private void addAdbPath() {
+    private void addAdbFilePathOption() {
         JLabel label = new JLabel("Adb path");
-        label.setBounds(25, 0, 125, 50);
-
+        label.setBounds(10, 10, 200, 25);
         add(label);
-    }
 
-    private void addTextField() {
         adbPathTf = new JTextField();
-        adbPathTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
-        adbPathTf.setBounds(150, 10, DimensionConst.SETTINGS_PANEL_WIDTH - 150 - 50, 30);
+        adbPathTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
+        adbPathTf.setBounds(200, 10,
+                DimensionConst.SETTINGS_PANEL_WIDTH - 235, 25);
         adbPathTf.setText(SharedValues.get(SharedValuesKey.ADB_PATH, ""));
-
         add(adbPathTf);
-    }
 
-    private void addFileChooserButton() {
-        JToggleButton button = new JToggleButton();
-        button.setFocusable(false);
-        button.setBounds(DimensionConst.SETTINGS_PANEL_WIDTH - 40, 10, 25, 30);
-        button.addActionListener(e -> {
+        JToggleButton toggleBtn = new JToggleButton("...");
+        toggleBtn.setFocusable(false);
+        toggleBtn.setBounds(DimensionConst.SETTINGS_PANEL_WIDTH - 35, 10, 20, 25);
+        toggleBtn.addActionListener(e -> {
             FileChooser fileChooser = new FileChooser(this);
-            fileChooser.open(JFileChooser.FILES_AND_DIRECTORIES);
+            fileChooser.open(this, JFileChooser.FILES_AND_DIRECTORIES);
         });
-
-        add(button);
+        add(toggleBtn);
     }
 
     public void setListener(OnMenuItemListener listener) {
