@@ -51,6 +51,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         this.isThreadRunning = new AtomicBoolean();
         new FileUploader(this, device);
 
+        this.imageHeight = (int) rectangle.getHeight();
+        this.imageWidth = (int) rectangle.getWidth();
         setLayout(null);
         changeOrientation(OrientationEnum.PORTRAIT);
     }
@@ -86,10 +88,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     @Override
     public void press(String value, TouchPressType type) {
         chimpDevice.press(value, TouchPressType.DOWN_AND_UP);
-    }
-
-    public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
-        this.onVideoFrameListener = onVideoFrameListener;
     }
 
     @Override
@@ -266,6 +264,10 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     public OrientationEnum getCurrentOrientation() {
         return currentOrientation;
+    }
+
+    public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
+        this.onVideoFrameListener = onVideoFrameListener;
     }
 
 }
