@@ -124,7 +124,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
 
     private void openFileChooser() {
         FileChooser chooser = new FileChooser(this);
-        chooser.open(JFileChooser.DIRECTORIES_ONLY);
+        chooser.open(frame, JFileChooser.DIRECTORIES_ONLY);
     }
 
     private void openScreenRecordOptions() {
