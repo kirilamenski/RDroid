@@ -48,6 +48,10 @@ public class AppUiCustomizationUtil {
 
         UIManager.put("FormattedTextField.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         UIManager.put("FormattedTextField.foreground", Color.WHITE);
+
+        UIManager.put("ToggleButton.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("ToggleButton.select", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("ToggleButton.foreground", Color.WHITE);
     }
 
 }
