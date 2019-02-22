@@ -4,7 +4,9 @@ import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.entities.Option;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 public class StringUtils {
@@ -40,8 +42,17 @@ public class StringUtils {
 
 
     public static String getEncodedString(char ch) {
-        byte[] bytes = String.valueOf(ch).getBytes();
-        return new String(bytes, Charset.forName("UTF-8"));
+        try {
+            byte[] b = String.valueOf(ch).getBytes("UTF8");
+            String s = new String(b, "UTF8");
+            System.out.println(s);
+            return s;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
+//        byte[] bytes = String.valueOf(ch).getBytes();
+//        return new String(bytes, Charset.forName("UTF-8"));
     }
 
 }
