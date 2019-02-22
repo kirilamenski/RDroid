@@ -40,7 +40,6 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         this.devices = new ArrayList<>();
         this.listener = new MainActionPanelsListener(this);
         setUpMainPanel();
-        setLayout(new BorderLayout());
     }
 
     private void setUpMainPanel() {
@@ -143,7 +142,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
     @Override
     public void onDeviceSettings(int position, Device device) {
         Rectangle rectangle = new Rectangle(getRectangle().x, getRectangle().y, 400, 400);
-        DeviceOptionsFrame frame = new DeviceOptionsFrame(device, rectangle);
+        new DeviceOptionsFrame(this, device, rectangle);
     }
 
     public void closeDevicesConnections() {

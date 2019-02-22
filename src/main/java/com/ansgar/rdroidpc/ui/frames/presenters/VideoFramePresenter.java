@@ -27,19 +27,17 @@ import java.io.InputStream;
 public class VideoFramePresenter extends BasePresenter implements OnFileChooserListener,
         OnDeviceOrientationListener, OnScreenRecordOptionsListener {
 
-    private VideoFrame frame;
     private VideoFrameView view;
     private DeviceActions deviceActions;
     private OrientationUtil orientationUtil;
 
-    public VideoFramePresenter(VideoFrame frame, VideoFrameView view) {
+    public VideoFramePresenter(VideoFrameView view) {
         super(view);
-        this.frame = frame;
         this.view = view;
+        VideoFrame frame = (VideoFrame) view.getChildComponent();
         this.deviceActions = new DeviceActionsImpl(frame);
-
-        initKeyboardListener();
-        initMouseListener();
+        view.setKeyboardListener(new KeyboardListener(frame));
+        initMouseListener(frame);
     }
 
     public ButtonsPanel.OnButtonPanelListener rightActionsListener = id -> {
@@ -111,20 +109,15 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         deviceActions.screenRecord(options, DateUtil.getCurrentDate() + ".mp4");
     }
 
-    private void initMouseListener() {
+    private void initMouseListener(VideoFrame frame) {
         FrameMouseListener listener = new FrameMouseListener(frame);
         frame.addMouseListener(listener);
         frame.addMouseMotionListener(listener);
     }
 
-    private void initKeyboardListener() {
-        KeyboardListener listener = new KeyboardListener(frame);
-        view.setKeyboardListener(listener);
-    }
-
     private void openFileChooser() {
         FileChooser chooser = new FileChooser(this);
-        chooser.open(frame, JFileChooser.DIRECTORIES_ONLY);
+        chooser.open(view.getChildComponent(), JFileChooser.DIRECTORIES_ONLY);
     }
 
     private void openScreenRecordOptions() {
@@ -134,7 +127,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 DimensionConst.SETTINGS_PANEL_WIDTH,
                 DimensionConst.SETTINGS_PANEL_HEIGHT
         );
-        ScreenRecordOptionsFrame settingsFrame = new ScreenRecordOptionsFrame(rectangle,
+        ScreenRecordOptionsFrame settingsFrame = new ScreenRecordOptionsFrame(view.getChildComponent(), rectangle,
                 MenuItemsEnum.SETTINGS.getValue());
         settingsFrame.setListener(this);
     }
@@ -143,7 +136,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         int value = new OptionDialog()
                 .setDialogTitle(StringConst.ASK_REBOOT)
                 .setMainTitle("")
-                .showDialog(frame, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                .showDialog(view.getChildComponent(), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
         if (value == 0) {
             view.onCloseFrame();
             deviceActions.restart();

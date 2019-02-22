@@ -30,7 +30,7 @@ public class MainPanelMenuListenerImpl implements OnMenuItemListener {
                             DimensionConst.SETTINGS_PANEL_WIDTH,
                             DimensionConst.SETTINGS_PANEL_HEIGHT
                     );
-                    SettingsFrame settingsFrame = new SettingsFrame(rectangle,
+                    SettingsFrame settingsFrame = new SettingsFrame(panel, rectangle,
                             MenuItemsEnum.SETTINGS.getValue());
                     settingsFrame.setListener(this);
                     break;

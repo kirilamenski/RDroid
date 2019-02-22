@@ -92,7 +92,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     @Override
     public void createPresenter() {
-        presenter = new VideoFramePresenter(this, this);
+        presenter = new VideoFramePresenter(this);
     }
 
     @Nullable

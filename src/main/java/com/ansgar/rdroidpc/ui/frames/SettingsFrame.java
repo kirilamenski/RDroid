@@ -16,10 +16,10 @@ public class SettingsFrame extends BasePanel implements OnFileChooserListener {
     private JTextField adbPathTf;
     private OnMenuItemListener listener;
 
-    public SettingsFrame(Rectangle rectangle, String title) {
+    public SettingsFrame(Component component, Rectangle rectangle, String title) {
         super(rectangle, title);
         addAdbFilePathOption();
-        setLayout(new BorderLayout());
+        relativeTo(component);
     }
 
     private void addAdbFilePathOption() {

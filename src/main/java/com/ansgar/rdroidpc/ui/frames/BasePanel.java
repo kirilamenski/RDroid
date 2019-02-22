@@ -15,6 +15,8 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
 
     public BasePanel(Rectangle rectangle, String title) {
         this.rectangle = rectangle;
+        setBounds(rectangle);
+        setLayout(null);
         initFrame(rectangle, title);
         createPresenter();
     }
@@ -22,13 +24,14 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
     private void initFrame(Rectangle rectangle, String title) {
         frame = new JFrame(title);
         frame.setVisible(true);
-        frame.pack();
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
         frame.setResizable(false);
-        frame.setBounds(rectangle);
+        frame.setPreferredSize(new Dimension(rectangle.width, rectangle.height));
+        frame.setLocationRelativeTo(null);
         frame.add(this);
         frame.addWindowListener(this);
+        frame.pack();
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {
@@ -98,12 +101,21 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
         frame.addKeyListener(listener);
     }
 
+    @Override
+    public JComponent getChildComponent() {
+        return this;
+    }
+
     public void createPresenter() {
     }
 
     @Nullable
     public BasePresenter getPresenter() {
         return null;
+    }
+
+    protected void relativeTo(Component component) {
+        if (frame != null) frame.setLocationRelativeTo(component);
     }
 
 }

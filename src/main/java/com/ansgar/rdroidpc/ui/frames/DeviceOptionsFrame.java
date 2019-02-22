@@ -14,11 +14,11 @@ public class DeviceOptionsFrame extends BasePanel {
     private int deviceWidth;
     private int deviceHeight;
 
-    public DeviceOptionsFrame(Device device, Rectangle rectangle) {
+    public DeviceOptionsFrame(Component component, Device device, Rectangle rectangle) {
         super(rectangle, String.format("%s Options", device.getDeviceName()));
         this.device = device;
         createFrame();
-        setLayout(new BorderLayout());
+        relativeTo(component);
     }
 
     private void createFrame() {
@@ -60,7 +60,7 @@ public class DeviceOptionsFrame extends BasePanel {
         screenResolutionCb.setSelectedIndex(getSelectedIndex());
 
         JButton okBtn = new JButton(StringConst.OK);
-        okBtn.setBounds(getRectangle().width - 225, getRectangle().height - 90, 100, 50);
+        okBtn.setBounds(getRectangle().width - 225, getRectangle().height - 100, 100, 50);
         okBtn.setFocusable(false);
         okBtn.addActionListener(e -> {
             device.setOption(createDeviceOption());
@@ -68,7 +68,7 @@ public class DeviceOptionsFrame extends BasePanel {
         });
 
         JButton cancelBtn = new JButton(StringConst.CANCEL);
-        cancelBtn.setBounds(getRectangle().width - 115, getRectangle().height - 90, 100, 50);
+        cancelBtn.setBounds(getRectangle().width - 115, getRectangle().height - 100, 100, 50);
         cancelBtn.setFocusable(false);
         cancelBtn.addActionListener(e -> closeFrame());
 

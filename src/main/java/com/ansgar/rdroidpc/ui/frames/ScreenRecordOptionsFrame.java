@@ -21,7 +21,7 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
     private int screenRecordHeight = DimensionConst.DEFAULT_HEIGHT;
     private JTextField downloadFolderTf, bitRateFtf, timeFtf;
 
-    public ScreenRecordOptionsFrame(Rectangle rectangle, String title) {
+    public ScreenRecordOptionsFrame(Component component, Rectangle rectangle, String title) {
         super(rectangle, title);
 
         addActionButtons();
@@ -29,12 +29,12 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         addBitRate();
         addTime();
         addDownloadFolder();
-        setLayout(new BorderLayout());
+        relativeTo(component);
     }
 
     private void addActionButtons() {
         JButton okBtn = new JButton(StringConst.OK);
-        okBtn.setBounds(getRectangle().width - 230, getRectangle().height - 95, 100, 50);
+        okBtn.setBounds(getRectangle().width - 230, getRectangle().height - 100, 100, 50);
         okBtn.setFocusable(false);
         okBtn.addActionListener(e -> {
             ScreenRecordOptions options = createScreenOptions();
@@ -48,7 +48,7 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         add(okBtn);
 
         JButton cancelBtn = new JButton(StringConst.CANCEL);
-        cancelBtn.setBounds(getRectangle().width - 120, getRectangle().height - 95, 100, 50);
+        cancelBtn.setBounds(getRectangle().width - 120, getRectangle().height - 100, 100, 50);
         cancelBtn.setFocusable(false);
         cancelBtn.addActionListener(e -> closeFrame());
         add(cancelBtn);
