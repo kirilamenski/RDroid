@@ -14,7 +14,6 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
     protected JFrame frame;
 
     public BasePanel(Rectangle rectangle, String title) {
-        setLayout(null);
         this.rectangle = rectangle;
         initFrame(rectangle, title);
         createPresenter();
@@ -22,8 +21,8 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
 
     private void initFrame(Rectangle rectangle, String title) {
         frame = new JFrame(title);
-        frame.pack();
         frame.setVisible(true);
+        frame.pack();
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
         frame.setResizable(false);

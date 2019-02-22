@@ -6,8 +6,9 @@ import com.ansgar.rdroidpc.listeners.OnFileChooserListener;
 import com.ansgar.rdroidpc.utils.SharedValues;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class FileChooser extends JFileChooser {
+public class FileChooser {
 
     private OnFileChooserListener listener;
 
@@ -15,10 +16,10 @@ public class FileChooser extends JFileChooser {
         this.listener = listener;
     }
 
-    public void open(int mode) {
+    public void open(Component component, int mode) {
         JFileChooser chooser = new JFileChooser(SharedValues.get(SharedValuesKey.ADB_PATH, ""));
         chooser.setFileSelectionMode(mode);
-        chooser.showDialog(this, StringConst.OK);
+        chooser.showDialog(component, StringConst.OK);
         if (chooser.getSelectedFile() != null) {
             if (listener != null) {
                 listener.onPathSelected(chooser.getSelectedFile().getAbsolutePath());

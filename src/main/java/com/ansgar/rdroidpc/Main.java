@@ -3,7 +3,6 @@ package com.ansgar.rdroidpc;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.ProgrammInf;
 import com.ansgar.rdroidpc.constants.StringConst;
-import com.ansgar.rdroidpc.enums.OsEnum;
 import com.ansgar.rdroidpc.ui.frames.MainPanel;
 import com.ansgar.rdroidpc.utils.AppUiCustomizationUtil;
 import com.ansgar.rdroidpc.utils.SharedValues;
@@ -14,7 +13,6 @@ import java.awt.*;
 public class Main {
 
     public static void main(String[] args) {
-
         SharedValues.newInstance();
         initScreenSize();
         AppUiCustomizationUtil.customizeApp();

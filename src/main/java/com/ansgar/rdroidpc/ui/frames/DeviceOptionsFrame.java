@@ -18,6 +18,7 @@ public class DeviceOptionsFrame extends BasePanel {
         super(rectangle, String.format("%s Options", device.getDeviceName()));
         this.device = device;
         createFrame();
+        setLayout(new BorderLayout());
     }
 
     private void createFrame() {
