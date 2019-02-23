@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_HEIGHT;
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
 public class VideoFrame extends BasePanel implements VideoFrameView {
@@ -51,8 +52,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         this.isThreadRunning = new AtomicBoolean();
         new FileUploader(this, device);
 
-        this.imageHeight = (int) rectangle.getHeight();
-        this.imageWidth = (int) rectangle.getWidth();
         setLayout(null);
         changeOrientation(OrientationEnum.PORTRAIT);
     }
@@ -107,7 +106,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
                 getRectangle().x,
                 getRectangle().y,
                 DEFAULT_WIDTH / 2 + 10,
-                imageHeight + OsEnum.Companion.getOsType().getHeightOffset()
+                DEFAULT_HEIGHT / 2
         );
         if (orientationEnum == OrientationEnum.PORTRAIT) {
             initPortraitOrientationSize();
@@ -116,6 +115,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
             initLandscapeOrientationSize();
             rectangle.width = imageWidth + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
         }
+        rectangle.height = imageHeight + OsEnum.Companion.getOsType().getHeightOffset();
         updateWindowSize(rectangle);
         currentOrientation = orientationEnum;
     }
@@ -187,7 +187,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         rightPanel.createPanel();
 
         add(rightPanel);
-        repaint();
     }
 
     /**
@@ -212,6 +211,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     private void updateWindowSize(@NotNull Rectangle rectangle) {
         frame.setBounds(rectangle);
         addRightPanel();
+        repaint();
     }
 
     public Device getDevice() {
