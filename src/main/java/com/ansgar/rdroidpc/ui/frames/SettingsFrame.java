@@ -1,5 +1,6 @@
 package com.ansgar.rdroidpc.ui.frames;
 
+import com.ansgar.rdroidpc.constants.Colors;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.listeners.OnFileChooserListener;
@@ -28,7 +29,7 @@ public class SettingsFrame extends BasePanel implements OnFileChooserListener {
         add(label);
 
         adbPathTf = new JTextField();
-        adbPathTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
+        adbPathTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode(Colors.BORDER_COLOR)));
         adbPathTf.setBounds(200, 10,
                 DimensionConst.SETTINGS_PANEL_WIDTH - 235, 25);
         adbPathTf.setText(SharedValues.get(SharedValuesKey.ADB_PATH, ""));

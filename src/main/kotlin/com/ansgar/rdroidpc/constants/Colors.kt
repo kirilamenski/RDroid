@@ -4,5 +4,6 @@ class Colors {
     companion object {
         const val MAIN_BACKGROUND_COLOR = "#3E3E3E"
         const val MENU_BACKGROUND_COLOR = "#363636"
+        const val BORDER_COLOR = "#b8cfe5"
     }
 }

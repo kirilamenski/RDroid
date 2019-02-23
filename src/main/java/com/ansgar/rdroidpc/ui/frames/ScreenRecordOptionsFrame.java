@@ -1,5 +1,6 @@
 package com.ansgar.rdroidpc.ui.frames;
 
+import com.ansgar.rdroidpc.constants.Colors;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
@@ -81,7 +82,7 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         bitRateFtf.setText("4");
         bitRateFtf.setColumns(2);
         bitRateFtf.addKeyListener(getKeyListener());
-        bitRateFtf.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
+        bitRateFtf.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode(Colors.BORDER_COLOR)));
         bitRateFtf.setBounds(getRectangle().width - 230, 35, 205, 25);
         add(bitRateFtf);
     }
@@ -93,7 +94,7 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
 
         timeFtf = new JTextField();
         timeFtf.setText("180");
-        timeFtf.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
+        timeFtf.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode(Colors.BORDER_COLOR)));
         timeFtf.setColumns(3);
         timeFtf.addKeyListener(getKeyListener());
         timeFtf.setBounds(getRectangle().width - 230, 65, 205, 25);
@@ -106,7 +107,7 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         add(downloadFolderL);
 
         downloadFolderTf = new JTextField();
-        downloadFolderTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
+        downloadFolderTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode(Colors.BORDER_COLOR)));
         downloadFolderTf.setBounds(getRectangle().width - 230, 95, 185, 25);
         add(downloadFolderTf);
 
