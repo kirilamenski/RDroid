@@ -27,6 +27,6 @@ java -jar ~./RDroid.jar
 ## Issues
 
 1) If the size of the displayed screen is not correct, check whether the screen sizes have been changed (some devices such as Samsung-s7, provide the ability to change the resolution of the screen in the settings). To fix it just return screen sizes to original.
-2) You can input only english letters :disappointed: (Will be fixed)
+2) Text input is available only for English letters.
 3) Xiaomi devices by default blocked input simulation. To use MonkeyRunner, you must enable this option in the developer settings.
 4) Multiple connection working but after start connection with first device you should wait until the Android screen appears. After that you can connect with another.
