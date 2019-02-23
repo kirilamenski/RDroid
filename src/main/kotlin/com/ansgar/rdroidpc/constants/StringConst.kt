@@ -15,6 +15,17 @@ class StringConst {
                 "21", "22", "24", "25", "26", "27", "28", "29", "30",
                 "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
                 "41", "42", "43", "44", "45", "46", "48", "49", "50")
+        val navigationPanelIcons = arrayOf(
+                "icons/ic_rotate_device_64.png",
+                "icons/ic_screen_capture_64.png",
+                "icons/ic_screen_record_64.png",
+                "icons/ic_menu_64.png",
+                "icons/ic_reboot_64.png",
+                "icons/ic_back_64.png",
+                "icons/ic_home_64.png",
+                "icons/ic_recent_app_64.png"
+        )
+
         const val BIT_RATE_L = "Bit Rate"
         const val DOWNLOAD_FOLDER = "Download Folder"
         const val TIME_L = "Time"
