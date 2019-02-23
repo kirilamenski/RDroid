@@ -77,13 +77,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         stop(true);
     }
 
-    public void stop(boolean closeFrame) {
-        if (chimpDevice != null) chimpDevice.dispose();
-        stoStreaming();
-        stopGrabber();
-        if (closeFrame) stopFrame();
-    }
-
     @Override
     public void press(String value, TouchPressType type) {
         chimpDevice.press(value, TouchPressType.DOWN_AND_UP);
@@ -120,6 +113,13 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         currentOrientation = orientationEnum;
     }
 
+    public void stop(boolean closeFrame) {
+        if (chimpDevice != null) chimpDevice.dispose();
+        stoStreaming();
+        stopGrabber();
+        if (closeFrame) stopFrame();
+    }
+
     private void start(String command) {
         isThreadRunning.set(true);
         presenter.startCheckOrientation(device, 5000, 5000);
@@ -143,7 +143,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private void stopGrabber() {
         try {
-            if (frameGrabber != null) {
+            System.out.println(currentImage == null);
+            if (frameGrabber != null && currentImage != null) {
                 frameGrabber.close();
             }
         } catch (FrameGrabber.Exception e) {
@@ -155,7 +156,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         if (thread != null && thread.isAlive()) {
             isThreadRunning.set(false);
             try {
-                thread.join();
+                thread.join(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
