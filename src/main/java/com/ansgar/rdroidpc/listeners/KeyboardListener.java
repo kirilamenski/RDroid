@@ -3,6 +3,7 @@ package com.ansgar.rdroidpc.listeners;
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
+import com.ansgar.rdroidpc.utils.StringUtils;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -31,12 +32,9 @@ public class KeyboardListener implements KeyListener {
         }
 
         AdbKeyCode adbKeyCode = AdbKeyCode.Companion.getAdbKeyEvent(e);
-        if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN && adbKeyCode.isChar()) {
-            frame.getChimpDevice().type(String.valueOf(e.getKeyChar()));
-        } else {
+        if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN ) {
             frame.getChimpDevice().press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);
         }
-
     }
 
     @Override
