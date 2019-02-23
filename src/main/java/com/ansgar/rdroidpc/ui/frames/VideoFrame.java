@@ -39,7 +39,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     private AtomicBoolean isThreadRunning;
     private OnVideoFrameListener onVideoFrameListener;
     private OrientationEnum currentOrientation;
-    private ButtonsPanel bottomPanel, rightPanel;
+    private ButtonsPanel rightPanel;
     private VideoFramePresenter presenter;
 
     private int imageWidth, imageHeight, imageCoordinateX;
@@ -107,7 +107,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
                 getRectangle().x,
                 getRectangle().y,
                 DEFAULT_WIDTH / 2 + 10,
-                imageHeight + DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
+                imageHeight + OsEnum.Companion.getOsType().getHeightOffset()
         );
         if (orientationEnum == OrientationEnum.PORTRAIT) {
             initPortraitOrientationSize();
@@ -170,34 +170,11 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         }
     }
 
-    private void addBottomPanel() {
-        if (bottomPanel != null) remove(bottomPanel);
-        bottomPanel = new ButtonsPanel();
-        bottomPanel.setIcons("icons/ic_back.png", "icons/ic_home.png", "icons/ic_square.png");
-        bottomPanel.setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK));
-        bottomPanel.setBounds(
-                0,
-                imageHeight,
-                frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
-                DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT
-        );
-        bottomPanel.setItemClickListener(presenter.bottomActionsListener);
-        bottomPanel.createPanel();
-
-        add(bottomPanel);
-        repaint();
-    }
-
     private void addRightPanel() {
         if (rightPanel != null) remove(rightPanel);
         rightPanel = new ButtonsPanel();
         rightPanel.setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK));
-        rightPanel.setIcons(
-                "icons/ic_rotate_device_64.png",
-                "icons/ic_screen_capture_64.png",
-                "icons/ic_screen_record_64.png",
-                "icons/ic_reboot_64.png"
-        );
+        rightPanel.setIcons(StringConst.Companion.getNavigationPanelIcons());
         rightPanel.setState(ButtonsPanelStateEnum.VERTICAL);
         rightPanel.setIconSize(42, 42);
         rightPanel.setBounds(
@@ -234,7 +211,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private void updateWindowSize(@NotNull Rectangle rectangle) {
         frame.setBounds(rectangle);
-        addBottomPanel();
         addRightPanel();
     }
 
@@ -255,7 +231,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     }
 
     public int getFrameHeight() {
-        return getHeight() - DimensionConst.BOTTOM_ACTION_PANEL_HEIGHT;
+        return getHeight();
     }
 
     public int getFrameWidth() {

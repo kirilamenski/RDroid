@@ -53,26 +53,19 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 openScreenRecordOptions();
                 break;
             case 3:
+                view.press(String.valueOf(AdbKeyCode.KEYCODE_MENU.getKeyCode()), TouchPressType.DOWN_AND_UP);
+                break;
+            case 4:
                 confirmReboot();
+            case 5:
+                view.press(String.valueOf(AdbKeyCode.KEYCODE_BACK.getKeyCode()), TouchPressType.DOWN_AND_UP);
                 break;
-        }
-    };
-
-    public ButtonsPanel.OnButtonPanelListener bottomActionsListener = id -> {
-        int keyCode = AdbKeyCode.KEYCODE_UNKNOWN.getKeyCode();
-        switch (id) {
-            case 0:
-                keyCode = AdbKeyCode.KEYCODE_BACK.getKeyCode();
+            case 6:
+                view.press(String.valueOf(AdbKeyCode.KEYCODE_HOME.getKeyCode()), TouchPressType.DOWN_AND_UP);
                 break;
-            case 1:
-                keyCode = AdbKeyCode.KEYCODE_HOME.getKeyCode();
+            case 7:
+                view.press(String.valueOf(AdbKeyCode.KEYCODE_APP_SWITCH.getKeyCode()), TouchPressType.DOWN_AND_UP);
                 break;
-            case 2:
-                keyCode = AdbKeyCode.KEYCODE_APP_SWITCH.getKeyCode();
-                break;
-        }
-        if (keyCode != AdbKeyCode.KEYCODE_UNKNOWN.getKeyCode()) {
-            view.press(String.valueOf(keyCode), TouchPressType.DOWN_AND_UP);
         }
     };
 
@@ -136,7 +129,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         int value = new OptionDialog()
                 .setDialogTitle(StringConst.ASK_REBOOT)
                 .setMainTitle("")
-                .showDialog(view.getChildComponent(), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                .showDialog(view.getChildComponent(), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (value == 0) {
             view.onCloseFrame();
             deviceActions.restart();
