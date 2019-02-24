@@ -33,6 +33,7 @@ dependencies {
     implementation group: 'com.android.tools.build', name: 'gradle', version: '2.3.0'
     implementation group: 'com.android.tools', name: 'sdk-common', version: '25.3.0'
     implementation group: 'com.android.tools.ddms', name: 'ddmlib', version: '25.3.0'
+    compile project(':filemanager')
 
     extraLibs "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     extraLibs group: 'org.bytedeco', name: 'javacv-platform', version: '1.4.3'
@@ -44,6 +45,7 @@ dependencies {
     extraLibs group: 'com.android.tools.build', name: 'gradle', version: '2.3.0'
     extraLibs group: 'com.android.tools', name: 'sdk-common', version: '25.3.0'
     extraLibs group: 'com.android.tools.ddms', name: 'ddmlib', version: '25.3.0'
+    extraLibs project(':filemanager')
 }
 
 compileKotlin {
@@ -64,5 +66,5 @@ jar {
 
     from { configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) } }
 
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }
