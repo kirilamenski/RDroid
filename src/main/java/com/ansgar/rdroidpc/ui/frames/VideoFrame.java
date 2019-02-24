@@ -143,7 +143,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private void stopGrabber() {
         try {
-            System.out.println(currentImage == null);
             if (frameGrabber != null && currentImage != null) {
                 frameGrabber.close();
             }

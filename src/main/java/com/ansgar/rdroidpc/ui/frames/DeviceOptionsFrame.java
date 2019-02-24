@@ -1,5 +1,7 @@
 package com.ansgar.rdroidpc.ui.frames;
 
+import com.ansgar.filemanager.FileManager;
+import com.ansgar.filemanager.FileManagerImpl;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.entities.Option;
@@ -9,6 +11,7 @@ import java.awt.*;
 
 public class DeviceOptionsFrame extends BasePanel {
 
+    private FileManager fileManager;
     private Device device;
     private int bitRate = 4;
     private int deviceWidth;
@@ -16,7 +19,13 @@ public class DeviceOptionsFrame extends BasePanel {
 
     public DeviceOptionsFrame(Component component, Device device, Rectangle rectangle) {
         super(rectangle, String.format("%s Options", device.getDeviceName()));
-        this.device = device;
+        this.fileManager = new FileManagerImpl();
+        Device cachedDevice = fileManager.get(device.getDeviceId() + ".txt", Device.class);
+        if (cachedDevice == null) {
+            this.device = device;
+        } else {
+            this.device = cachedDevice;
+        }
         createFrame();
         relativeTo(component);
     }
@@ -41,7 +50,7 @@ public class DeviceOptionsFrame extends BasePanel {
             int index = bitRateCb.getSelectedIndex();
             bitRate = Integer.valueOf(StringConst.Companion.getBitRates()[index]);
         });
-        bitRateCb.setSelectedIndex(3); // TODO change when will be added possibility to save device option in file
+        bitRateCb.setSelectedIndex(getBitRateIndex());
 
         String[] screenSizes = StringConst.Companion.getDefaultScreenSizes();
         JComboBox screenResolutionCb = new JComboBox<>(screenSizes);
@@ -57,13 +66,14 @@ public class DeviceOptionsFrame extends BasePanel {
             deviceWidth = Integer.valueOf(sizes[0]);
             deviceHeight = Integer.valueOf(sizes[1]);
         });
-        screenResolutionCb.setSelectedIndex(getSelectedIndex());
+        screenResolutionCb.setSelectedIndex(getSelectedIndex(screenSizes));
 
         JButton okBtn = new JButton(StringConst.OK);
         okBtn.setBounds(getRectangle().width - 225, getRectangle().height - 100, 100, 50);
         okBtn.setFocusable(false);
         okBtn.addActionListener(e -> {
             device.setOption(createDeviceOption());
+            fileManager.save(device.getDeviceId() + ".txt", device);
             closeFrame();
         });
 
@@ -84,16 +94,25 @@ public class DeviceOptionsFrame extends BasePanel {
         return new Option(bitRate, deviceWidth, deviceHeight);
     }
 
-    private int getSelectedIndex() {
-        String[] screens = StringConst.Companion.getDefaultScreenSizes();
+    private int getSelectedIndex(String[] screens) {
         for (int i = 0; i < screens.length; i++) {
             String[] screenSizes = screens[i].split("x");
             boolean widthEqual = device.getWidth() == Integer.valueOf(screenSizes[0]);
             boolean heightEqual = device.getHeight() == Integer.valueOf(screenSizes[1]);
+            if (device.getOption() != null) {
+                widthEqual = device.getOption().getWidth() == Integer.valueOf(screenSizes[0]);
+                heightEqual = device.getOption().getHeight() == Integer.valueOf(screenSizes[1]);
+            }
             if (widthEqual && heightEqual) return i;
         }
 
         return 0;
     }
 
+    public int getBitRateIndex() {
+        if (device.getOption() != null) {
+            return device.getOption().getBitRate() - 1;
+        }
+        return 3;
+    }
 }

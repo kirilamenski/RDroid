@@ -1,5 +1,6 @@
 package com.ansgar.rdroidpc.listeners.impl;
 
+import com.ansgar.filemanager.FileManagerImpl;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.enums.MenuItemsEnum;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
@@ -43,10 +44,10 @@ public class MainPanelMenuListenerImpl implements OnMenuItemListener {
 
     @Override
     public void onAdbPathChanged(String path) {
-        if (!SharedValues.get(SharedValuesKey.ADB_PATH, "").equals(path)) {
-            SharedValues.put(SharedValuesKey.ADB_PATH, path);
-            panel.closeDevicesConnections();
-        }
+        new FileManagerImpl()
+                .save(SharedValuesKey.ADB_PATH + ".txt", SharedValuesKey.ADB_PATH, path);
+        SharedValues.put(SharedValuesKey.ADB_PATH, path);
+        panel.closeDevicesConnections();
     }
 
 }

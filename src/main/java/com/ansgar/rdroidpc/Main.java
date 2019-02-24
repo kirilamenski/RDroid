@@ -1,7 +1,9 @@
 package com.ansgar.rdroidpc;
 
+import com.ansgar.filemanager.FileManagerImpl;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.ProgrammInf;
+import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.ui.frames.MainPanel;
 import com.ansgar.rdroidpc.utils.AppUiCustomizationUtil;
@@ -14,6 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
         SharedValues.newInstance();
+        initAdbPath();
         initScreenSize();
         AppUiCustomizationUtil.customizeApp();
 
@@ -32,6 +35,12 @@ public class Main {
         Dimension dimension = ToolkitUtils.getWindowSize();
         SharedValues.put(StringConst.SHARED_VAL_SCREEN_WIDTH, dimension.width);
         SharedValues.put(StringConst.SHARED_VAL_SCREEN_HEIGHT, dimension.height);
+    }
+
+    private static void initAdbPath() {
+        String adbPath = new FileManagerImpl()
+                .get(SharedValuesKey.ADB_PATH + ".txt", SharedValuesKey.ADB_PATH, "");
+        SharedValues.put(SharedValuesKey.ADB_PATH, adbPath);
     }
 
 }

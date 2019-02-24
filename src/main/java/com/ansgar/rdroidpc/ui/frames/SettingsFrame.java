@@ -40,7 +40,7 @@ public class SettingsFrame extends BasePanel implements OnFileChooserListener {
         toggleBtn.setBounds(DimensionConst.SETTINGS_PANEL_WIDTH - 35, 10, 20, 25);
         toggleBtn.addActionListener(e -> {
             FileChooser fileChooser = new FileChooser(this);
-            fileChooser.open(this, JFileChooser.FILES_AND_DIRECTORIES);
+            fileChooser.open(this, JFileChooser.FILES_AND_DIRECTORIES, adbPathTf.getText());
         });
         add(toggleBtn);
     }

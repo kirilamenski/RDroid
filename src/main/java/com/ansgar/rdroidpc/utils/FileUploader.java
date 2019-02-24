@@ -1,5 +1,6 @@
 package com.ansgar.rdroidpc.utils;
 
+import com.ansgar.filemanager.FileManagerImpl;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
@@ -63,7 +64,7 @@ public class FileUploader extends DropTarget {
     // TODO refactor Hack for path with spaces
     private List<String> getCmds(String filePath, String uploadFolder) {
         List<String> cmd = new ArrayList<>();
-        String adbPath = SharedValues.get(SharedValuesKey.ADB_PATH, "");
+        String adbPath = new FileManagerImpl().get(SharedValuesKey.ADB_PATH + ".txt", SharedValuesKey.ADB_PATH, "");
         if (!adbPath.isEmpty()) cmd.add(adbPath);
         else cmd.add("adb");
         cmd.add("-s");

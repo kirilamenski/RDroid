@@ -116,7 +116,7 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         toggleBtn.setBounds(getRectangle().width - 230 + 185, 95, 20, 25);
         toggleBtn.addActionListener(e -> {
             FileChooser fileChooser = new FileChooser(this);
-            fileChooser.open(this, JFileChooser.FILES_AND_DIRECTORIES);
+            fileChooser.open(this, JFileChooser.FILES_AND_DIRECTORIES, downloadFolderTf.getText());
         });
 
         add(toggleBtn);

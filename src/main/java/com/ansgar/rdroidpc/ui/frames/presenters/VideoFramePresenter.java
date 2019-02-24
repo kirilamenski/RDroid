@@ -57,6 +57,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 break;
             case 4:
                 confirmReboot();
+                break;
             case 5:
                 view.press(String.valueOf(AdbKeyCode.KEYCODE_BACK.getKeyCode()), TouchPressType.DOWN_AND_UP);
                 break;
@@ -110,7 +111,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
 
     private void openFileChooser() {
         FileChooser chooser = new FileChooser(this);
-        chooser.open(view.getChildComponent(), JFileChooser.DIRECTORIES_ONLY);
+        chooser.open(view.getChildComponent(), JFileChooser.DIRECTORIES_ONLY, "");
     }
 
     private void openScreenRecordOptions() {
