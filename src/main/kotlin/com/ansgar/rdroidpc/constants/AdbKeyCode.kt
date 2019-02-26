@@ -72,8 +72,8 @@ enum class AdbKeyCode(val keyCode: Int, val equalKeyEvent: Int? = null, val isCh
     KEYCODE_ENTER(66, KeyEvent.VK_ENTER, false),
     KEYCODE_DEL(67, KeyEvent.VK_BACK_SPACE, false),
     KEYCODE_GRAVE(68, null, false),
-    KEYCODE_MINUS(69, null, false),
-    KEYCODE_EQUALS(70, null, false),
+    KEYCODE_MINUS(69, KeyEvent.VK_MINUS, true),
+    KEYCODE_EQUALS(70, KeyEvent.VK_EQUALS, true),
     KEYCODE_LEFT_BRACKET(71, KeyEvent.VK_OPEN_BRACKET, false),
     KEYCODE_RIGHT_BRACKET(72, KeyEvent.VK_CLOSE_BRACKET, false),
     KEYCODE_BACKSLASH(73, KeyEvent.VK_BACK_SLASH, false),
@@ -84,7 +84,7 @@ enum class AdbKeyCode(val keyCode: Int, val equalKeyEvent: Int? = null, val isCh
     KEYCODE_NUM(78, null, false),
     KEYCODE_HEADSETHOOK(79, null, false),
     KEYCODE_FOCUS(80, null, false),
-    KEYCODE_PLUS(81, null, false),
+    KEYCODE_PLUS(81, KeyEvent.VK_PLUS, true),
     KEYCODE_MENU(82, null, false),
     KEYCODE_NOTIFICATION(83, null, false),
     KEYCODE_SEARCH(84, null, false),
@@ -95,9 +95,8 @@ enum class AdbKeyCode(val keyCode: Int, val equalKeyEvent: Int? = null, val isCh
 
     companion object {
         fun getAdbKeyEvent(e: KeyEvent?): AdbKeyCode {
-            AdbKeyCode.values().forEach { adbKeyCode ->
-                if (adbKeyCode.equalKeyEvent == e?.keyCode) return adbKeyCode
-            }
+            AdbKeyCode.values()
+                    .forEach { if (it.equalKeyEvent == e?.keyCode) return it }
             return KEYCODE_UNKNOWN
         }
     }

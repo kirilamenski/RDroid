@@ -32,7 +32,10 @@ public class KeyboardListener implements KeyListener {
         }
 
         AdbKeyCode adbKeyCode = AdbKeyCode.Companion.getAdbKeyEvent(e);
-        if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN ) {
+        System.out.println("" + e.getKeyChar() + ", " + e.getKeyCode() + ", " + (e.getKeyCode() == KeyEvent.VK_EQUALS));
+        if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN && adbKeyCode.isChar()) {
+            frame.getChimpDevice().type(String.valueOf(e.getKeyChar()));
+        } else {
             frame.getChimpDevice().press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);
         }
     }
