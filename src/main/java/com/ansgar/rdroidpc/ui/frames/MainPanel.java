@@ -16,10 +16,8 @@ import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
 
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
@@ -78,6 +76,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
                             device.getDeviceId()
                     )
             );
+            responseUtil.setDeviceOption(device);
         }
         createDeviceContainer();
     }
@@ -147,15 +146,12 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
 
     public void closeDevicesConnections() {
         if (openedDevices.size() > 0) {
-            Object[] values = openedDevices.values().toArray();
-            for (Object obj : values) {
-                if (obj instanceof VideoFrame) {
-                    ((VideoFrame) obj).stop(true);
+            openedDevices.values().forEach(obj -> {
+                if (obj != null) {
+                    obj.stop(false);
                 }
-            }
+            });
         }
-
-        setUpMainPanel();
     }
 
     public void stopAdbConnection() throws NullPointerException {
