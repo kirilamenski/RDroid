@@ -31,7 +31,6 @@ public class KeyboardListener implements KeyListener {
         }
 
         AdbKeyCode adbKeyCode = AdbKeyCode.Companion.getAdbKeyEvent(e);
-        System.out.println("" + e.getKeyChar() + ", " + e.getKeyCode() + ", " + (e.getKeyCode() == KeyEvent.VK_EQUALS));
         if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN && adbKeyCode.isChar()) {
             frame.getChimpDevice().type(String.valueOf(e.getKeyChar()));
         } else {
