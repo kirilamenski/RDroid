@@ -1,6 +1,7 @@
 package com.ansgar.rdroidpc.ui.components;
 
 import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -11,6 +12,7 @@ public class ButtonsPanel extends JPanel {
 
     private int iconWidth = -1, iconHeight = -1;
     private String[] icons;
+    private String[] toolTips;
     private OnButtonPanelListener listener;
     private MatteBorder border;
     private ButtonsPanelStateEnum state;
@@ -46,6 +48,7 @@ public class ButtonsPanel extends JPanel {
         button.setBounds(x, y, width, height);
         ImageIcon icon = new ImageIcon(getResizedIcon(iconPath));
         button.setIcon(icon);
+        button.setToolTipText(getTooltip(position));
         button.setFocusable(false);
         button.setHorizontalAlignment(JLabel.CENTER);
         button.setVerticalAlignment(JLabel.CENTER);
@@ -63,6 +66,16 @@ public class ButtonsPanel extends JPanel {
         return new ImageIcon(iconPath)
                 .getImage()
                 .getScaledInstance(iconWidth, iconHeight, Image.SCALE_DEFAULT);
+    }
+
+    @Nullable
+    private String getTooltip(int position) {
+        if (toolTips != null && toolTips.length > 0
+                && icons != null && icons.length > 0
+                && position < icons.length) {
+            return toolTips[position];
+        }
+        return null;
     }
 
     public interface OnButtonPanelListener {
@@ -84,6 +97,10 @@ public class ButtonsPanel extends JPanel {
 
     public void setIcons(String... icons) {
         this.icons = icons;
+    }
+
+    public void setToolTips(String... toolTips) {
+        this.toolTips = toolTips;
     }
 
     public void setItemClickListener(OnButtonPanelListener listener) {

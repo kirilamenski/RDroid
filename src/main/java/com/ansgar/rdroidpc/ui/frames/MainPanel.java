@@ -84,6 +84,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
     private ButtonsPanel getActionsPanel() {
         ButtonsPanel panel = new ButtonsPanel();
         panel.setIcons("icons/ic_restart_64.png");
+        panel.setToolTips("Restart");
         panel.setBounds(0, menuBar.getHeight(), 48, 48);
         panel.setIconSize(30, 30);
         panel.setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));

@@ -61,6 +61,7 @@ public class DevicesContainer extends JPanel {
     private JPanel createActionButtons(int position, int x, int y, int width, int height) {
         ButtonsPanel panel = new ButtonsPanel();
         panel.setIcons("icons/ic_settings_64.png", "icons/ic_run_64.png");
+        panel.setToolTips("Settings", "Run");
         panel.setBounds(x, y, width, height);
         panel.setItemClickListener((id) -> {
             if (listener != null) {

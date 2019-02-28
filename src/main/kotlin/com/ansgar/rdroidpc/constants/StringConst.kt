@@ -25,6 +25,16 @@ class StringConst {
                 "icons/ic_home_64.png",
                 "icons/ic_recent_app_64.png"
         )
+        val navigationPanelTooltips = arrayOf(
+                "Rotate",
+                "Screen Capture",
+                "Screen Record",
+                "Menu",
+                "Reboot",
+                "Back",
+                "Home",
+                "Recent Application"
+        )
 
         const val BIT_RATE_L = "Bit Rate"
         const val DOWNLOAD_FOLDER = "Download Folder"

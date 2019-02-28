@@ -52,6 +52,9 @@ public class AppUiCustomizationUtil {
         UIManager.put("ToggleButton.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         UIManager.put("ToggleButton.select", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         UIManager.put("ToggleButton.foreground", Color.WHITE);
+
+        UIManager.put("ToolTip.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("ToolTip.foreground", Color.WHITE);
     }
 
 }

@@ -176,6 +176,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         rightPanel = new ButtonsPanel();
         rightPanel.setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK));
         rightPanel.setIcons(StringConst.Companion.getNavigationPanelIcons());
+        rightPanel.setToolTips(StringConst.Companion.getNavigationPanelTooltips());
         rightPanel.setState(ButtonsPanelStateEnum.VERTICAL);
         rightPanel.setIconSize(42, 42);
         rightPanel.setBounds(
