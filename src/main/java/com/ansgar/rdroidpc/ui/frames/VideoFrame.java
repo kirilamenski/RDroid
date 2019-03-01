@@ -124,7 +124,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         isThreadRunning.set(true);
         presenter.startCheckOrientation(device, 5000, 5000);
 
-        System.out.println(command);
         try {
             InputStream inputStream = presenter.getInputScream(command);
             frameGrabber = new FFmpegFrameGrabber(inputStream);
