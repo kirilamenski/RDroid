@@ -12,4 +12,8 @@ public interface BaseFrameView {
     void setKeyboardListener(KeyListener listener);
 
     void onCloseFrame();
+
+    void showSpinner();
+
+    void hideSpinner();
 }

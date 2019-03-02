@@ -1,5 +1,6 @@
 package com.ansgar.rdroidpc.ui.frames;
 
+import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
 import com.ansgar.rdroidpc.ui.frames.views.BaseFrameView;
 import org.jetbrains.annotations.Nullable;
@@ -12,17 +13,27 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
 
     private Rectangle rectangle;
     protected JFrame frame;
+    private SpinnerDialog spinnerDialog;
 
     public BasePanel(Rectangle rectangle, String title) {
         this.rectangle = rectangle;
         setBounds(rectangle);
         setLayout(null);
-        initFrame(rectangle, title);
+        initFrame(rectangle, title, false);
         createPresenter();
     }
 
-    private void initFrame(Rectangle rectangle, String title) {
+    public BasePanel(JComponent component, String title, boolean undecorated) {
+        this.rectangle = component.getBounds();
+        setBounds(rectangle);
+        setLayout(null);
+        initFrame(rectangle, title, undecorated);
+        createPresenter();
+    }
+
+    private void initFrame(Rectangle rectangle, String title, boolean undecorated) {
         frame = new JFrame(title);
+        frame.setUndecorated(undecorated);
         frame.setVisible(true);
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
@@ -99,6 +110,19 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
     @Override
     public void setKeyboardListener(KeyListener listener) {
         frame.addKeyListener(listener);
+    }
+
+    @Override
+    public void showSpinner() {
+        spinnerDialog = new SpinnerDialog(frame);
+        spinnerDialog.start();
+    }
+
+    @Override
+    public void hideSpinner() {
+        if (spinnerDialog != null) {
+            spinnerDialog.close();
+        }
     }
 
     @Override

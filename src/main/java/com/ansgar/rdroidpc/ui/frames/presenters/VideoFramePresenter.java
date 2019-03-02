@@ -59,6 +59,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 view.stop(false);
                 view.initChimpDevice();
                 view.startNewThread();
+                view.hideSpinner();
                 break;
             case 5:
                 view.press(String.valueOf(AdbKeyCode.KEYCODE_BACK.getKeyCode()), TouchPressType.DOWN_AND_UP);

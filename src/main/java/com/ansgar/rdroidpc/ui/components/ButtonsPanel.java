@@ -1,6 +1,7 @@
 package com.ansgar.rdroidpc.ui.components;
 
 import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
+import com.ansgar.rdroidpc.utils.ImageUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -63,9 +64,7 @@ public class ButtonsPanel extends JPanel {
         if (iconWidth == -1 || iconHeight == -1) {
             iconWidth = iconHeight = (int) ((state == ButtonsPanelStateEnum.HORIZONTAL ? getHeight() : getWidth()) * 0.3);
         }
-        return new ImageIcon(iconPath)
-                .getImage()
-                .getScaledInstance(iconWidth, iconHeight, Image.SCALE_DEFAULT);
+        return ImageUtils.resizeIcon(iconPath, iconWidth, iconHeight);
     }
 
     @Nullable
