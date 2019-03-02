@@ -32,6 +32,7 @@ import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
 public class VideoFrame extends BasePanel implements VideoFrameView {
 
+    private AdbBackend adbBackend;
     private Thread thread;
     private FrameGrabber frameGrabber;
     private BufferedImage currentImage;
@@ -42,23 +43,26 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     private OrientationEnum currentOrientation;
     private ButtonsPanel rightPanel;
     private VideoFramePresenter presenter;
+    private String adbStreamCommand;
 
     private int imageWidth, imageHeight, imageCoordinateX;
 
     public VideoFrame(Device device, AdbBackend adbBackend, Rectangle rectangle) {
         super(rectangle, String.format("%s(%dx%d)", device.getDeviceName(), device.getWidth(), device.getHeight()));
+        this.adbBackend = adbBackend;
         this.device = device;
-        this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
         this.isThreadRunning = new AtomicBoolean();
+        this.adbStreamCommand = StringUtils.getScreenRecordCommand(device, 45);
         new FileUploader(this, device);
-
+        initChimpDevice();
         setLayout(null);
         changeOrientation(OrientationEnum.PORTRAIT);
     }
 
-    public void startNewThread(String command) {
+    @Override
+    public void startNewThread() {
         if (thread != null) return;
-        thread = new Thread(() -> start(command));
+        thread = new Thread(() -> start(adbStreamCommand));
         thread.start();
     }
 
@@ -70,6 +74,11 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
             g2d.drawImage(currentImage, imageCoordinateX, 0, imageWidth, imageHeight, this);
             g2d.dispose();
         }
+    }
+
+    @Override
+    public void initChimpDevice() {
+        this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
     }
 
     @Override
@@ -113,6 +122,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         currentOrientation = orientationEnum;
     }
 
+    @Override
     public void stop(boolean closeFrame) {
         if (chimpDevice != null) chimpDevice.dispose();
         stoStreaming();
@@ -122,7 +132,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private void start(String command) {
         isThreadRunning.set(true);
-        presenter.startCheckOrientation(device, 5000, 5000);
+        presenter.startCheckOrientationThread(device, 5000, 5000);
 
         try {
             InputStream inputStream = presenter.getInputScream(command);
@@ -156,6 +166,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
             isThreadRunning.set(false);
             try {
                 thread.join(1000);
+                thread = null;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

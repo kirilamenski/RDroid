@@ -56,7 +56,9 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 view.press(String.valueOf(AdbKeyCode.KEYCODE_MENU.getKeyCode()), TouchPressType.DOWN_AND_UP);
                 break;
             case 4:
-                confirmReboot();
+                view.stop(false);
+                view.initChimpDevice();
+                view.startNewThread();
                 break;
             case 5:
                 view.press(String.valueOf(AdbKeyCode.KEYCODE_BACK.getKeyCode()), TouchPressType.DOWN_AND_UP);
@@ -74,7 +76,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         return deviceActions.getInputStream(command);
     }
 
-    public void startCheckOrientation(Device device, int delay, int period) {
+    public void startCheckOrientationThread(Device device, int delay, int period) {
         this.orientationUtil = new OrientationUtil(device, this);
         orientationUtil.start(delay, period);
     }
@@ -126,6 +128,9 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         settingsFrame.setListener(this);
     }
 
+    /**
+     * Todo add button to right panel with multiple actions list such as reboot, turn off, wake up, and other actions with device
+     */
     private void confirmReboot() {
         int value = new OptionDialog()
                 .setDialogTitle(StringConst.ASK_REBOOT)

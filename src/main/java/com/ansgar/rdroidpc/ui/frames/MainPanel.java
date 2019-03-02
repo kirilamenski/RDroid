@@ -132,7 +132,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         if (!openedDevices.containsKey(device.getDeviceId())) {
             VideoFrame videoFrame = new VideoFrame(device, adbBackend, rectangle);
             videoFrame.setOnVideoFrameListener(MainPanel.this);
-            videoFrame.startNewThread(StringUtils.getScreenRecordCommand(device, 12, 45));
+            videoFrame.startNewThread();
             openedDevices.put(device.getDeviceId(), videoFrame);
         } else {
             System.out.println("Device is already opened.");

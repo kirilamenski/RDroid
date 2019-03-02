@@ -20,7 +20,7 @@ class StringConst {
                 "icons/ic_screen_capture_64.png",
                 "icons/ic_screen_record_64.png",
                 "icons/ic_menu_64.png",
-                "icons/ic_reboot_64.png",
+                "icons/ic_reconnect_64.png",
                 "icons/ic_back_64.png",
                 "icons/ic_home_64.png",
                 "icons/ic_recent_app_64.png"
@@ -30,7 +30,7 @@ class StringConst {
                 "Screen Capture",
                 "Screen Record",
                 "Menu",
-                "Reboot",
+                "Reconnect",
                 "Back",
                 "Home",
                 "Recent Application"
