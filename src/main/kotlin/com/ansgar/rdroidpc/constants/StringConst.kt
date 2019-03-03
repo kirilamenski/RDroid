@@ -7,7 +7,7 @@ class StringConst {
     companion object {
         var menuItems = arrayOf(
                 MenuItemsEnum.FILE.value, arrayOf(MenuItemsEnum.SETTINGS.value, MenuItemsEnum.EXIT.value),
-                MenuItemsEnum.HELP.value, arrayOf(MenuItemsEnum.REPORT.value, MenuItemsEnum.CONTACT.value))
+                MenuItemsEnum.HELP.value)
         val deviceHeaderNames = arrayOf("name", "size", "device id", "status", "")
         val defaultScreenSizes = arrayOf("480x640", "540x960", "720x1280", "1080x1920", "1440x2560")
         val bitRates = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10",

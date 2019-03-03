@@ -58,6 +58,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         add(menuBar.getMenuBar(StringConst.Companion.getMenuItems()));
         add(getActionsPanel());
         executeAdbDevices();
+        updateUI();
     }
 
     public void executeAdbDevices() {

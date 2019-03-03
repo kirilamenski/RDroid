@@ -32,7 +32,6 @@ public class MenuBar extends JMenuBar {
         for (Menu menu : parseMenuList(menus)) {
             add(menu);
         }
-        updateUI();
     }
 
     /**
