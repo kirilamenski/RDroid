@@ -5,18 +5,44 @@ import com.ansgar.rdroidpc.utils.ImageUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.List;
 
-public class SpinnerDialog implements Runnable {
+/**
+ * This class simulate spinner loading dialog which extend from {@link SwingWorker}.
+ * To call it you need to override doInBackground method where you execute you operation.
+ * In this method you should call publish method. After that dialog will run and dispose automatically.
+ */
+public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
 
+    private JFrame frame;
+    private final JDialog dialog = new JDialog();
     private String spinnerSrc = "gifs/loading.gif";
     private int imageWidth = 60;
     private int imageHeight = 60;
-    private Thread thread;
-    private JFrame frame;
-    private JDialog dialog;
 
     public SpinnerDialog(JFrame frame) {
         this.frame = frame;
+    }
+
+    @Override
+    protected void process(List<Void> chunks) {
+        initDialog();
+    }
+
+    @Override
+    protected void done() {
+        dialog.dispose();
+    }
+
+    private void initDialog() {
+        dialog.getContentPane().add(createSpinner());
+        dialog.setUndecorated(true);
+        dialog.pack();
+        dialog.setLocation(frame.getX(), frame.getY());
+        dialog.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.setModal(true);
+        dialog.setVisible(true);
     }
 
     private JPanel createSpinner() {
@@ -35,23 +61,6 @@ public class SpinnerDialog implements Runnable {
         return null;
     }
 
-    public void start() {
-        thread = new Thread(this);
-        thread.start();
-    }
-
-    public void close() {
-        if (thread != null) {
-            dialog.dispose();
-            try {
-                thread.join();
-                thread = null;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public SpinnerDialog setSpinnerSrc(String spinnerSrc) {
         this.spinnerSrc = spinnerSrc;
         return this;
@@ -67,17 +76,4 @@ public class SpinnerDialog implements Runnable {
         return this;
     }
 
-    @Override
-    public void run() {
-        dialog = new JDialog(frame);
-        dialog.getContentPane().add(createSpinner());
-        dialog.setUndecorated(true);
-        dialog.setBackground(new Color(1.0f, 1.0f, 1.0f, 0.0f));
-        dialog.pack();
-        dialog.setSize(new Dimension(dialog.getParent().getWidth(), dialog.getParent().getHeight()));
-        dialog.setLocationRelativeTo(dialog.getParent());
-        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        dialog.setModal(true);
-        dialog.setVisible(true);
-    }
 }

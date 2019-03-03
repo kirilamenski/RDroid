@@ -124,7 +124,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     @Override
     public void stop(boolean closeFrame) {
-        showSpinner();
         if (chimpDevice != null) chimpDevice.dispose();
         stoStreaming();
         stopGrabber();
@@ -178,7 +177,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         if (frame != null) {
             frame.setVisible(false);
             frame.dispose();
-            if (onVideoFrameListener != null) onVideoFrameListener.onClosed(device);
+            if (onVideoFrameListener != null) onVideoFrameListener.onDeviceConnectionClosed(device);
         }
     }
 

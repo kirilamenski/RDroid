@@ -10,14 +10,17 @@ import com.ansgar.rdroidpc.listeners.MainActionPanelsListener;
 import com.ansgar.rdroidpc.listeners.impl.MainPanelMenuListenerImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.DevicesContainer;
+import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.utils.StringUtils;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
@@ -37,7 +40,16 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         this.adbBackend = new AdbBackend();
         this.devices = new ArrayList<>();
         this.listener = new MainActionPanelsListener(this);
-        setUpMainPanel();
+
+        SpinnerDialog dialog = new SpinnerDialog(frame) {
+            @Override
+            protected Void doInBackground() {
+                publish();
+                setUpMainPanel();
+                return null;
+            }
+        };
+        dialog.execute();
     }
 
     private void setUpMainPanel() {
@@ -52,6 +64,12 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         CommandExecutor commandExecutor = new CommandExecutor();
         commandExecutor.setOnFinishExecuteListener((this::showDevices));
         commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.DEVICES));
+    }
+
+    public void killServer() {
+        if (devicesContainer != null) remove(devicesContainer);
+        CommandExecutor commandExecutor = new CommandExecutor();
+        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KILL_SERVER));
     }
 
     private void showDevices(StringBuilder lines) {
@@ -83,9 +101,9 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
 
     private ButtonsPanel getActionsPanel() {
         ButtonsPanel panel = new ButtonsPanel();
-        panel.setIcons("icons/ic_restart_64.png");
-        panel.setToolTips("Restart");
-        panel.setBounds(0, menuBar.getHeight(), 48, 48);
+        panel.setIcons("icons/ic_restart_64.png", "icons/ic_kill_server_64.png");
+        panel.setToolTips("Restart", "Kill Server");
+        panel.setBounds(0, menuBar.getHeight(), 96, 48);
         panel.setIconSize(30, 30);
         panel.setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
         panel.setItemClickListener(listener);
@@ -105,17 +123,25 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
 
     @Override
     public void onCloseFrame() {
-        closeDevicesConnections();
-        try {
-            stopAdbConnection();
-        } catch (NullPointerException ignored) {
-        }
-        restartServer();
-        System.exit(0);
+        SpinnerDialog dialog = new SpinnerDialog(frame) {
+            @Override
+            protected Void doInBackground() {
+                publish();
+                closeDevicesConnections();
+                try {
+                    stopAdbConnection();
+                } catch (NullPointerException ignored) {
+                }
+                restartServer();
+                System.exit(0);
+                return null;
+            }
+        };
+        dialog.execute();
     }
 
     @Override
-    public void onClosed(Device device) {
+    public void onDeviceConnectionClosed(Device device) {
         if (openedDevices != null) {
             openedDevices.remove(device.getDeviceId());
         }

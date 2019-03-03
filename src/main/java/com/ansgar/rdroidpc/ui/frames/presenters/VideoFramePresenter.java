@@ -13,6 +13,7 @@ import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.FileChooser;
 import com.ansgar.rdroidpc.ui.components.OptionDialog;
+import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 import com.ansgar.rdroidpc.ui.frames.ScreenRecordOptionsFrame;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
@@ -56,10 +57,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 view.press(String.valueOf(AdbKeyCode.KEYCODE_MENU.getKeyCode()), TouchPressType.DOWN_AND_UP);
                 break;
             case 4:
-                view.stop(false);
-                view.initChimpDevice();
-                view.startNewThread();
-                view.hideSpinner();
+                reconnect();
                 break;
             case 5:
                 view.press(String.valueOf(AdbKeyCode.KEYCODE_BACK.getKeyCode()), TouchPressType.DOWN_AND_UP);
@@ -127,6 +125,20 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         ScreenRecordOptionsFrame settingsFrame = new ScreenRecordOptionsFrame(view.getChildComponent(), rectangle,
                 MenuItemsEnum.SETTINGS.getValue());
         settingsFrame.setListener(this);
+    }
+
+    private void reconnect() {
+        SpinnerDialog dialog = new SpinnerDialog(view.getParentComponent()) {
+            @Override
+            protected Void doInBackground() {
+                publish();
+                view.stop(false);
+                view.initChimpDevice();
+                view.startNewThread();
+                return null;
+            }
+        };
+        dialog.execute();
     }
 
     /**

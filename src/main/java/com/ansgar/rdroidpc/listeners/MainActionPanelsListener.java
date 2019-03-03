@@ -17,6 +17,9 @@ public class MainActionPanelsListener implements ButtonsPanel.OnButtonPanelListe
             case 0:
                 panel.executeAdbDevices();
                 break;
+            case 1:
+                panel.killServer();
+                break;
         }
     }
 }

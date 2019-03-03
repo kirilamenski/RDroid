@@ -9,11 +9,10 @@ public interface BaseFrameView {
 
     JComponent getChildComponent();
 
+    JFrame getParentComponent();
+
     void setKeyboardListener(KeyListener listener);
 
     void onCloseFrame();
 
-    void showSpinner();
-
-    void hideSpinner();
 }

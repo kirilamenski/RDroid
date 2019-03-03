@@ -1,6 +1,5 @@
 package com.ansgar.rdroidpc.ui.frames;
 
-import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
 import com.ansgar.rdroidpc.ui.frames.views.BaseFrameView;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +12,6 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
 
     private Rectangle rectangle;
     protected JFrame frame;
-    private SpinnerDialog spinnerDialog;
 
     public BasePanel(Rectangle rectangle, String title) {
         this.rectangle = rectangle;
@@ -113,21 +111,13 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
     }
 
     @Override
-    public void showSpinner() {
-        spinnerDialog = new SpinnerDialog(frame);
-        spinnerDialog.start();
-    }
-
-    @Override
-    public void hideSpinner() {
-        if (spinnerDialog != null) {
-            spinnerDialog.close();
-        }
-    }
-
-    @Override
     public JComponent getChildComponent() {
         return this;
+    }
+
+    @Override
+    public JFrame getParentComponent() {
+        return frame;
     }
 
     public void createPresenter() {
