@@ -1,12 +1,15 @@
 package com.ansgar.filemanager;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -23,14 +26,28 @@ public class FileManagerImpl implements FileManager {
 
     @Override
     public void save(String fileName, String key, String value) {
-        write(fileName, formatValue(key, value).getBytes(), StandardOpenOption.CREATE);
+        write(fileName, formatValue(key, value + "\n").getBytes(), StandardOpenOption.CREATE);
     }
 
     @Override
     public <T> void save(String fileName, T obj) {
         Gson gson = new Gson();
-        String json = gson.toJson(obj);
+        String json = gson.toJson(obj) + "\n";
         write(fileName, json.getBytes(), StandardOpenOption.CREATE);
+    }
+
+    @Override
+    public <T> void save(String fileName, String key, T obj) {
+        if (getClass(fileName, key, obj.getClass()) != null) {
+            // TODO
+            System.out.println("Exists: " + key);
+            return;
+        }
+        Gson gson = new Gson();
+        HashMap<String, T> map = new HashMap<>();
+        map.put(key, obj);
+        String json = gson.toJson(map) + "\n";
+        write(fileName, json.getBytes(), StandardOpenOption.APPEND);
     }
 
     @Override
@@ -46,8 +63,29 @@ public class FileManagerImpl implements FileManager {
         return obj;
     }
 
+    @Override
+    public <T> T getClass(String fileName, String key, Class<T> clazz) {
+        List<String> list = getAllLines(fileName);
+        Gson gson = new Gson();
+
+        if (list != null) {
+            for (String line : list) {
+                Type type = new TypeToken<HashMap<String, T>>() {
+                }.getType();
+                HashMap<String, T> map = gson.fromJson(line, type);
+                if (map.get(key) != null) {
+                    return map.get(key);
+                }
+            }
+        }
+        return null;
+    }
+
     private void write(String fileName, byte[] bytes, StandardOpenOption option) {
         Path path = Paths.get(defaultDirectory, fileName);
+        if (!Files.exists(path)) {
+            option = StandardOpenOption.CREATE;
+        }
         try {
             Files.write(path, bytes, option);
         } catch (IOException e) {
