@@ -1,7 +1,10 @@
 package com.ansgar.filemanager;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -38,16 +41,11 @@ public class FileManagerImpl implements FileManager {
 
     @Override
     public <T> void save(String fileName, String key, T obj) {
-        if (getClass(fileName, key, obj.getClass()) != null) {
-            // TODO
-            System.out.println("Exists: " + key);
-            return;
-        }
         Gson gson = new Gson();
-        HashMap<String, T> map = new HashMap<>();
+        HashMap<String, T> map = getHashedLines(fileName);
         map.put(key, obj);
-        String json = gson.toJson(map) + "\n";
-        write(fileName, json.getBytes(), StandardOpenOption.APPEND);
+        String json = gson.toJson(map);
+        write(fileName, json.getBytes(), StandardOpenOption.CREATE);
     }
 
     @Override
@@ -65,18 +63,12 @@ public class FileManagerImpl implements FileManager {
 
     @Override
     public <T> T getClass(String fileName, String key, Class<T> clazz) {
-        List<String> list = getAllLines(fileName);
+        HashMap<String, T> map = getHashedLines(fileName);
         Gson gson = new Gson();
-
-        if (list != null) {
-            for (String line : list) {
-                Type type = new TypeToken<HashMap<String, T>>() {
-                }.getType();
-                HashMap<String, T> map = gson.fromJson(line, type);
-                if (map.get(key) != null) {
-                    return map.get(key);
-                }
-            }
+        if (map != null) {
+            JsonObject jsonObj = gson.toJsonTree(map.get(key))
+                    .getAsJsonObject();
+            return gson.fromJson(jsonObj.toString(), clazz);
         }
         return null;
     }
@@ -134,6 +126,20 @@ public class FileManagerImpl implements FileManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    @NotNull
+    private <T> HashMap<String, T> getHashedLines(String fileName) {
+        List<String> list = getAllLines(fileName);
+        HashMap<String, T> map = new HashMap<>();
+        Gson gson = new Gson();
+        Type type = new TypeToken<HashMap<String, T>>() {
+        }.getType();
+
+        if (list != null) {
+            list.forEach(line -> map.putAll(gson.fromJson(line, type)));
+        }
+        return map;
     }
 
 }
