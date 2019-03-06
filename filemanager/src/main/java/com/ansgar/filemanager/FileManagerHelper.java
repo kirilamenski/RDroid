@@ -12,22 +12,20 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 class FileManagerHelper {
 
-    private final String SEPARATOR = ":";
     private String defaultDirectory;
 
-    FileManagerHelper() {
-        Path path = Paths.get("cache");
+    FileManagerHelper(String folder) {
+        Path path = Paths.get(folder);
         createDirectory(path);
         defaultDirectory = path.toAbsolutePath().toString();
     }
 
     void write(String fileName, byte[] bytes, StandardOpenOption option) {
         Path path = Paths.get(defaultDirectory, fileName);
-        if (!Files.exists(path)) {
+        if (!fileExists(fileName)) {
             option = StandardOpenOption.CREATE;
         }
         try {
@@ -37,26 +35,9 @@ class FileManagerHelper {
         }
     }
 
-    String read(String fileName, String key, String defaultValue) {
-        AtomicReference<String> atomicValue = new AtomicReference<>(defaultValue);
-        List<String> lines = getAllLines(fileName);
-        if (lines != null) {
-            lines.forEach(line -> {
-                String[] splitted = line.split(SEPARATOR);
-                if (splitted.length > 1) {
-                    String keyOfValue = splitted[0].trim();
-                    if (keyOfValue.equals(key)) {
-                        atomicValue.set(splitted[1]);
-                    }
-                }
-            });
-        }
-        return atomicValue.get();
-    }
-
     List<String> getAllLines(String fileName) {
         Path path = Paths.get(defaultDirectory, fileName);
-        if (Files.exists(path)) {
+        if (fileExists(fileName)) {
             try {
                 return Files.readAllLines(path);
             } catch (IOException e) {
@@ -66,20 +47,18 @@ class FileManagerHelper {
         return null;
     }
 
-    String formatValue(String key, String value) {
-        return String.format("%s%s %s\n", key, SEPARATOR, value);
-    }
-
     @NotNull
     <T> HashMap<String, T> getHashedLines(String fileName) {
-        List<String> list = getAllLines(fileName);
         HashMap<String, T> map = new HashMap<>();
-        Gson gson = new Gson();
-        Type type = new TypeToken<HashMap<String, T>>() {
-        }.getType();
+        if (fileExists(fileName)) {
+            List<String> list = getAllLines(fileName);
+            Gson gson = new Gson();
+            Type type = new TypeToken<HashMap<String, T>>() {
+            }.getType();
 
-        if (list != null) {
-            list.forEach(line -> map.putAll(gson.fromJson(line, type)));
+            if (list != null) {
+                list.forEach(line -> map.putAll(gson.fromJson(line, type)));
+            }
         }
         return map;
     }
@@ -92,6 +71,11 @@ class FileManagerHelper {
                 e.printStackTrace();
             }
         }
+    }
+
+    private boolean fileExists(String fileName) {
+        Path path = Paths.get(defaultDirectory, fileName);
+        return Files.exists(path);
     }
 
 }

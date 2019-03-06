@@ -11,14 +11,17 @@ public class FileManagerImpl implements FileManager {
 
     private FileManagerHelper fileManagerHelper;
 
-    public FileManagerImpl() {
-        fileManagerHelper = new FileManagerHelper();
+    public FileManagerImpl(String folder) {
+        fileManagerHelper = new FileManagerHelper(folder);
     }
 
     @Override
     public void save(String fileName, String key, String value) {
-        fileManagerHelper.write(fileName, fileManagerHelper.formatValue(key, value + "\n").getBytes(),
-                StandardOpenOption.CREATE);
+        Gson gson = new Gson();
+        HashMap<String, String> map = fileManagerHelper.getHashedLines(fileName);
+        map.put(key, value);
+        String json = gson.toJson(map);
+        fileManagerHelper.write(fileName, json.getBytes(), StandardOpenOption.CREATE);
     }
 
     @Override
@@ -39,11 +42,12 @@ public class FileManagerImpl implements FileManager {
 
     @Override
     public String get(String fileName, String key, String defaultValue) {
-        return fileManagerHelper.read(fileName, key, defaultValue);
+        HashMap<String, String> map = fileManagerHelper.getHashedLines(fileName);
+        return map.get(key);
     }
 
     @Override
-    public <T> T get(String fileName, Class<T> clazz) {
+    public <T> T getClass(String fileName, Class<T> clazz) {
         List<String> list = fileManagerHelper.getAllLines(fileName);
         String json = (list != null && list.size() > 0) ? list.get(0) : "";
         T obj = new Gson().fromJson(json, clazz);
@@ -53,8 +57,8 @@ public class FileManagerImpl implements FileManager {
     @Override
     public <T> T getClass(String fileName, String key, Class<T> clazz) {
         HashMap<String, T> map = fileManagerHelper.getHashedLines(fileName);
-        Gson gson = new Gson();
-        if (map != null) {
+        if (map.containsKey(key)) {
+            Gson gson = new Gson();
             JsonObject jsonObj = gson.toJsonTree(map.get(key))
                     .getAsJsonObject();
             return gson.fromJson(jsonObj.toString(), clazz);

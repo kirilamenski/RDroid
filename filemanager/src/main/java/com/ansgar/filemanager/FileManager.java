@@ -9,7 +9,7 @@ public interface FileManager {
 
     String get(String fileName, String key, String defaultValue);
 
-    <T> T get(String fileName, Class<T> clazz);
+    <T> T getClass(String fileName, Class<T> clazz);
 
     <T> T getClass(String fileName, String key, Class<T> clazz);
 }
