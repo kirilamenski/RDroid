@@ -5,6 +5,7 @@ import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.ProgrammInf;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.constants.StringConst;
+import com.ansgar.rdroidpc.entities.FilesEnum;
 import com.ansgar.rdroidpc.ui.frames.MainPanel;
 import com.ansgar.rdroidpc.utils.AppUiCustomizationUtil;
 import com.ansgar.rdroidpc.utils.SharedValues;
@@ -38,9 +39,9 @@ public class Main {
     }
 
     private static void initAdbPath() {
-        String adbPath = new FileManagerImpl()
-                .get(SharedValuesKey.ADB_PATH + ".txt", SharedValuesKey.ADB_PATH, "");
-        SharedValues.put(SharedValuesKey.ADB_PATH, adbPath);
+        String adbPath = new FileManagerImpl(FilesEnum.CACHE.getValue())
+                .get(FilesEnum.SETTINGS.getValue(), SharedValuesKey.ADB_PATH, "");
+        SharedValues.put(SharedValuesKey.ADB_PATH, adbPath != null ? adbPath : "");
     }
 
 }

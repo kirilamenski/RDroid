@@ -4,6 +4,7 @@ import com.ansgar.filemanager.FileManager;
 import com.ansgar.filemanager.FileManagerImpl;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
+import com.ansgar.rdroidpc.entities.FilesEnum;
 import com.ansgar.rdroidpc.entities.Option;
 
 import javax.swing.*;
@@ -19,8 +20,8 @@ public class DeviceOptionsFrame extends BasePanel {
 
     public DeviceOptionsFrame(Component component, Device device, Rectangle rectangle) {
         super(rectangle, String.format("%s Options", device.getDeviceName()));
-        this.fileManager = new FileManagerImpl();
-        Device cachedDevice = fileManager.get(device.getDeviceId() + ".txt", Device.class);
+        this.fileManager = new FileManagerImpl(FilesEnum.CACHE.getValue());
+        Device cachedDevice = fileManager.getClass(FilesEnum.DEVICES.getValue(), device.getDeviceId(), Device.class);
         if (cachedDevice == null) {
             this.device = device;
         } else {
@@ -73,7 +74,7 @@ public class DeviceOptionsFrame extends BasePanel {
         okBtn.setFocusable(false);
         okBtn.addActionListener(e -> {
             device.setOption(createDeviceOption());
-            fileManager.save(device.getDeviceId() + ".txt", device);
+            fileManager.save(FilesEnum.DEVICES.getValue(), device.getDeviceId(), device);
             closeFrame();
         });
 

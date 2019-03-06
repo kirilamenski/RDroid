@@ -3,7 +3,7 @@ package com.ansgar.rdroidpc.commands;
 import com.ansgar.filemanager.FileManager;
 import com.ansgar.filemanager.FileManagerImpl;
 import com.ansgar.rdroidpc.entities.Device;
-import com.ansgar.rdroidpc.entities.Option;
+import com.ansgar.rdroidpc.entities.FilesEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +59,8 @@ public class ResponseParserUtil {
     }
 
     public Device setDeviceOption(Device device) {
-        FileManager fileManager = new FileManagerImpl();
-        Device savedDevice = fileManager.get(device.getDeviceId() + ".txt", Device.class);
+        FileManager fileManager = new FileManagerImpl(FilesEnum.CACHE.getValue());
+        Device savedDevice = fileManager.getClass(FilesEnum.DEVICES.getValue(), device.getDeviceId(), Device.class);
         if (savedDevice != null && savedDevice.getOption() != null) {
             device.setOption(savedDevice.getOption());
         }

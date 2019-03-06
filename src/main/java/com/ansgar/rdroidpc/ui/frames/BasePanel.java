@@ -63,7 +63,6 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
 
     @Override
     public void onCloseFrame() {
-
     }
 
     @Override

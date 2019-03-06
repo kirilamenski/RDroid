@@ -21,7 +21,8 @@ public class OrientationUtil extends TimerTask implements CommandExecutor.OnFini
     public OrientationUtil(Device device, OnDeviceOrientationListener listener) {
         this.executor = new CommandExecutor();
         this.timer = new Timer();
-        this.command = String.format(AdbCommandEnum.ORIENTATION.getCommand(), device.getDeviceId());
+        this.command = String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ORIENTATION),
+                device.getDeviceId());
         this.listener = listener;
         executor.setOnFinishExecuteListener(this);
     }
