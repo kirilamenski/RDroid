@@ -99,7 +99,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     @Nullable
     @Override
     public BasePresenter getPresenter() {
-        return super.getPresenter();
+        return presenter;
     }
 
     @Override
@@ -174,11 +174,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     }
 
     private void stopFrame() {
-        if (frame != null) {
-            frame.setVisible(false);
-            frame.dispose();
-            if (onVideoFrameListener != null) onVideoFrameListener.onDeviceConnectionClosed(device);
-        }
+        closeFrame();
+        if (onVideoFrameListener != null) onVideoFrameListener.onDeviceConnectionClosed(device);
     }
 
     private void addRightPanel() {
