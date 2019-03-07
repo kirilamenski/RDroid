@@ -22,6 +22,7 @@ public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
 
     public SpinnerDialog(JFrame frame) {
         this.frame = frame;
+        execute();
     }
 
     @Override
@@ -33,6 +34,15 @@ public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
     protected void done() {
         dialog.dispose();
     }
+
+    @Override
+    protected Void doInBackground() {
+        publish();
+        doInBack();
+        return null;
+    }
+
+    public abstract void doInBack();
 
     private void initDialog() {
         dialog.getContentPane().add(createSpinner());
