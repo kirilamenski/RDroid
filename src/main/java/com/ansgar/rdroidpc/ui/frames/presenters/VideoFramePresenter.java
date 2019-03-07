@@ -127,14 +127,26 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         settingsFrame.setListener(this);
     }
 
+    /**
+     * Run in background to display {@link SpinnerDialog}.
+     * Monkey Runner can stop working after some crash in android.
+     * Adb screenrecorder is limited by ~3 h. After this connection will stop.
+     * By default it is reconnect to monkey runner but if shared screen from android is empty
+     * then reconnect adb screenrecord.
+     */
     private void reconnect() {
         SpinnerDialog dialog = new SpinnerDialog(view.getParentComponent()) {
             @Override
             protected Void doInBackground() {
                 publish();
-                view.stop(false);
+                view.disposeDevice();
+                view.stopThread();
                 view.initChimpDevice();
-                view.startNewThread();
+                if (view.isScreenEmpty()) {
+                    view.stopFrameGrabber();
+                    if (orientationUtil != null) orientationUtil.stop();
+                    view.startNewThread();
+                }
                 return null;
             }
         };

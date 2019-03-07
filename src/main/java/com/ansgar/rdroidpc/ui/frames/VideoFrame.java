@@ -67,6 +67,76 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     }
 
     @Override
+    public void start(String command) {
+        isThreadRunning.set(true);
+        presenter.startCheckOrientationThread(device, 5000, 5000);
+
+        try {
+            InputStream inputStream = presenter.getInputScream(command);
+            frameGrabber = new FFmpegFrameGrabber(inputStream);
+            frameGrabber.start();
+
+            Java2DFrameConverter converter = new Java2DFrameConverter();
+            while (isThreadRunning.get() && frameGrabber != null && frameGrabber.grab() != null) {
+                if (isThreadRunning.get()) {
+                    currentImage = converter.getBufferedImage(frameGrabber.grab());
+                    repaint();
+                }
+            }
+            currentImage = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stop(boolean closeFrame) {
+        disposeDevice();
+        stopThread();
+        stopFrameGrabber();
+        if (closeFrame) stopFrame();
+    }
+
+    @Override
+    public void disposeDevice() {
+        if (chimpDevice != null) {
+            chimpDevice.dispose();
+            chimpDevice = null;
+        }
+    }
+
+    @Override
+    public void stopFrameGrabber() {
+        try {
+            if (frameGrabber != null && currentImage != null) {
+                frameGrabber.stop();
+                frameGrabber = null;
+            }
+        } catch (FrameGrabber.Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stopThread() {
+        if (thread != null && thread.isAlive()) {
+            isThreadRunning.set(false);
+            try {
+                thread.join(1000);
+                thread = null;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void stopFrame() {
+        closeFrame();
+        if (onVideoFrameListener != null) onVideoFrameListener.onDeviceConnectionClosed(device);
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (currentImage != null) {
@@ -120,62 +190,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         rectangle.height = imageHeight + OsEnum.Companion.getOsType().getHeightOffset();
         updateWindowSize(rectangle);
         currentOrientation = orientationEnum;
-    }
-
-    @Override
-    public void stop(boolean closeFrame) {
-        if (chimpDevice != null) chimpDevice.dispose();
-        stoStreaming();
-        stopGrabber();
-        if (closeFrame) stopFrame();
-    }
-
-    private void start(String command) {
-        isThreadRunning.set(true);
-        presenter.startCheckOrientationThread(device, 5000, 5000);
-
-        try {
-            InputStream inputStream = presenter.getInputScream(command);
-            frameGrabber = new FFmpegFrameGrabber(inputStream);
-            frameGrabber.start();
-
-            Java2DFrameConverter converter = new Java2DFrameConverter();
-            while (isThreadRunning.get() && frameGrabber != null && frameGrabber.grab() != null) {
-                if (isThreadRunning.get()) {
-                    currentImage = converter.getBufferedImage(frameGrabber.grab());
-                    repaint();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void stopGrabber() {
-        try {
-            if (frameGrabber != null && currentImage != null) {
-                frameGrabber.close();
-            }
-        } catch (FrameGrabber.Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void stoStreaming() {
-        if (thread != null && thread.isAlive()) {
-            isThreadRunning.set(false);
-            try {
-                thread.join(1000);
-                thread = null;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void stopFrame() {
-        closeFrame();
-        if (onVideoFrameListener != null) onVideoFrameListener.onDeviceConnectionClosed(device);
     }
 
     private void addRightPanel() {
@@ -249,6 +263,11 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     public OrientationEnum getCurrentOrientation() {
         return currentOrientation;
+    }
+
+    @Override
+    public boolean isScreenEmpty() {
+        return currentImage == null;
     }
 
     public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {

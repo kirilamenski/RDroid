@@ -7,14 +7,26 @@ public interface VideoFrameView extends BaseFrameView {
 
     void startNewThread();
 
+    void start(String command);
+
+    void stop(boolean closeFrame);
+
+    void disposeDevice();
+
+    void stopFrameGrabber();
+
+    void stopThread();
+
+    void stopFrame();
+
     void initChimpDevice();
 
     void changeOrientation(OrientationEnum orientation);
 
-    OrientationEnum getCurrentOrientation();
-
     void press(String value, TouchPressType type);
 
-    void stop(boolean closeFrame);
+    OrientationEnum getCurrentOrientation();
+
+    boolean isScreenEmpty();
 
 }
