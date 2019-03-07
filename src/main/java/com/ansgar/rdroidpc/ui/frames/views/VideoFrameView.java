@@ -11,7 +11,7 @@ public interface VideoFrameView extends BaseFrameView {
 
     void stop(boolean closeFrame);
 
-    void disposeDevice();
+    void disposeChimpDevice();
 
     void stopFrameGrabber();
 

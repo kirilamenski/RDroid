@@ -91,14 +91,14 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     @Override
     public void stop(boolean closeFrame) {
-        disposeDevice();
+        disposeChimpDevice();
         stopThread();
         stopFrameGrabber();
         if (closeFrame) stopFrame();
     }
 
     @Override
-    public void disposeDevice() {
+    public void disposeChimpDevice() {
         if (chimpDevice != null) {
             chimpDevice.dispose();
             chimpDevice = null;

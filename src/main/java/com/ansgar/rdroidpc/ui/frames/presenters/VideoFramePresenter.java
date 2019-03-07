@@ -138,12 +138,12 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         new SpinnerDialog(view.getParentComponent()) {
             @Override
             public void doInBack() {
-                view.disposeDevice();
-                view.stopThread();
+                view.disposeChimpDevice();
                 view.initChimpDevice();
                 if (view.isScreenEmpty()) {
-                    view.stopFrameGrabber();
                     if (orientationUtil != null) orientationUtil.stop();
+                    view.stopThread();
+                    view.stopFrameGrabber();
                     view.startNewThread();
                 }
             }
