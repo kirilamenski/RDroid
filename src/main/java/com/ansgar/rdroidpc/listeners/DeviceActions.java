@@ -13,9 +13,9 @@ public interface DeviceActions {
 
     void changeOrientation(int orientation);
 
-    void screenRecord(ScreenRecordOptions options, String name);
+    void screenRecord(ScreenRecordOptions options, String name, OnSaveScreenListener listener);
 
-    void screenCapture(String fileName, String path);
+    void screenCapture(String fileName, String path, OnSaveScreenListener listener);
 
     void restart();
 

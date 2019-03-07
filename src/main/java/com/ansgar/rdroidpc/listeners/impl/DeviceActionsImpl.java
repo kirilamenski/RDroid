@@ -5,23 +5,22 @@ import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.listeners.DeviceActions;
+import com.ansgar.rdroidpc.listeners.OnSaveScreenListener;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 
-public class DeviceActionsImpl implements DeviceActions, CommandExecutor.OnExecuteNextListener,
-        CommandExecutor.OnFinishExecuteListener, CommandExecutor.onExecuteErrorListener {
+public class DeviceActionsImpl implements DeviceActions {
 
     private VideoFrame frame;
     private CommandExecutor executor;
     private boolean isAccelerometerDisabled;
 
     public DeviceActionsImpl(VideoFrame frame) {
-        this.executor = new CommandExecutor(this, this, this);
+        this.executor = new CommandExecutor();
         this.frame = frame;
     }
 
@@ -47,7 +46,7 @@ public class DeviceActionsImpl implements DeviceActions, CommandExecutor.OnExecu
     }
 
     @Override
-    public void screenRecord(ScreenRecordOptions options, String fileName) {
+    public void screenRecord(ScreenRecordOptions options, String fileName, OnSaveScreenListener listener) {
         WeakReference<Thread> weakThread = new WeakReference<>(
                 new Thread(() -> {
                     String devicePath = String.format("%s%s", StringConst.DEFAULT_DEVICE_FOLDER, fileName);
@@ -61,31 +60,35 @@ public class DeviceActionsImpl implements DeviceActions, CommandExecutor.OnExecu
                             options.getHeight(),
                             devicePath
                     );
-                    executor.execute(command);
-                    executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_PULL_SNAPSHOT),
-                            frame.getDevice().getDeviceId(), devicePath, options.getDownloadFolder()));
-                    executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_REMOVE_FILE),
-                            frame.getDevice().getDeviceId(), devicePath));
+                    executeScreenActions(
+                            listener,
+                            options.getDownloadFolder(),
+                            command,
+                            String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_PULL_SNAPSHOT),
+                                    frame.getDevice().getDeviceId(), devicePath, options.getDownloadFolder()),
+                            String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_REMOVE_FILE),
+                                    frame.getDevice().getDeviceId(), devicePath)
+                    );
                 })
         );
         weakThread.get().start();
     }
 
     @Override
-    public void screenCapture(String fileName, String path) {
-        File file = new File(path);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
+    public void screenCapture(String fileName, String path, OnSaveScreenListener listener) {
         String devicePath = String.format("%s%s", StringConst.DEFAULT_DEVICE_FOLDER, fileName);
         WeakReference<Thread> thread = new WeakReference<>(
                 new Thread(() -> {
-                    executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_TAKE_SNAPSHOT),
-                            frame.getDevice().getDeviceId(), devicePath));
-                    executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_PULL_SNAPSHOT),
-                            frame.getDevice().getDeviceId(), devicePath, path));
-                    executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_REMOVE_FILE),
-                            frame.getDevice().getDeviceId(), devicePath));
+                    executeScreenActions(
+                            listener,
+                            path,
+                            String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_TAKE_SNAPSHOT),
+                                    frame.getDevice().getDeviceId(), devicePath),
+                            String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_PULL_SNAPSHOT),
+                                    frame.getDevice().getDeviceId(), devicePath, path),
+                            String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_REMOVE_FILE),
+                                    frame.getDevice().getDeviceId(), devicePath)
+                    );
                 })
         );
         thread.get().start();
@@ -101,18 +104,17 @@ public class DeviceActionsImpl implements DeviceActions, CommandExecutor.OnExecu
         if (executor != null) executor.destroy();
     }
 
-    @Override
-    public void onNext(String line) {
-        System.out.println(line);
+    private void executeScreenActions(OnSaveScreenListener listener, String uploadFolder, String... commands) {
+        WeakReference<CommandExecutor> executorWeakReference = new WeakReference<>(new CommandExecutor());
+        for (int i = 0; i < commands.length; i++) {
+            String command = commands[i];
+            if (i == commands.length - 1) {
+                executorWeakReference.get().setOnFinishExecuteListener(result -> listener.onScreenSaved(uploadFolder));
+            }
+            executorWeakReference.get().execute(command);
+        }
+        executorWeakReference.get().destroy();
+        executorWeakReference.clear();
     }
 
-    @Override
-    public void onFinish(StringBuilder result) {
-        System.out.println("Finish: " + result.toString());
-    }
-
-    @Override
-    public void onError(Throwable error) {
-        System.out.println("Error: " + error);
-    }
 }

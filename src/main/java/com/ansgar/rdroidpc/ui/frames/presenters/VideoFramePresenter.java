@@ -1,6 +1,7 @@
 package com.ansgar.rdroidpc.ui.frames.presenters;
 
 import com.android.chimpchat.core.TouchPressType;
+import com.ansgar.filemanager.DesktopUtil;
 import com.ansgar.rdroidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.StringConst;
@@ -91,7 +92,14 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
 
     @Override
     public void onPathSelected(String path) {
-        deviceActions.screenCapture(DateUtil.getCurrentDate() + ".png", path);
+        deviceActions.screenCapture(DateUtil.getCurrentDate() + ".png", path,
+                folder -> {
+                    try {
+                        DesktopUtil.openFolder(folder);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     @Override
@@ -101,7 +109,14 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
 
     @Override
     public void onOptionsSelected(ScreenRecordOptions options) {
-        deviceActions.screenRecord(options, DateUtil.getCurrentDate() + ".mp4");
+        deviceActions.screenRecord(options, DateUtil.getCurrentDate() + ".mp4",
+                folder -> {
+                    try {
+                        DesktopUtil.openFolder(folder);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     private void initMouseListener(VideoFrame frame) {
