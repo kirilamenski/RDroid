@@ -7,7 +7,7 @@ public interface FileManager {
 
     <T> void save(String fileName, String key, T obj);
 
-    String get(String fileName, String key, String defaultValue);
+    String get(String fileName, String key);
 
     <T> T getClass(String fileName, Class<T> clazz);
 

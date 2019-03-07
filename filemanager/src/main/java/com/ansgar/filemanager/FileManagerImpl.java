@@ -41,7 +41,7 @@ public class FileManagerImpl implements FileManager {
     }
 
     @Override
-    public String get(String fileName, String key, String defaultValue) {
+    public String get(String fileName, String key) {
         HashMap<String, String> map = fileManagerHelper.getHashedLines(fileName);
         return map.get(key);
     }

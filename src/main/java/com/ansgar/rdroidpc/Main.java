@@ -40,7 +40,7 @@ public class Main {
 
     private static void initAdbPath() {
         String adbPath = new FileManagerImpl(FilesEnum.CACHE.getValue())
-                .get(FilesEnum.SETTINGS.getValue(), SharedValuesKey.ADB_PATH, "");
+                .get(FilesEnum.SETTINGS.getValue(), SharedValuesKey.ADB_PATH);
         SharedValues.put(SharedValuesKey.ADB_PATH, adbPath != null ? adbPath : "");
     }
 

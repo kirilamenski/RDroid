@@ -66,7 +66,7 @@ public class FileUploader extends DropTarget {
     private List<String> getCmds(String filePath, String uploadFolder) {
         List<String> cmd = new ArrayList<>();
         String adbPath = new FileManagerImpl(FilesEnum.CACHE.getValue())
-                .get(FilesEnum.SETTINGS.getValue(), SharedValuesKey.ADB_PATH, "");
+                .get(FilesEnum.SETTINGS.getValue(), SharedValuesKey.ADB_PATH);
         if (!adbPath.isEmpty()) cmd.add(adbPath);
         else cmd.add("adb");
         cmd.add("-s");

@@ -25,9 +25,7 @@ class FileManagerHelper {
 
     void write(String fileName, byte[] bytes, StandardOpenOption option) {
         Path path = Paths.get(defaultDirectory, fileName);
-        if (!fileExists(fileName)) {
-            option = StandardOpenOption.CREATE;
-        }
+        createFile(fileName);
         try {
             Files.write(path, bytes, option);
         } catch (IOException e) {
@@ -37,28 +35,27 @@ class FileManagerHelper {
 
     List<String> getAllLines(String fileName) {
         Path path = Paths.get(defaultDirectory, fileName);
-        if (fileExists(fileName)) {
-            try {
-                return Files.readAllLines(path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        createFile(fileName);
+        try {
+            return Files.readAllLines(path);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     @NotNull
     <T> HashMap<String, T> getHashedLines(String fileName) {
-        HashMap<String, T> map = new HashMap<>();
-        if (fileExists(fileName)) {
-            List<String> list = getAllLines(fileName);
-            Gson gson = new Gson();
-            Type type = new TypeToken<HashMap<String, T>>() {
-            }.getType();
+        createFile(fileName);
 
-            if (list != null) {
-                list.forEach(line -> map.putAll(gson.fromJson(line, type)));
-            }
+        HashMap<String, T> map = new HashMap<>();
+        List<String> list = getAllLines(fileName);
+        Gson gson = new Gson();
+        Type type = new TypeToken<HashMap<String, T>>() {
+        }.getType();
+
+        if (list != null) {
+            list.forEach(line -> map.putAll(gson.fromJson(line, type)));
         }
         return map;
     }
@@ -73,9 +70,15 @@ class FileManagerHelper {
         }
     }
 
-    private boolean fileExists(String fileName) {
+    private void createFile(String fileName) {
         Path path = Paths.get(defaultDirectory, fileName);
-        return Files.exists(path);
+        if (!Files.exists(path)) {
+            try {
+                Files.createFile(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
