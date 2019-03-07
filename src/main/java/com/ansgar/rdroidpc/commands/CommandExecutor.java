@@ -29,7 +29,6 @@ public class CommandExecutor {
     }
 
     public void execute(String command) {
-        System.out.println(command);
         try {
             process = Runtime.getRuntime().exec(command);
 

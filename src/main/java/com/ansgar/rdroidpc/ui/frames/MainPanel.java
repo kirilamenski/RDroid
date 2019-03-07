@@ -37,19 +37,15 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         super(rectangle, title);
         this.menuBar = new MenuBar();
         this.openedDevices = new HashMap<>();
-        this.adbBackend = new AdbBackend();
         this.devices = new ArrayList<>();
         this.listener = new MainActionPanelsListener(this);
-
-        SpinnerDialog dialog = new SpinnerDialog(frame) {
+        new SpinnerDialog(frame) {
             @Override
-            protected Void doInBackground() {
-                publish();
+            public void doInBack() {
+                adbBackend = new AdbBackend();
                 setUpMainPanel();
-                return null;
             }
         };
-        dialog.execute();
     }
 
     private void setUpMainPanel() {
@@ -69,6 +65,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
 
     public void killServer() {
         if (devicesContainer != null) remove(devicesContainer);
+        repaint();
         CommandExecutor commandExecutor = new CommandExecutor();
         commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KILL_SERVER));
     }
@@ -124,10 +121,9 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
 
     @Override
     public void onCloseFrame() {
-        SpinnerDialog dialog = new SpinnerDialog(frame) {
+        new SpinnerDialog(frame) {
             @Override
-            protected Void doInBackground() {
-                publish();
+            public void doInBack() {
                 closeDevicesConnections();
                 try {
                     stopAdbConnection();
@@ -135,10 +131,8 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
                 }
                 restartServer();
                 System.exit(0);
-                return null;
             }
         };
-        dialog.execute();
     }
 
     @Override
