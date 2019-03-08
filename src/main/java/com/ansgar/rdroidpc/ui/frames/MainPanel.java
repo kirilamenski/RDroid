@@ -12,15 +12,12 @@ import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.DevicesContainer;
 import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
-import com.ansgar.rdroidpc.utils.StringUtils;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 
-import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
@@ -39,13 +36,13 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         this.openedDevices = new HashMap<>();
         this.devices = new ArrayList<>();
         this.listener = new MainActionPanelsListener(this);
-        new SpinnerDialog(frame) {
+        new SpinnerDialog(getRectangle()) {
             @Override
             public void doInBack() {
                 adbBackend = new AdbBackend();
                 setUpMainPanel();
             }
-        };
+        }.execute();
     }
 
     private void setUpMainPanel() {
@@ -121,7 +118,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
 
     @Override
     public void onCloseFrame() {
-        new SpinnerDialog(frame) {
+        new SpinnerDialog(getRectangle()) {
             @Override
             public void doInBack() {
                 closeDevicesConnections();
@@ -132,7 +129,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
                 restartServer();
                 System.exit(0);
             }
-        };
+        }.execute();
     }
 
     @Override

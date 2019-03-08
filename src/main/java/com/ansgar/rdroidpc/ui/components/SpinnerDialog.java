@@ -4,6 +4,8 @@ import com.ansgar.rdroidpc.utils.ImageUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 import java.net.URL;
 import java.util.List;
 
@@ -14,15 +16,15 @@ import java.util.List;
  */
 public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
 
-    private JFrame frame;
+    private Rectangle rectangle;
     private final JDialog dialog = new JDialog();
     private String spinnerSrc = "gifs/loading.gif";
     private int imageWidth = 60;
     private int imageHeight = 60;
+    private boolean undecorated = true;
 
-    public SpinnerDialog(JFrame frame) {
-        this.frame = frame;
-        execute();
+    public SpinnerDialog(Rectangle rectangle) {
+        this.rectangle = rectangle;
     }
 
     @Override
@@ -46,10 +48,10 @@ public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
 
     private void initDialog() {
         dialog.getContentPane().add(createSpinner());
-        dialog.setUndecorated(true);
+        dialog.setUndecorated(undecorated);
         dialog.pack();
-        dialog.setLocation(frame.getX(), frame.getY());
-        dialog.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
+        dialog.setLocation(rectangle.x, rectangle.y);
+        dialog.setSize(new Dimension(rectangle.width, rectangle.height));
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         dialog.setModal(true);
         dialog.setVisible(true);
@@ -60,11 +62,14 @@ public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
         URL imageUrl = classLoader.getResource(spinnerSrc);
         Image img = ImageUtils.resizeIcon(imageUrl, imageWidth, imageHeight);
         if (img != null) {
-            JPanel spinnerContainer = new JPanel(new BorderLayout());
+            JPanel spinnerContainer = new JPanel(null);
             ImageIcon icon = new ImageIcon(img);
             JLabel spinner = new JLabel(icon);
+            spinner.setBounds(
+                    (int) (rectangle.getWidth() / 2 - icon.getIconWidth() / 2),
+                    (int) (rectangle.getHeight() / 2 - icon.getIconHeight() / 2),
+                    icon.getIconWidth(), icon.getIconHeight());
             spinnerContainer.add(spinner);
-
             return spinnerContainer;
         }
 
@@ -84,6 +89,10 @@ public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
     public SpinnerDialog setImageHeight(int imageHeight) {
         this.imageHeight = imageHeight;
         return this;
+    }
+
+    public void setUndecorated(boolean undecorated) {
+        this.undecorated = undecorated;
     }
 
 }
