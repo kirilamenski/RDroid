@@ -11,10 +11,7 @@ import com.ansgar.rdroidpc.enums.MenuItemsEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
-import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
-import com.ansgar.rdroidpc.ui.components.FileChooser;
-import com.ansgar.rdroidpc.ui.components.OptionDialog;
-import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
+import com.ansgar.rdroidpc.ui.components.*;
 import com.ansgar.rdroidpc.ui.frames.ScreenRecordOptionsFrame;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
@@ -25,6 +22,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class VideoFramePresenter extends BasePresenter implements OnFileChooserListener,
         OnDeviceOrientationListener, OnScreenRecordOptionsListener {
@@ -32,6 +32,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
     private VideoFrameView view;
     private DeviceActions deviceActions;
     private OrientationUtil orientationUtil;
+    private AtomicInteger screenRecordTimeleft;
 
     public VideoFramePresenter(VideoFrameView view) {
         super(view);
@@ -52,7 +53,9 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 openFileChooser();
                 break;
             case 2:
-                openScreenRecordOptions();
+                if (screenRecordTimeleft == null) openScreenRecordOptions();
+                else view.showMessageDialog("", StringConst.SCREEN_RECORD_ALREADY_RUNNING,
+                        JOptionPane.CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
                 break;
             case 3:
                 view.press(String.valueOf(AdbKeyCode.KEYCODE_MENU.getKeyCode()), TouchPressType.DOWN_AND_UP);
@@ -117,6 +120,30 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                         e.printStackTrace();
                     }
                 });
+        startScreenRecordTimerLeft(options.getTime());
+    }
+
+    private void startScreenRecordTimerLeft(int time) {
+        if (screenRecordTimeleft == null) screenRecordTimeleft = new AtomicInteger();
+        screenRecordTimeleft.set(time);
+
+        OverlayComponent component = getOverlayComponent();
+        view.getChildComponent().add(component);
+        view.getChildComponent().repaint();
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                screenRecordTimeleft.set(screenRecordTimeleft.get() - 1);
+                component.updateTitle(String.format(StringConst.SCREEN_RECORDING_L, screenRecordTimeleft.get()));
+                if (screenRecordTimeleft.get() <= 0) {
+                    screenRecordTimeleft = null;
+                    timer.cancel();
+                    view.getChildComponent().remove(component);
+                }
+            }
+        }, 0, 1000);
     }
 
     private void initMouseListener(VideoFrame frame) {
@@ -150,7 +177,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
      * then reconnect adb screenrecord.
      */
     private void reconnect() {
-        new SpinnerDialog(view.getParentComponent()) {
+        new SpinnerDialog(view.getRectangle()) {
             @Override
             public void doInBack() {
                 view.disposeChimpDevice();
@@ -162,21 +189,30 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                     view.startNewThread();
                 }
             }
-        };
+        }.execute();
     }
 
     /**
      * Todo add button to right panel with multiple actions list such as reboot, turn off, wake up, and other actions with device
      */
     private void confirmReboot() {
-        int value = new OptionDialog()
-                .setDialogTitle(StringConst.ASK_REBOOT)
-                .setMainTitle("")
-                .showDialog(view.getChildComponent(), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int value = view.showMessageDialog("", StringConst.ASK_REBOOT,
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (value == 0) {
             view.onCloseFrame();
             deviceActions.restart();
         }
+    }
+
+    private OverlayComponent getOverlayComponent() {
+        OverlayComponent component = new OverlayComponent();
+        component.setBounds(new Rectangle(0, view.getChildComponent().getHeight() - 30,
+                view.getChildComponent().getWidth(), 30));
+        component.setImageSrc("icons/ic_screen_record_64.png");
+        component.setImageWidth(30);
+        component.setImageHeight(30);
+        component.createComponent();
+        return component;
     }
 
 }
