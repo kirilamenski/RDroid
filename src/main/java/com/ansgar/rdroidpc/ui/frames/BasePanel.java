@@ -1,5 +1,7 @@
 package com.ansgar.rdroidpc.ui.frames;
 
+import com.ansgar.rdroidpc.constants.StringConst;
+import com.ansgar.rdroidpc.ui.components.OptionDialog;
 import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
 import com.ansgar.rdroidpc.ui.frames.views.BaseFrameView;
 import org.jetbrains.annotations.Nullable;
@@ -102,6 +104,14 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
     @Override
     public Rectangle getRectangle() {
         return rectangle;
+    }
+
+    @Override
+    public int showMessageDialog(String title, String message, int optionType, int messageType) {
+        return new OptionDialog()
+                .setDialogTitle(message)
+                .setMainTitle(title)
+                .showDialog(this, optionType, messageType);
     }
 
     @Override

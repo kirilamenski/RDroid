@@ -15,4 +15,6 @@ public interface BaseFrameView {
 
     void onCloseFrame();
 
+    int showMessageDialog(String title, String message, int optionType, int messageType);
+
 }
