@@ -49,5 +49,8 @@ class StringConst {
         const val ASK_REBOOT = "Do you want to reboot device?"
 
         const val DEFAULT_DEVICE_FOLDER = "/sdcard/"
+
+        const val SCREEN_RECORD_ALREADY_RUNNING = "Screen Record_already_running"
+        const val SCREEN_RECORDING_L = "Screen recording %d"
     }
 }
