@@ -180,7 +180,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
      * then reconnect adb screenrecord.
      */
     private void reconnect() {
-        new SpinnerDialog(view.getRectangle()) {
+        new SpinnerDialog(view.getParentComponent().getBounds()) {
             @Override
             public void doInBack() {
                 view.disposeChimpDevice();

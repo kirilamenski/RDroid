@@ -110,7 +110,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         try {
             if (frameGrabber != null && currentImage != null) {
                 frameGrabber.stop();
-                frameGrabber = null;
             }
         } catch (FrameGrabber.Exception e) {
             e.printStackTrace();

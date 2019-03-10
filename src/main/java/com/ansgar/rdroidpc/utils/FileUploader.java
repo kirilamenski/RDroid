@@ -2,12 +2,16 @@ package com.ansgar.rdroidpc.utils;
 
 import com.ansgar.filemanager.FileManagerImpl;
 import com.ansgar.rdroidpc.commands.CommandExecutor;
+import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.FilesEnum;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.entities.Device;
+import com.ansgar.rdroidpc.ui.components.OptionDialog;
+import com.ansgar.rdroidpc.ui.components.OverlayComponent;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
@@ -15,17 +19,20 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
+import java.util.Timer;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileUploader extends DropTarget {
 
     private Device device;
+    private JPanel panel;
 
     public FileUploader(JPanel panel, Device device) {
         this.device = device;
-        panel.setDropTarget(this);
+        this.panel = panel;
+        this.panel.setDropTarget(this);
     }
 
     @Override
@@ -43,7 +50,7 @@ public class FileUploader extends DropTarget {
 
     private void uploadFiles(List<File> droppedFiles) {
         CommandExecutor executor = new CommandExecutor();
-        executor.setOnExecuteNextListener(System.out::println);
+        executor.setOnFinishExecuteListener(result -> showMessage());
         String uploadFolder = SharedValues.get(SharedValuesKey.UPLOAD_FOLDER, "/sdcard/Download");
         for (File file : droppedFiles) {
             String filePath = file.getAbsolutePath();
@@ -58,6 +65,9 @@ public class FileUploader extends DropTarget {
                 executor.execute(getCmds(filePath, uploadFolder));
             } else {
                 executor.execute(command);
+            }
+            if (file.getName().endsWith(".apk")) {
+                showInstallApkMessage(filePath);
             }
         }
     }
@@ -76,4 +86,48 @@ public class FileUploader extends DropTarget {
         cmd.add(uploadFolder);
         return cmd;
     }
+
+    private void showMessage() {
+        OverlayComponent component = getOverlayComponent();
+        panel.add(component);
+        component.updateTitle("File uploaded to \"sdcard/Download\" folder.");
+        panel.repaint();
+
+        AtomicInteger timeToDisappear = new AtomicInteger();
+        timeToDisappear.set(10);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                timeToDisappear.set(timeToDisappear.get() - 1);
+                if (timeToDisappear.get() <= 0) {
+                    panel.remove(component);
+                    timer.cancel();
+                    panel.repaint();
+                }
+            }
+        }, 0, 1000);
+    }
+
+    private OverlayComponent getOverlayComponent() {
+        OverlayComponent component = new OverlayComponent();
+        component.setBounds(new Rectangle(0, panel.getHeight() - 30, panel.getWidth(), 30));
+        component.setImageWidth(30);
+        component.setImageHeight(30);
+        component.createComponent();
+        return component;
+    }
+
+    private void showInstallApkMessage(String pathToApk) {
+        int result = new OptionDialog()
+                .setDialogTitle(StringConst.INSTALL_APK_MESSAGE)
+                .setMainTitle("")
+                .showDialog(panel, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (result == 0) {
+            CommandExecutor executor = new CommandExecutor();
+            executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.INSTALL_APK),
+                    device.getDeviceId(), pathToApk));
+        }
+    }
+
 }

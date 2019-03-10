@@ -15,6 +15,7 @@ enum class AdbCommandEnum(val command: String) {
     START_SERVER("adb start-server"),
     ORIENTATION("adb -s %s shell dumpsys input | grep 'SurfaceOrientation'"),
     ACCELEROMETER_ENABLE("adb -s %s shell settings put system accelerometer_rotation %d"),
+    INSTALL_APK("adb -s %s install -r %s"),
     ROTATE_DEVICE("adb -s %s shell settings put system user_rotation %d"),
     TAKE_SNAPSHOT("adb -s %s exec-out screencap -p > %s"),
     ADB_TAKE_SNAPSHOT("adb -s %s shell screencap -p %s"),

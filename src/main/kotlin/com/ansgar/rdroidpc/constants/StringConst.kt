@@ -52,5 +52,6 @@ class StringConst {
 
         const val SCREEN_RECORD_ALREADY_RUNNING = "Screen Record_already_running"
         const val SCREEN_RECORDING_L = "Screen recording %d"
+        const val INSTALL_APK_MESSAGE = "Do you want to install this apk?"
     }
 }
