@@ -7,7 +7,7 @@ class StringConst {
     companion object {
         var menuItems = arrayOf(
                 MenuItemsEnum.FILE.value, arrayOf(MenuItemsEnum.SETTINGS.value, MenuItemsEnum.EXIT.value),
-                MenuItemsEnum.HELP.value)
+                MenuItemsEnum.HELP.value, arrayOf(MenuItemsEnum.INFORMATION.value))
         val deviceHeaderNames = arrayOf("name", "size", "device id", "status", "")
         val defaultScreenSizes = arrayOf("480x640", "540x960", "720x1280", "1080x1920", "1440x2560")
         val bitRates = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
@@ -34,6 +34,27 @@ class StringConst {
                 "Back",
                 "Home",
                 "Recent Application"
+        )
+
+        const val INFORMATION = "<html><h2>FEATURES:</h2>" +
+                "- control android device from PC.<br>" +
+                "- video recording and screen capturing.<br>" +
+                "- uploading files by drag and drop.<br>" +
+                "<br>" +
+                "<h2>HOT KEYS:</h2>" +
+                "|alt + left arrow \t|\tgo back\t|<br>" +
+                "|ctrl + alt + h\t|\tgo home\t|<br>" +
+                "|ctrl + alt + l\t|\topen recent app list\t|<br>" +
+                "|ctrl + shift + F10\t|\tmute volume\t|<br>" +
+                "|ctrl + shift + F11\t|\tvolume down\t|<br>" +
+                "|ctrl + shift + F12\t|\tvolume up\t|<br>" +
+                "|left/top/right/bottom arrows|navigation|<br>" +
+                "<br>" +
+                "<h2>CONTACTS:</h2></html>"
+
+        val links = arrayOf(
+                "https://github.com/kirilamenski/RDroid/issues",
+                "<html>Visit <a href=\"https://github.com/kirilamenski/RDroid/issues\">https://github.com/kirilamenski/RDroid/issues</a> to report about issues</html>"
         )
 
         const val BIT_RATE_L = "Bit Rate"

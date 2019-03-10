@@ -5,8 +5,7 @@ enum class MenuItemsEnum(val value: String) {
     SETTINGS("Settings"),
     EXIT("Exit"),
     HELP("Help"),
-    REPORT("Report an issue"),
-    CONTACT("Contact me");
+    INFORMATION("Information");
 
     companion object {
         fun getMenuItemEnumByValue(value: String): MenuItemsEnum? = values().firstOrNull { menuItemsEnum ->

@@ -6,6 +6,7 @@ import com.ansgar.rdroidpc.entities.FilesEnum;
 import com.ansgar.rdroidpc.enums.MenuItemsEnum;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
+import com.ansgar.rdroidpc.ui.frames.AboutPanel;
 import com.ansgar.rdroidpc.ui.frames.MainPanel;
 import com.ansgar.rdroidpc.ui.frames.SettingsFrame;
 import com.ansgar.rdroidpc.utils.SharedValues;
@@ -35,6 +36,9 @@ public class MainPanelMenuListenerImpl implements OnMenuItemListener {
                     SettingsFrame settingsFrame = new SettingsFrame(panel, rectangle,
                             MenuItemsEnum.SETTINGS.getValue());
                     settingsFrame.setListener(this);
+                    break;
+                case INFORMATION:
+                    new AboutPanel(panel.getRectangle(), MenuItemsEnum.INFORMATION.getValue());
                     break;
                 case EXIT:
                     panel.onCloseFrame();
