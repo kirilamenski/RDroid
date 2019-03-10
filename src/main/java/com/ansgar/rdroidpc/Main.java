@@ -28,7 +28,7 @@ public class Main {
                 DimensionConst.MAIN_WINDOW_HEIGHT
         );
 
-        MainPanel panel = new MainPanel(rectangle, ProgrammInf.NAME + "/" + ProgrammInf.VERSION);
+        MainPanel panel = new MainPanel(rectangle, ProgrammInf.NAME + ProgrammInf.VERSION);
         panel.updateUI();
     }
 
