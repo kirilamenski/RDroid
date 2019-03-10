@@ -24,7 +24,7 @@ public class OverlayComponent extends JPanel {
             add(iconL);
         }
 
-        titleL = new JLabel("Wait");
+        titleL = new JLabel();
         titleL.setBounds(imageWidth, getHeight() / 6, getWidth() - imageWidth, getHeight());
         add(titleL);
     }

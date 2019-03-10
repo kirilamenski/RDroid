@@ -53,9 +53,12 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 openFileChooser();
                 break;
             case 2:
-                if (screenRecordTimeleft == null) openScreenRecordOptions();
-                else view.showMessageDialog("", StringConst.SCREEN_RECORD_ALREADY_RUNNING,
-                        JOptionPane.CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
+                if (screenRecordTimeleft == null) {
+                    openScreenRecordOptions();
+                } else {
+                    view.showMessageDialog("", StringConst.SCREEN_RECORD_ALREADY_RUNNING,
+                            JOptionPane.CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
+                }
                 break;
             case 3:
                 view.press(String.valueOf(AdbKeyCode.KEYCODE_MENU.getKeyCode()), TouchPressType.DOWN_AND_UP);
