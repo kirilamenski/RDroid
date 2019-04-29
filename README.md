@@ -1,6 +1,6 @@
 ## About
 
-RDroid is free and open source program written in Java to connect to android devices. Provides the ability to display the screen of an android device and remotely control it from a PC via a USB cable. Uses [MonkeyRunner](https://developer.android.com/studio/test/monkeyrunner/) for remote control and [JavaCV](https://github.com/bytedeco/javacv) to display the android screen.
+RDroid is a free and open source program written in Java to connect to android devices via USB cable. Provides the ability to display the screen of android and remotely control it from a PC. Uses [MonkeyRunner](https://developer.android.com/studio/test/monkeyrunner/) for remote control and [JavaCV](https://github.com/bytedeco/javacv) to display the android screen.
 
 ## Usage
 
