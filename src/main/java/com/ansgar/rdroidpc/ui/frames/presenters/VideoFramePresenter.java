@@ -7,6 +7,7 @@ import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
+import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.enums.MenuItemsEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.listeners.*;
@@ -61,7 +62,8 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 }
                 break;
             case 3:
-                view.press(String.valueOf(AdbKeyCode.KEYCODE_MENU.getKeyCode()), TouchPressType.DOWN_AND_UP);
+//                view.press(String.valueOf(AdbKeyCode.KEYCODE_MENU.getKeyCode()), TouchPressType.DOWN_AND_UP);
+                deviceActions.pressKeyCode(AdbKeyCode.KEYCODE_MENU);
                 break;
             case 4:
                 reconnect();

@@ -1,6 +1,7 @@
 package com.ansgar.rdroidpc.listeners.impl;
 
 import com.ansgar.rdroidpc.commands.CommandExecutor;
+import com.ansgar.rdroidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
@@ -92,6 +93,17 @@ public class DeviceActionsImpl implements DeviceActions {
                 })
         );
         thread.get().start();
+    }
+
+    @Override
+    public void pressKeyCode(AdbKeyCode command) {
+        String _command = String.format(
+                AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KEY_EVENT),
+                frame.getDevice().getDeviceId(),
+                command.name()
+        );
+        System.out.println(_command);
+        executor.execute(_command);
     }
 
     @Override

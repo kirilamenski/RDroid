@@ -23,7 +23,8 @@ enum class AdbCommandEnum(val command: String) {
     ADB_REMOVE_FILE("adb -s %s shell rm -f %s"),
     SCREEN_STREAMING("screenrecord --bit-rate %dm --output-format=h264 --time-limit 180 --size %dx%d - "),
     SCREEN_RECORD("adb -s %s shell screenrecord --bit-rate %dm --time-limit %d --size %dx%d %s"),
-    UPLOAD_FILES("adb -s %s push %s %s");
+    UPLOAD_FILES("adb -s %s push %s %s"),
+    KEY_EVENT("adb -s %s shell input keyevent %s");
 
     companion object {
         fun getCommandValue(commandEnum: AdbCommandEnum): String {
