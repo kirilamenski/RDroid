@@ -2,7 +2,6 @@ package com.ansgar.filemanager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -44,7 +43,6 @@ class FileManagerHelper {
         return null;
     }
 
-    @NotNull
     <T> HashMap<String, T> getHashedLines(String fileName) {
         createFile(fileName);
 
