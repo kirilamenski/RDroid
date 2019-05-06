@@ -7,7 +7,6 @@ import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
-import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.enums.MenuItemsEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.listeners.*;
@@ -33,7 +32,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
     private VideoFrameView view;
     private DeviceActions deviceActions;
     private OrientationUtil orientationUtil;
-    private AtomicInteger screenRecordTimeleft;
+    private AtomicInteger screenRecordTimeLeft;
 
     public VideoFramePresenter(VideoFrameView view) {
         super(view);
@@ -54,7 +53,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 openFileChooser();
                 break;
             case 2:
-                if (screenRecordTimeleft == null) {
+                if (screenRecordTimeLeft == null) {
                     openScreenRecordOptions();
                 } else {
                     view.showMessageDialog("", StringConst.SCREEN_RECORD_ALREADY_RUNNING,
@@ -128,8 +127,8 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
     }
 
     private void startScreenRecordTimerLeft(int time) {
-        if (screenRecordTimeleft == null) screenRecordTimeleft = new AtomicInteger();
-        screenRecordTimeleft.set(time);
+        if (screenRecordTimeLeft == null) screenRecordTimeLeft = new AtomicInteger();
+        screenRecordTimeLeft.set(time);
 
         OverlayComponent component = getOverlayComponent();
         view.getChildComponent().add(component);
@@ -139,10 +138,10 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                screenRecordTimeleft.set(screenRecordTimeleft.get() - 1);
-                component.updateTitle(String.format(StringConst.SCREEN_RECORDING_L, screenRecordTimeleft.get()));
-                if (screenRecordTimeleft.get() <= 0) {
-                    screenRecordTimeleft = null;
+                screenRecordTimeLeft.set(screenRecordTimeLeft.get() - 1);
+                component.updateTitle(String.format(StringConst.SCREEN_RECORDING_L, screenRecordTimeLeft.get()));
+                if (screenRecordTimeLeft.get() <= 0) {
+                    screenRecordTimeLeft = null;
                     timer.cancel();
                     view.getChildComponent().remove(component);
                 }
