@@ -83,9 +83,10 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
                     repaint();
                 }
             }
-            currentImage = null;
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            currentImage = null;
         }
     }
 
@@ -108,7 +109,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     @Override
     public void stopFrameGrabber() {
         try {
-            if (frameGrabber != null && currentImage != null) {
+            if (frameGrabber != null) {
                 frameGrabber.stop();
             }
         } catch (FrameGrabber.Exception e) {
@@ -118,7 +119,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     @Override
     public void stopThread() {
-        if (thread != null && thread.isAlive()) {
+        if (thread != null) {
             isThreadRunning.set(false);
             try {
                 thread.join(1000);

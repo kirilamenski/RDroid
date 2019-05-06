@@ -62,7 +62,6 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 }
                 break;
             case 3:
-//                view.press(String.valueOf(AdbKeyCode.KEYCODE_MENU.getKeyCode()), TouchPressType.DOWN_AND_UP);
                 deviceActions.pressKeyCode(AdbKeyCode.KEYCODE_MENU);
                 break;
             case 4:
@@ -178,7 +177,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
      * Run in background to display {@link SpinnerDialog}.
      * Monkey Runner can stop working after some crash in android.
      * Adb screenrecorder is limited by ~3 h. After this connection will stop.
-     * By default it is reconnect to monkey runner but if shared screen from android is empty
+     * By default will reconnected to monkey runner and if displayed android screen is empty
      * then reconnect adb screenrecord.
      */
     private void reconnect() {
