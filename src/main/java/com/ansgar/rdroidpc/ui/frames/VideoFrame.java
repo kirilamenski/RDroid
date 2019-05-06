@@ -194,20 +194,20 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private void addRightPanel() {
         if (rightPanel != null) remove(rightPanel);
-        rightPanel = new ButtonsPanel();
-        rightPanel.setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK));
-        rightPanel.setIcons(StringConst.Companion.getNavigationPanelIcons());
-        rightPanel.setToolTips(StringConst.Companion.getNavigationPanelTooltips());
-        rightPanel.setState(ButtonsPanelStateEnum.VERTICAL);
-        rightPanel.setIconSize(42, 42);
-        rightPanel.setBounds(
-                frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
-                0,
-                DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
-                imageHeight
-        );
-        rightPanel.setItemClickListener(presenter.rightActionsListener);
-        rightPanel.createPanel();
+        rightPanel = new ButtonsPanel.ButtonsPanelBuilder()
+                .setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK))
+                .setIcons(StringConst.Companion.getNavigationPanelIcons())
+                .setToolTips(StringConst.Companion.getNavigationPanelTooltips())
+                .setState(ButtonsPanelStateEnum.VERTICAL)
+                .setIconSize(42, 42)
+                .setBounds(
+                        frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
+                        0,
+                        DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
+                        imageHeight
+                )
+                .setItemClickListener(presenter.rightActionsListener)
+                .build();
 
         add(rightPanel);
     }

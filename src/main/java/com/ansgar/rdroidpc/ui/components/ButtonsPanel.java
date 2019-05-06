@@ -106,4 +106,54 @@ public class ButtonsPanel extends JPanel {
         this.listener = listener;
     }
 
+    public static class ButtonsPanelBuilder {
+
+        private ButtonsPanel panel;
+
+        public ButtonsPanelBuilder() {
+            panel = new ButtonsPanel();
+        }
+
+        public ButtonsPanelBuilder setBorder(MatteBorder border) {
+            panel.setBorder(border);
+            return this;
+        }
+
+        public ButtonsPanelBuilder setState(ButtonsPanelStateEnum state) {
+            panel.setState(state);
+            return this;
+        }
+
+        public ButtonsPanelBuilder setIconSize(int iconWidth, int iconHeight) {
+            panel.setIconSize(iconWidth, iconHeight);
+            return this;
+        }
+
+        public ButtonsPanelBuilder setIcons(String... icons) {
+            panel.setIcons(icons);
+            return this;
+        }
+
+        public ButtonsPanelBuilder setToolTips(String... toolTips) {
+            panel.setToolTips(toolTips);
+            return this;
+        }
+
+        public ButtonsPanelBuilder setBounds(int x, int y, int width, int height) {
+            panel.setBounds(x, y, width, height);
+            return this;
+        }
+
+        public ButtonsPanelBuilder setItemClickListener(OnButtonPanelListener listener) {
+            panel.setItemClickListener(listener);
+            return this;
+        }
+
+        public ButtonsPanel build() {
+            panel.createPanel();
+            return panel;
+        }
+
+    }
+
 }
