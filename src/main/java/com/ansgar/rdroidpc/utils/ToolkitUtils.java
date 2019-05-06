@@ -1,6 +1,9 @@
 package com.ansgar.rdroidpc.utils;
 
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 
 public class ToolkitUtils {
 
@@ -14,6 +17,18 @@ public class ToolkitUtils {
 
     public static GraphicsDevice getMultiWindowSize() {
         return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    }
+
+    public static String getTextFromClipboard() {
+        StringBuilder savedText = new StringBuilder();
+        try {
+            savedText.append("\"")
+                    .append(Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor))
+                    .append("\"");
+        } catch (UnsupportedFlavorException | IOException e) {
+            e.printStackTrace();
+        }
+        return savedText.toString();
     }
 
 }
