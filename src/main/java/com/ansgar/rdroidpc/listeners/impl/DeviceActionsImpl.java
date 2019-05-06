@@ -102,7 +102,6 @@ public class DeviceActionsImpl implements DeviceActions {
                 frame.getDevice().getDeviceId(),
                 command.name()
         );
-        System.out.println(_command);
         executor.execute(_command);
     }
 
