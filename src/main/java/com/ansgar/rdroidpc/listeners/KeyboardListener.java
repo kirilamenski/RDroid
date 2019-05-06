@@ -3,6 +3,7 @@ package com.ansgar.rdroidpc.listeners;
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
+import com.ansgar.rdroidpc.utils.ToolkitUtils;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -44,6 +45,7 @@ public class KeyboardListener implements KeyListener {
     }
 
     private void checkForMultipleKey() {
+        // TODO refactor
         AdbKeyCode adbKeyCode = AdbKeyCode.KEYCODE_UNKNOWN;
         if (pressedKey.containsKey(KeyEvent.VK_ALT) && pressedKey.containsKey(KeyEvent.VK_LEFT)) {
             adbKeyCode = AdbKeyCode.KEYCODE_BACK;
@@ -57,6 +59,11 @@ public class KeyboardListener implements KeyListener {
             adbKeyCode = AdbKeyCode.KEYCODE_VOLUME_DOWN;
         } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_SHIFT) && pressedKey.containsKey(KeyEvent.VK_F10)) {
             adbKeyCode = AdbKeyCode.KEYCODE_VOLUME_MUTE;
+        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_C)) {
+            System.out.println("Copy");
+        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_V)) {
+            frame.getChimpDevice().type(ToolkitUtils.getTextFromClipboard());
+            return;
         }
         if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN) {
             frame.getChimpDevice().press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);
