@@ -11,13 +11,12 @@ public class StringUtils {
 
     public static String getScreenRecordCommand(Device device, int count) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(
-                String.format(
-                        Locale.ENGLISH,
-                        AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_SHELL),
-                        device.getDeviceId()
-                )
-        ).append(" ");
+        stringBuilder.append(String.format(
+                Locale.ENGLISH,
+                AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_SHELL),
+                device.getDeviceId()
+        ))
+                .append(" ");
         Option option = device.getOption();
         int _bitRate = option != null ? option.getBitRate() : 4;
         int height = option != null ? option.getHeight() : device.getHeight();
