@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class KeyboardListener implements KeyListener {
 
     private VideoFrame frame;
-    private HashMap<Integer, Integer> pressedKey = new HashMap();
+    private HashMap<Integer, Integer> pressedKey = new HashMap<>();
 
     public KeyboardListener(VideoFrame frame) {
         this.frame = frame;
@@ -59,11 +59,13 @@ public class KeyboardListener implements KeyListener {
             adbKeyCode = AdbKeyCode.KEYCODE_VOLUME_DOWN;
         } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_SHIFT) && pressedKey.containsKey(KeyEvent.VK_F10)) {
             adbKeyCode = AdbKeyCode.KEYCODE_VOLUME_MUTE;
-        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_C)) {
-            System.out.println("Copy");
-        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_V)) {
+        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_SHIFT) && pressedKey.containsKey(KeyEvent.VK_V)) {
             frame.getChimpDevice().type(ToolkitUtils.getTextFromClipboard());
             return;
+        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_C)) {
+            adbKeyCode = AdbKeyCode.KEYCODE_COPY;
+        } else if (pressedKey.containsKey(KeyEvent.VK_CONTROL) && pressedKey.containsKey(KeyEvent.VK_V)) {
+            adbKeyCode = AdbKeyCode.KEYCODE_PASTE;
         }
         if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN) {
             frame.getChimpDevice().press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);
