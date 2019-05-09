@@ -83,7 +83,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
                     repaint();
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         } finally {
             currentImage = null;
