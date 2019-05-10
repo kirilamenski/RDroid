@@ -77,7 +77,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
             frameGrabber.start();
 
             Java2DFrameConverter converter = new Java2DFrameConverter();
-            while (isThreadRunning.get() && frameGrabber != null && frameGrabber.grab() != null) {
+            while (isThreadRunning.get() && frameGrabber != null) {
                 if (isThreadRunning.get()) {
                     currentImage = converter.getBufferedImage(frameGrabber.grab());
                     repaint();
