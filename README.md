@@ -21,6 +21,8 @@ java -jar ~./RDroid.jar
 | ctrl + shift + F10  | mute volume  |
 | ctrl + shift + F11  | volume down  |
 | ctrl + shift + F12  | volume up  |
+| ctrl + C/V  | copy/paste  |
+| ctrl + shift + V  | paste copied text from PC to android  |
 | left/top/right/bottom arrows  | navigation  |
 
 
