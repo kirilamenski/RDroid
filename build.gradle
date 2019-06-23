@@ -24,7 +24,7 @@ configurations {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation group: 'org.bytedeco', name: 'javacv-platform', version: '1.5'
+    implementation group: 'org.bytedeco', name: 'javacv-platform', version: '1.4.3'
 
     // Monkey Runner dependencies
     implementation group: 'net.sf.sociaal', name: 'chimpchat', version: '22.6.3'
@@ -36,7 +36,7 @@ dependencies {
     compile project(':filemanager')
 
     extraLibs "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    extraLibs group: 'org.bytedeco', name: 'javacv-platform', version: '1.5'
+    extraLibs group: 'org.bytedeco', name: 'javacv-platform', version: '1.4.3'
 
     // Monkey Runner dependencies
     extraLibs group: 'net.sf.sociaal', name: 'chimpchat', version: '22.6.3'
