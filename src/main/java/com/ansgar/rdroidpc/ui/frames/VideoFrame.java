@@ -80,7 +80,13 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
             while (isThreadRunning.get() && frameGrabber != null) {
                 if (isThreadRunning.get()) {
                     currentImage = converter.getBufferedImage(frameGrabber.grab());
-                    repaint();
+                    if (currentImage == null) {
+                        // TODO You need to find a correct way to handle this issue in case if usb cable will be unplugged
+                        presenter.reconnect();
+                        break;
+                    } else {
+                        repaint();
+                    }
                 }
             }
         } catch (IOException | NullPointerException e) {

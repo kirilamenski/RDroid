@@ -179,7 +179,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
      * By default will reconnected to monkey runner and if displayed android screen is empty
      * then reconnect adb screenrecord.
      */
-    private void reconnect() {
+    public void reconnect() {
         new SpinnerDialog(view.getParentComponent().getBounds()) {
             @Override
             public void doInBack() {
