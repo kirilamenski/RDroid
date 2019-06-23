@@ -173,13 +173,13 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         }
     }
 
-    public void stopAdbConnection() throws NullPointerException {
+    private void stopAdbConnection() throws NullPointerException {
         if (adbBackend != null) {
             adbBackend.shutdown();
         }
     }
 
-    public void restartServer() {
+    private void restartServer() {
         CommandExecutor commandExecutor = new CommandExecutor();
         commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KILL_SERVER));
         commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.START_SERVER));
