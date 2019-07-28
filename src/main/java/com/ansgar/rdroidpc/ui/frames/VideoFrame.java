@@ -81,7 +81,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
                 if (isThreadRunning.get()) {
                     currentImage = converter.getBufferedImage(frameGrabber.grab());
                     if (currentImage == null) {
-                        // TODO You need to find a correct way to handle this issue in case if usb cable will be unplugged
+                        // TODO
+                        // You need to find a correct way to handle this issue in case if usb cable will be unplugged
                         presenter.reconnect();
                         break;
                     } else {
@@ -188,7 +189,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         );
         if (orientationEnum == OrientationEnum.PORTRAIT) {
             initPortraitOrientationSize();
-            rectangle.width = imageWidth - (imageWidth + imageCoordinateX + 30) + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+            rectangle.width = imageWidth - (imageWidth + imageCoordinateX + 30)
+                    + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
         } else {
             initLandscapeOrientationSize();
             rectangle.width = imageWidth + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;

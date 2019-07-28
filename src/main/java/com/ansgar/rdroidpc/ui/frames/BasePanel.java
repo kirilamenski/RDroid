@@ -1,6 +1,5 @@
 package com.ansgar.rdroidpc.ui.frames;
 
-import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.ui.components.OptionDialog;
 import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
 import com.ansgar.rdroidpc.ui.frames.views.BaseFrameView;
