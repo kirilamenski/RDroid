@@ -46,6 +46,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     private String adbStreamCommand;
 
     private int imageWidth, imageHeight, imageCoordinateX;
+    private float deviceScreenRatio;
 
     public VideoFrame(Device device, AdbBackend adbBackend, Rectangle rectangle) {
         super(rectangle, String.format("%s(%dx%d)", device.getDeviceName(), device.getWidth(), device.getHeight()));
@@ -53,6 +54,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         this.device = device;
         this.isThreadRunning = new AtomicBoolean();
         this.adbStreamCommand = StringUtils.getScreenRecordCommand(device, 45);
+        this.deviceScreenRatio = device.getWidth() * 1f / device.getHeight();
         new FileUploader(this, device);
         initChimpDevice();
         setLayout(null);
@@ -228,14 +230,14 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     private void initPortraitOrientationSize() {
         int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
         imageHeight = (int) (screenHeight * 0.7f);
-        imageWidth = (int) (imageHeight * 3.2f * DimensionConst.SCREEN_RATIO);
+        imageWidth = (int) (imageHeight * 3.2f * deviceScreenRatio);
         imageCoordinateX = -(imageWidth / 3 + 10);
     }
 
     private void initLandscapeOrientationSize() {
         int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
         imageHeight = (int) (screenHeight * 0.7f);
-        imageWidth = (int) (imageHeight / DimensionConst.SCREEN_RATIO);
+        imageWidth = (int) (imageHeight / deviceScreenRatio);
         imageCoordinateX = 0;
     }
 
