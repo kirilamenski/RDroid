@@ -3,6 +3,7 @@ package com.ansgar.rdroidpc.ui.frames;
 import com.android.chimpchat.adb.AdbBackend;
 import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
+import com.android.ddmlib.AdbCommandRejectedException;
 import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
@@ -83,8 +84,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
                 if (isThreadRunning.get()) {
                     currentImage = converter.getBufferedImage(frameGrabber.grab());
                     if (currentImage == null) {
-                        // TODO
-                        // You need to find a correct way to handle this issue in case if usb cable will be unplugged
                         presenter.reconnect();
                         break;
                     } else {

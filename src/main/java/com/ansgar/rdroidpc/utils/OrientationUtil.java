@@ -9,7 +9,8 @@ import com.ansgar.rdroidpc.listeners.OnDeviceOrientationListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class OrientationUtil extends TimerTask implements CommandExecutor.OnFinishExecuteListener {
+public class OrientationUtil extends TimerTask implements CommandExecutor.OnFinishExecuteListener,
+        CommandExecutor.OnExecuteErrorListener {
 
     private Timer timer;
     private CommandExecutor executor;
@@ -25,6 +26,7 @@ public class OrientationUtil extends TimerTask implements CommandExecutor.OnFini
                 device.getDeviceId());
         this.listener = listener;
         executor.setOnFinishExecuteListener(this);
+        executor.setOnExecuteErrorListener(this);
     }
 
     public void start(long delay, long period) {
@@ -53,4 +55,8 @@ public class OrientationUtil extends TimerTask implements CommandExecutor.OnFini
         }
     }
 
+    @Override
+    public void onError(Throwable error) {
+        if (listener != null) listener.onDeviceNotFounded(error);
+    }
 }

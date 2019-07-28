@@ -9,7 +9,7 @@ public class CommandExecutor {
 
     private Process process;
     private OnExecuteNextListener onExecuteNextListener;
-    private onExecuteErrorListener onExecuteErrorListener;
+    private OnExecuteErrorListener onExecuteErrorListener;
     private OnFinishExecuteListener onFinishExecuteListener;
 
     public CommandExecutor() {
@@ -17,7 +17,7 @@ public class CommandExecutor {
     }
 
     public CommandExecutor(OnExecuteNextListener onExecuteNextListener,
-                           onExecuteErrorListener onExecuteErrorListener,
+                           OnExecuteErrorListener onExecuteErrorListener,
                            OnFinishExecuteListener onFinishExecuteListener) {
         this.onExecuteNextListener = onExecuteNextListener;
         this.onExecuteErrorListener = onExecuteErrorListener;
@@ -78,7 +78,9 @@ public class CommandExecutor {
         BufferedReader errorStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String line;
         while ((line = errorStream.readLine()) != null) {
-            System.out.println(line);
+            if (onExecuteErrorListener != null) {
+                onExecuteErrorListener.onError(new Throwable(line));
+            }
         }
     }
 
@@ -103,7 +105,7 @@ public class CommandExecutor {
         this.onExecuteNextListener = onExecuteNextListener;
     }
 
-    public void setOnExecuteErrorListener(CommandExecutor.onExecuteErrorListener onExecuteErrorListener) {
+    public void setOnExecuteErrorListener(OnExecuteErrorListener onExecuteErrorListener) {
         this.onExecuteErrorListener = onExecuteErrorListener;
     }
 
@@ -115,7 +117,7 @@ public class CommandExecutor {
         void onNext(String line);
     }
 
-    public interface onExecuteErrorListener {
+    public interface OnExecuteErrorListener {
         void onError(Throwable error);
     }
 

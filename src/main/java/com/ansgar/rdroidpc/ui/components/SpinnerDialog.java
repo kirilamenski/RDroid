@@ -34,7 +34,7 @@ public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
 
     @Override
     protected void done() {
-        dialog.dispose();
+        closeSpinner();
     }
 
     @Override
@@ -93,6 +93,10 @@ public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
 
     public void setUndecorated(boolean undecorated) {
         this.undecorated = undecorated;
+    }
+
+    public void closeSpinner() {
+        dialog.dispose();
     }
 
 }

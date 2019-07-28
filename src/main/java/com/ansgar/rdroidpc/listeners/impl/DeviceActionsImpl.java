@@ -96,13 +96,13 @@ public class DeviceActionsImpl implements DeviceActions {
     }
 
     @Override
-    public void pressKeyCode(AdbKeyCode command) {
-        String _command = String.format(
+    public void pressKeyCode(AdbKeyCode keyCode) {
+        String command = String.format(
                 AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KEY_EVENT),
                 frame.getDevice().getDeviceId(),
-                command.name()
+                keyCode.name()
         );
-        executor.execute(_command);
+        executor.execute(command);
     }
 
     @Override

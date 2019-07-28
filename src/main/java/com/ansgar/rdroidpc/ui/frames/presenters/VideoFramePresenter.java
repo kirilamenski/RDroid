@@ -33,6 +33,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
     private DeviceActions deviceActions;
     private OrientationUtil orientationUtil;
     private AtomicInteger screenRecordTimeLeft;
+    private SpinnerDialog spinnerDialog;
 
     public VideoFramePresenter(VideoFrameView view) {
         super(view);
@@ -114,6 +115,12 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
     }
 
     @Override
+    public void onDeviceNotFounded(Throwable throwable) {
+        if (spinnerDialog != null) spinnerDialog.closeSpinner();
+        view.onCloseFrame();
+    }
+
+    @Override
     public void onOptionsSelected(ScreenRecordOptions options) {
         deviceActions.screenRecord(options, DateUtil.getCurrentDate() + ".mp4",
                 folder -> {
@@ -180,7 +187,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
      * then reconnect adb screenrecord.
      */
     public void reconnect() {
-        new SpinnerDialog(view.getParentComponent().getBounds()) {
+        spinnerDialog = new SpinnerDialog(view.getParentComponent().getBounds()) {
             @Override
             public void doInBack() {
                 view.disposeChimpDevice();
@@ -191,8 +198,10 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                     view.stopFrameGrabber();
                     view.startNewThread();
                 }
+                spinnerDialog = null;
             }
-        }.execute();
+        };
+        spinnerDialog.execute();
     }
 
     /**
