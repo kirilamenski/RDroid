@@ -1,5 +1,7 @@
 package com.ansgar.rdroidpc.listeners;
 
+import com.android.chimpchat.adb.AdbChimpDevice;
+import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
@@ -50,7 +52,10 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
     private void handleMouseListener(int x, int y, TouchPressType type) {
         int _x = (int) convertCoordinates(getOriginalScreenSize()[0], frame.getFrameWidth(), x);
         int _y = (int) convertCoordinates(getOriginalScreenSize()[1], frame.getFrameHeight(), y);
-        frame.getChimpDevice().touch(_x, _y, type);
+        IChimpDevice chimpDevice = frame.getChimpDevice();
+        if (chimpDevice != null) {
+            frame.getChimpDevice().touch(_x, _y, type);
+        }
     }
 
     private int[] getOriginalScreenSize() {
