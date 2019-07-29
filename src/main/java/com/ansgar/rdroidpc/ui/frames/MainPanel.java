@@ -3,10 +3,11 @@ package com.ansgar.rdroidpc.ui.frames;
 import com.android.chimpchat.adb.AdbBackend;
 import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
-import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.commands.ResponseParserUtil;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
+import com.ansgar.rdroidpc.listeners.DeviceActions;
 import com.ansgar.rdroidpc.listeners.MainActionPanelsListener;
+import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.listeners.impl.MainPanelMenuListenerImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.DevicesContainer;
@@ -55,23 +56,22 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
     }
 
     public void executeAdbDevices() {
-        CommandExecutor commandExecutor = new CommandExecutor();
-        commandExecutor.setOnFinishExecuteListener((this::showDevices));
-        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.DEVICES));
+        DeviceActions actions = new DeviceActionsImpl();
+        showDevices(actions.getConnectedDevices());
     }
 
     public void killServer() {
         if (devicesContainer != null) remove(devicesContainer);
         repaint();
-        CommandExecutor commandExecutor = new CommandExecutor();
-        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KILL_SERVER));
+        DeviceActions actions = new DeviceActionsImpl();
+        actions.killServer();
     }
 
-    private void showDevices(StringBuilder lines) {
+    private void showDevices(List<Device> connectedDevices) {
         ResponseParserUtil responseUtil = new ResponseParserUtil();
         openedDevices.clear();
         devices.clear();
-        devices.addAll(responseUtil.getDevices(lines));
+        devices.addAll(connectedDevices);
 
         for (Device device : devices) {
             responseUtil.setDeviceName(
@@ -180,9 +180,9 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
     }
 
     private void restartServer() {
-        CommandExecutor commandExecutor = new CommandExecutor();
-        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KILL_SERVER));
-        commandExecutor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.START_SERVER));
+        DeviceActions actions = new DeviceActionsImpl();
+        actions.killServer();
+        actions.startServer();
     }
 
 }
