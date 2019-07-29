@@ -2,6 +2,7 @@ package com.ansgar.rdroidpc.ui.frames.views;
 
 import com.android.chimpchat.core.TouchPressType;
 import com.android.ddmlib.AdbCommandRejectedException;
+import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 
 public interface VideoFrameView extends BaseFrameView {
@@ -29,5 +30,7 @@ public interface VideoFrameView extends BaseFrameView {
     OrientationEnum getCurrentOrientation();
 
     boolean isScreenEmpty();
+
+    Device getDevice();
 
 }

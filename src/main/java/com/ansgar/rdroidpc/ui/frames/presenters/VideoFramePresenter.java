@@ -187,21 +187,25 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
      * then reconnect adb screenrecord.
      */
     public void reconnect() {
-        spinnerDialog = new SpinnerDialog(view.getParentComponent().getBounds()) {
-            @Override
-            public void doInBack() {
-                view.disposeChimpDevice();
-                view.initChimpDevice();
-                if (view.isScreenEmpty()) {
-                    if (orientationUtil != null) orientationUtil.stop();
-                    view.stopThread();
-                    view.stopFrameGrabber();
-                    view.startNewThread();
+        if (deviceActions.isDevicesConnected(view.getDevice())) {
+            spinnerDialog = new SpinnerDialog(view.getParentComponent().getBounds()) {
+                @Override
+                public void doInBack() {
+                    view.disposeChimpDevice();
+                    view.initChimpDevice();
+                    if (view.isScreenEmpty()) {
+                        if (orientationUtil != null) orientationUtil.stop();
+                        view.stopThread();
+                        view.stopFrameGrabber();
+                        view.startNewThread();
+                    }
+                    spinnerDialog = null;
                 }
-                spinnerDialog = null;
-            }
-        };
-        spinnerDialog.execute();
+            };
+            spinnerDialog.execute();
+        } else {
+            view.onCloseFrame();
+        }
     }
 
     /**

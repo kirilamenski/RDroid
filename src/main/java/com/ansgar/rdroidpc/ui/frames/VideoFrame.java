@@ -3,7 +3,6 @@ package com.ansgar.rdroidpc.ui.frames;
 import com.android.chimpchat.adb.AdbBackend;
 import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
-import com.android.ddmlib.AdbCommandRejectedException;
 import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
@@ -231,6 +230,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         imageHeight = (int) (screenHeight * 0.7f);
         imageWidth = (int) (imageHeight * 3.2f * deviceScreenRatio);
         imageCoordinateX = -(imageWidth / 3 + 10);
+//        imageWidth = (int) (imageHeight  * deviceScreenRatio * (deviceScreenRatio * 10));
+//        imageCoordinateX = -(imageWidth / 3 +70);
     }
 
     private void initLandscapeOrientationSize() {
@@ -246,10 +247,12 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         repaint();
     }
 
+    @Override
     public Device getDevice() {
         return device;
     }
 
+    @Nullable
     public IChimpDevice getChimpDevice() {
         return chimpDevice;
     }
