@@ -43,7 +43,6 @@ public class DeviceActionsImpl implements DeviceActions {
             devices.addAll(parserUtil.getDevices(result));
         });
         executor.execute(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.DEVICES));
-        System.out.println("Devices size 1: " + devices.size());
         return devices;
     }
 

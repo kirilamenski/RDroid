@@ -1,6 +1,5 @@
 package com.ansgar.rdroidpc.listeners;
 
-import com.android.chimpchat.adb.AdbChimpDevice;
 import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.enums.OrientationEnum;

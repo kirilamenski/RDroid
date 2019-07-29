@@ -3,7 +3,6 @@ package com.ansgar.rdroidpc.listeners;
 import com.ansgar.rdroidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
-import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 
 import java.io.IOException;
 import java.io.InputStream;
