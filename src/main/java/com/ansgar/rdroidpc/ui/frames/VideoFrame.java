@@ -189,8 +189,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         );
         if (orientationEnum == OrientationEnum.PORTRAIT) {
             initPortraitOrientationSize();
-            rectangle.width = imageWidth - (imageWidth + imageCoordinateX + 30)
-                    + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+            rectangle.width = (int) Math.ceil(imageHeight * deviceScreenRatio + getOffset()
+                    + DimensionConst.RIGHT_ACTION_PANEL_WIDTH);
         } else {
             initLandscapeOrientationSize();
             rectangle.width = imageWidth + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
@@ -230,8 +230,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         imageHeight = (int) (screenHeight * 0.7f);
         imageWidth = (int) (imageHeight * 3.2f * deviceScreenRatio);
         imageCoordinateX = -(imageWidth / 3 + 10);
-//        imageWidth = (int) (imageHeight  * deviceScreenRatio * (deviceScreenRatio * 10));
-//        imageCoordinateX = -(imageWidth / 3 +70);
+//        imageWidth = (int) (imageHeight * 5.0f * deviceScreenRatio);
+//        imageCoordinateX = -(imageWidth / 3 + 105);
     }
 
     private void initLandscapeOrientationSize() {
@@ -245,6 +245,13 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         frame.setBounds(rectangle);
         addRightPanel();
         repaint();
+    }
+
+    private int getOffset() {
+        if (deviceScreenRatio != DimensionConst.SCREEN_RATIO) {
+            return (int) Math.ceil(deviceScreenRatio * DimensionConst.SCREEN_RATIO * 100);
+        }
+        return 0;
     }
 
     @Override
