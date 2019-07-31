@@ -189,7 +189,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         );
         if (orientationEnum == OrientationEnum.PORTRAIT) {
             initPortraitOrientationSize();
-            rectangle.width = (int) Math.ceil(imageHeight * deviceScreenRatio + getOffset()
+            rectangle.width = (int) Math.ceil(imageHeight * deviceScreenRatio + getRightOffset()
                     + DimensionConst.RIGHT_ACTION_PANEL_WIDTH);
         } else {
             initLandscapeOrientationSize();
@@ -228,10 +228,9 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     private void initPortraitOrientationSize() {
         int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
         imageHeight = (int) (screenHeight * 0.7f);
-        imageWidth = (int) (imageHeight * 3.2f * deviceScreenRatio);
-        imageCoordinateX = -(imageWidth / 3 + 10);
-//        imageWidth = (int) (imageHeight * 5.0f * deviceScreenRatio);
-//        imageCoordinateX = -(imageWidth / 3 + 105);
+        imageWidth = (int) (imageHeight * getWidthOffset() * deviceScreenRatio);
+        imageCoordinateX = -(imageWidth / 3 + getCoordinateOffset(getWidthOffset()));
+        System.out.println("!!!!!! " + getWidthOffset() + ", " + getCoordinateOffset(getWidthOffset()));
     }
 
     private void initLandscapeOrientationSize() {
@@ -247,11 +246,29 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         repaint();
     }
 
-    private int getOffset() {
+    private int getRightOffset() {
         if (deviceScreenRatio != DimensionConst.SCREEN_RATIO) {
             return (int) Math.ceil(deviceScreenRatio * DimensionConst.SCREEN_RATIO * 100);
         }
         return 0;
+    }
+
+    private float getWidthOffset() {
+        if (deviceScreenRatio != DimensionConst.SCREEN_RATIO) {
+            return (float) Math.round(round(device.getHeight() * 1f / device.getWidth() / deviceScreenRatio, 10));
+        }
+        return 3.2f;
+    }
+
+    private int getCoordinateOffset(float widthOffset) {
+        if (deviceScreenRatio != DimensionConst.SCREEN_RATIO) {
+            return (int) (10 * widthOffset / deviceScreenRatio);
+        }
+        return 10;
+    }
+
+    private double round(float value, double count) {
+        return Math.round(value * count) / count;
     }
 
     @Override
