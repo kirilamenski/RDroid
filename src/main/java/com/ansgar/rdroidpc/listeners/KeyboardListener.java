@@ -1,10 +1,12 @@
 package com.ansgar.rdroidpc.listeners;
 
+import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.enums.HotKeys;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.utils.ToolkitUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -28,18 +30,22 @@ public class KeyboardListener implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        pressedKey.add(e.getKeyCode());
+        IChimpDevice chimpDevice = frame.getChimpDevice();
+        if (chimpDevice != null) {
+            pressedKey.add(e.getKeyCode());
 
-        if (pressedKey.size() > 1 && !(pressedKey.size() == 2 && pressedKey.contains(KeyEvent.VK_SHIFT))) {
-            executeHotKey();
-            return;
-        }
+            if (pressedKey.size() > 1 && !(pressedKey.size() == 2 && pressedKey.contains(KeyEvent.VK_SHIFT))) {
+                executeHotKey(chimpDevice);
+                return;
+            }
 
-        AdbKeyCode adbKeyCode = AdbKeyCode.Companion.getAdbKeyEvent(e);
-        if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN && adbKeyCode.isChar()) {
-            frame.getChimpDevice().type(String.valueOf(e.getKeyChar()));
-        } else {
-            frame.getChimpDevice().press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);
+            AdbKeyCode adbKeyCode = AdbKeyCode.Companion.getAdbKeyEvent(e);
+
+            if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN && adbKeyCode.isChar()) {
+                chimpDevice.type(String.valueOf(e.getKeyChar()));
+            } else {
+                chimpDevice.press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);
+            }
         }
     }
 
@@ -48,8 +54,8 @@ public class KeyboardListener implements KeyListener {
         pressedKey.remove(e.getKeyCode());
     }
 
-    private void executeHotKey() {
-        HotKeys.Companion.execute(pressedKey, frame.getChimpDevice());
+    private void executeHotKey(@NotNull IChimpDevice chimpDevice) {
+        HotKeys.Companion.execute(pressedKey, chimpDevice);
     }
 
 }

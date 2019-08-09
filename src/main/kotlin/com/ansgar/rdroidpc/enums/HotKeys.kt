@@ -86,7 +86,7 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
             return set
         }
     },
-    PC_COPY(null) {
+    PC_PASTE(null) {
         override fun execute(chimpDevice: IChimpDevice) {
             chimpDevice.type(ToolkitUtils.getTextFromClipboard())
         }
@@ -95,7 +95,7 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
             val set = HashSet<Int>()
             set.add(KeyEvent.VK_CONTROL)
             set.add(KeyEvent.VK_SHIFT)
-            set.add(KeyEvent.VK_C)
+            set.add(KeyEvent.VK_V)
             return set
         }
     },
@@ -146,7 +146,9 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
         fun execute(pressedKeys: HashSet<Int>, chimpDevice: IChimpDevice) {
             for (hotKey in values()) {
                 val keyCodes = hotKey.getKeyCodes()
-                if (keyCodes != null && pressedKeys.containsAll(keyCodes)) {
+                if (keyCodes != null
+                        && keyCodes.size == pressedKeys.size &&
+                        pressedKeys.containsAll(keyCodes)) {
                     hotKey.execute(chimpDevice)
                     break
                 }

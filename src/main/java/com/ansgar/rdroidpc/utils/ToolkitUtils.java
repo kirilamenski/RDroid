@@ -22,9 +22,7 @@ public class ToolkitUtils {
     public static String getTextFromClipboard() {
         StringBuilder savedText = new StringBuilder();
         try {
-            savedText.append("\"")
-                    .append(Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor))
-                    .append("\"");
+            savedText.append(Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor));
         } catch (UnsupportedFlavorException | IOException e) {
             e.printStackTrace();
         }
