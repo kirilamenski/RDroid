@@ -1,0 +1,1 @@
+{"adb_path":"/home/kirill/Android/Sdk/platform-tools/adb"}
