@@ -230,7 +230,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         imageHeight = (int) (screenHeight * 0.7f);
         imageWidth = (int) (imageHeight * getWidthOffset() * deviceScreenRatio);
         imageCoordinateX = -(imageWidth / 3 + getCoordinateOffset(getWidthOffset()));
-        System.out.println("!!!!!! " + getWidthOffset() + ", " + getCoordinateOffset(getWidthOffset()));
     }
 
     private void initLandscapeOrientationSize() {
@@ -246,6 +245,12 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         repaint();
     }
 
+    /**
+     * Different screen size has different offset and coordination to display image. Has been implemented these functions
+     * to make it same for different devices.
+     * TODO need to be refactored. In better case try to find formula of relations or to make some util class which will
+     * return hardcoded values for different screens.
+     */
     private int getRightOffset() {
         if (deviceScreenRatio != DimensionConst.SCREEN_RATIO) {
             return (int) Math.ceil(deviceScreenRatio * DimensionConst.SCREEN_RATIO * 100);
@@ -255,7 +260,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private float getWidthOffset() {
         if (deviceScreenRatio != DimensionConst.SCREEN_RATIO) {
-            return (float) Math.round(round(device.getHeight() * 1f / device.getWidth() / deviceScreenRatio, 10));
+            return (float) Math.round(DimensionUtils
+                    .round(device.getHeight() * 1f / device.getWidth() / deviceScreenRatio, 10));
         }
         return 3.2f;
     }
@@ -265,10 +271,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
             return (int) (10 * widthOffset / deviceScreenRatio);
         }
         return 10;
-    }
-
-    private double round(float value, double count) {
-        return Math.round(value * count) / count;
     }
 
     @Override
