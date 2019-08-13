@@ -34,7 +34,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private AdbBackend adbBackend;
     private Thread thread;
-    private FrameGrabber frameGrabber;
+//    private FrameGrabber frameGrabber;
+    private FFmpegFrameGrabber frameGrabber;
     private BufferedImage currentImage;
     private Device device;
     private IChimpDevice chimpDevice;
@@ -116,7 +117,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     @Override
     public void stopFrameGrabber() {
         try {
-            if (frameGrabber != null) {
+            if (frameGrabber != null && frameGrabber.hasVideo()) {
                 frameGrabber.stop();
             }
         } catch (FrameGrabber.Exception e) {
