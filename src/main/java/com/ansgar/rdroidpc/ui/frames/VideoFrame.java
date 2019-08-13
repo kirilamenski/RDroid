@@ -253,9 +253,9 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
      */
     private int getRightOffset() {
         if (deviceScreenRatio != DimensionConst.SCREEN_RATIO) {
-            return (int) Math.ceil(deviceScreenRatio * DimensionConst.SCREEN_RATIO * 100);
+            return (int) Math.ceil(deviceScreenRatio * DimensionConst.SCREEN_RATIO * 100) + 10;
         }
-        return 0;
+        return 5;
     }
 
     private float getWidthOffset() {
@@ -268,7 +268,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private int getCoordinateOffset(float widthOffset) {
         if (deviceScreenRatio != DimensionConst.SCREEN_RATIO) {
-            return (int) (10 * widthOffset / deviceScreenRatio);
+            return (int) (10 * widthOffset / deviceScreenRatio) - 5;
         }
         return 10;
     }
