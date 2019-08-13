@@ -34,7 +34,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private AdbBackend adbBackend;
     private Thread thread;
-//    private FrameGrabber frameGrabber;
     private FFmpegFrameGrabber frameGrabber;
     private BufferedImage currentImage;
     private Device device;
