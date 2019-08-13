@@ -1,18 +1,18 @@
 package com.ansgar.rdroidpc.entities
 
 class ProfileData {
-    var flags: Int? = null
-    var intendedVsync: Long? = null
-    var vsync: Long? = null
-    var oldestInputEvent: Long? = null
-    var newestInputEvent: Long? = null
-    var handleInputStart: Long? = null
-    var aniationStart: Long? = null
-    var performTraverSalsStart: Long? = null
-    var drawStart: Long? = null
-    var syncQueued: Long? = null
-    var syncStart: Long? = null
-    var issueDrawCommandsStart: Long? = null
-    var swapBuffers: Long? = null
-    var frameCompleted: Long? = null
+    var flags: Int = 0
+    var intendedVsync: Long = 0
+    var vsync: Long = 0
+    var oldestInputEvent: Long = 0
+    var newestInputEvent: Long = 0
+    var handleInputStart: Long = 0
+    var aniationStart: Long = 0
+    var performTraverSalsStart: Long = 0
+    var drawStart: Long = 0
+    var syncQueued: Long = 0
+    var syncStart: Long = 0
+    var issueDrawCommandsStart: Long = 0
+    var swapBuffers: Long = 0
+    var frameCompleted: Long = 0
 }
