@@ -12,6 +12,7 @@ import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.ui.components.*;
+import com.ansgar.rdroidpc.ui.frames.DumpsysPanel;
 import com.ansgar.rdroidpc.ui.frames.ScreenRecordOptionsFrame;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
@@ -75,6 +76,10 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 break;
             case 7:
                 view.press(String.valueOf(AdbKeyCode.KEYCODE_APP_SWITCH.getKeyCode()), TouchPressType.DOWN_AND_UP);
+                break;
+            case 8:
+                new DumpsysPanel(view.getDevice().getDeviceId(),
+                        new Rectangle(100, 0, 600, 400), "Dumpsys Manager");
                 break;
         }
     };
