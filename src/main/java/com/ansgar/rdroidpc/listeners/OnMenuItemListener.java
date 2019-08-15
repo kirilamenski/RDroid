@@ -4,6 +4,4 @@ public interface OnMenuItemListener {
 
     void onMenuItemClicked(String name);
 
-    void onAdbPathChanged(String path);
-
 }

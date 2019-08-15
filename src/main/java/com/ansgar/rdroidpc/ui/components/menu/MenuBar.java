@@ -1,6 +1,5 @@
 package com.ansgar.rdroidpc.ui.components.menu;
 
-import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
 
 import javax.swing.*;
@@ -19,9 +18,9 @@ public class MenuBar extends JMenuBar {
 
     }
 
-    public MenuBar getMenuBar(Serializable[] menus) {
+    public MenuBar getMenuBar(Serializable[] menus, Rectangle rectangle) {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBounds(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 25);
+        setBounds(rectangle);
         setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
         displayMenus(menus);
 
@@ -61,8 +60,7 @@ public class MenuBar extends JMenuBar {
     }
 
     private Menu createMenu(String name) {
-        Menu menu = new Menu(name);
-        return menu;
+        return new Menu(name);
     }
 
     private JMenuItem createMenuItem(String name) {

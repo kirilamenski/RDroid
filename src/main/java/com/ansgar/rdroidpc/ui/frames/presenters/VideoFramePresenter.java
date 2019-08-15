@@ -6,7 +6,7 @@ import com.ansgar.rdroidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
-import com.ansgar.rdroidpc.enums.MenuItemsEnum;
+import com.ansgar.rdroidpc.enums.MainMenuItemsEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
@@ -181,7 +181,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 DimensionConst.SETTINGS_PANEL_HEIGHT
         );
         ScreenRecordOptionsFrame settingsFrame = new ScreenRecordOptionsFrame(view.getChildComponent(), rectangle,
-                MenuItemsEnum.SETTINGS.getValue());
+                MainMenuItemsEnum.SETTINGS.getValue());
         settingsFrame.setListener(this);
     }
 

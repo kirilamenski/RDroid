@@ -9,7 +9,9 @@ import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.enums.OsEnum;
 import com.ansgar.rdroidpc.listeners.*;
+import com.ansgar.rdroidpc.listeners.impl.VideoFrameMenuListenerImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
+import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
 import com.ansgar.rdroidpc.ui.frames.presenters.VideoFramePresenter;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
@@ -44,6 +46,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     private ButtonsPanel rightPanel;
     private VideoFramePresenter presenter;
     private String adbStreamCommand;
+    private MenuBar menuBar;
 
     private int imageWidth, imageHeight, imageCoordinateX;
     private float deviceScreenRatio;
@@ -148,7 +151,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         super.paintComponent(g);
         if (currentImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.drawImage(currentImage, imageCoordinateX, 0, imageWidth, imageHeight, this);
+            g2d.drawImage(currentImage, imageCoordinateX, DimensionConst.MENU_HEIGHT, imageWidth, imageHeight, this);
             g2d.dispose();
         }
     }
@@ -195,9 +198,20 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
             initLandscapeOrientationSize();
             rectangle.width = imageWidth + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
         }
-        rectangle.height = imageHeight + OsEnum.Companion.getOsType().getHeightOffset();
+        rectangle.height = imageHeight + OsEnum.Companion.getOsType().getHeightOffset() + DimensionConst.MENU_HEIGHT;
         updateWindowSize(rectangle);
         currentOrientation = orientationEnum;
+    }
+
+    private void createMenu() {
+        menuBar = new MenuBar();
+        menuBar.setListener(new VideoFrameMenuListenerImpl(this));
+        add(menuBar.getMenuBar(
+                StringConst.Companion.getVideoMenuItems(),
+                new Rectangle(0, 0,
+                        frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH, DimensionConst.MENU_HEIGHT)
+        ));
+        updateUI();
     }
 
     private void addRightPanel() {
@@ -212,7 +226,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
                         frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
                         0,
                         DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
-                        imageHeight
+                        imageHeight + DimensionConst.MENU_HEIGHT
                 )
                 .setItemClickListener(presenter.rightActionsListener)
                 .build();
@@ -227,20 +241,21 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
      */
     private void initPortraitOrientationSize() {
         int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
-        imageHeight = (int) (screenHeight * 0.7f);
+        imageHeight = (int) (screenHeight * 0.7f) + DimensionConst.MENU_HEIGHT;
         imageWidth = (int) (imageHeight * getWidthOffset() * deviceScreenRatio);
         imageCoordinateX = -(imageWidth / 3 + getCoordinateOffset(getWidthOffset()));
     }
 
     private void initLandscapeOrientationSize() {
         int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
-        imageHeight = (int) (screenHeight * 0.7f);
+        imageHeight = (int) (screenHeight * 0.7f) + DimensionConst.MENU_HEIGHT;
         imageWidth = (int) (imageHeight / deviceScreenRatio);
         imageCoordinateX = 0;
     }
 
     private void updateWindowSize(@NotNull Rectangle rectangle) {
         frame.setBounds(rectangle);
+        createMenu();
         addRightPanel();
         repaint();
     }

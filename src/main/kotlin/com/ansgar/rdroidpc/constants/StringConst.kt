@@ -1,13 +1,18 @@
 package com.ansgar.rdroidpc.constants
 
-import com.ansgar.rdroidpc.enums.MenuItemsEnum
+import com.ansgar.rdroidpc.enums.MainMenuItemsEnum
+import com.ansgar.rdroidpc.enums.VideoMenuItemsEnum
 
 class StringConst {
 
     companion object {
-        var menuItems = arrayOf(
-                MenuItemsEnum.FILE.value, arrayOf(MenuItemsEnum.SETTINGS.value, MenuItemsEnum.EXIT.value),
-                MenuItemsEnum.HELP.value, arrayOf(MenuItemsEnum.INFORMATION.value))
+        var mainMenuItems = arrayOf(
+                MainMenuItemsEnum.FILE.value, arrayOf(MainMenuItemsEnum.SETTINGS.value, MainMenuItemsEnum.EXIT.value),
+                MainMenuItemsEnum.HELP.value, arrayOf(MainMenuItemsEnum.INFORMATION.value))
+        var videoMenuItems = arrayOf(
+                VideoMenuItemsEnum.FILE.value, arrayOf(VideoMenuItemsEnum.SETTINGS.value, VideoMenuItemsEnum.EXIT.value),
+                VideoMenuItemsEnum.TOOLS.value, arrayOf(VideoMenuItemsEnum.PERFORMANCE_MANAGER.value),
+                VideoMenuItemsEnum.HELP.value)
         val deviceHeaderNames = arrayOf("name", "size", "device id", "status", "")
         val defaultScreenSizes = arrayOf("480x640", "540x960", "720x1280", "1080x1920", "540x1140",
                 "720x1520", "1080x2280", "1440x2560")

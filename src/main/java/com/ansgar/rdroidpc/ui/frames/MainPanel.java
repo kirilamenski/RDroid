@@ -49,7 +49,10 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
     private void setUpMainPanel() {
         menuBar = new MenuBar();
         menuBar.setListener(new MainPanelMenuListenerImpl(this));
-        add(menuBar.getMenuBar(StringConst.Companion.getMenuItems()));
+        add(menuBar.getMenuBar(
+                StringConst.Companion.getMainMenuItems(),
+                new Rectangle(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 25)
+        ));
         add(getActionsPanel());
         executeAdbDevices();
         updateUI();

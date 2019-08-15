@@ -3,9 +3,10 @@ package com.ansgar.rdroidpc.listeners.impl;
 import com.ansgar.filemanager.FileManagerImpl;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.entities.FilesEnum;
-import com.ansgar.rdroidpc.enums.MenuItemsEnum;
+import com.ansgar.rdroidpc.enums.MainMenuItemsEnum;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
+import com.ansgar.rdroidpc.listeners.OnSettingsListener;
 import com.ansgar.rdroidpc.ui.frames.AboutPanel;
 import com.ansgar.rdroidpc.ui.frames.MainPanel;
 import com.ansgar.rdroidpc.ui.frames.SettingsFrame;
@@ -13,7 +14,7 @@ import com.ansgar.rdroidpc.utils.SharedValues;
 
 import java.awt.*;
 
-public class MainPanelMenuListenerImpl implements OnMenuItemListener {
+public class MainPanelMenuListenerImpl implements OnMenuItemListener, OnSettingsListener {
 
     private MainPanel panel;
 
@@ -23,9 +24,9 @@ public class MainPanelMenuListenerImpl implements OnMenuItemListener {
 
     @Override
     public void onMenuItemClicked(String name) {
-        MenuItemsEnum menuItemsEnum = MenuItemsEnum.Companion.getMenuItemEnumByValue(name);
-        if (menuItemsEnum != null) {
-            switch (menuItemsEnum) {
+        MainMenuItemsEnum mainMenuItemsEnum = MainMenuItemsEnum.Companion.getMenuItemEnumByValue(name);
+        if (mainMenuItemsEnum != null) {
+            switch (mainMenuItemsEnum) {
                 case SETTINGS:
                     Rectangle rectangle = new Rectangle(
                             panel.getRectangle().x,
@@ -34,11 +35,11 @@ public class MainPanelMenuListenerImpl implements OnMenuItemListener {
                             DimensionConst.SETTINGS_PANEL_HEIGHT
                     );
                     SettingsFrame settingsFrame = new SettingsFrame(panel, rectangle,
-                            MenuItemsEnum.SETTINGS.getValue());
+                            MainMenuItemsEnum.SETTINGS.getValue());
                     settingsFrame.setListener(this);
                     break;
                 case INFORMATION:
-                    new AboutPanel(panel.getRectangle(), MenuItemsEnum.INFORMATION.getValue());
+                    new AboutPanel(panel.getRectangle(), MainMenuItemsEnum.INFORMATION.getValue());
                     break;
                 case EXIT:
                     panel.onCloseFrame();

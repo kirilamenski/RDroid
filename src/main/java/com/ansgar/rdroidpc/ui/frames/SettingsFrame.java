@@ -4,7 +4,7 @@ import com.ansgar.rdroidpc.constants.Colors;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.listeners.OnFileChooserListener;
-import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
+import com.ansgar.rdroidpc.listeners.OnSettingsListener;
 import com.ansgar.rdroidpc.ui.components.FileChooser;
 import com.ansgar.rdroidpc.utils.SharedValues;
 
@@ -15,7 +15,7 @@ import java.awt.*;
 public class SettingsFrame extends BasePanel implements OnFileChooserListener {
 
     private JTextField adbPathTf;
-    private OnMenuItemListener listener;
+    private OnSettingsListener listener;
 
     public SettingsFrame(Component component, Rectangle rectangle, String title) {
         super(rectangle, title);
@@ -45,7 +45,7 @@ public class SettingsFrame extends BasePanel implements OnFileChooserListener {
         add(toggleBtn);
     }
 
-    public void setListener(OnMenuItemListener listener) {
+    public void setListener(OnSettingsListener listener) {
         this.listener = listener;
     }
 

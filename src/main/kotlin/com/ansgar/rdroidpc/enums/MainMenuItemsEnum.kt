@@ -1,6 +1,6 @@
 package com.ansgar.rdroidpc.enums
 
-enum class MenuItemsEnum(val value: String) {
+enum class MainMenuItemsEnum(val value: String) {
     FILE("File"),
     SETTINGS("Settings"),
     EXIT("Exit"),
@@ -8,7 +8,7 @@ enum class MenuItemsEnum(val value: String) {
     INFORMATION("Information");
 
     companion object {
-        fun getMenuItemEnumByValue(value: String): MenuItemsEnum? = values().firstOrNull { menuItemsEnum ->
+        fun getMenuItemEnumByValue(value: String): MainMenuItemsEnum? = values().firstOrNull { menuItemsEnum ->
             menuItemsEnum.value == value
         }
     }
