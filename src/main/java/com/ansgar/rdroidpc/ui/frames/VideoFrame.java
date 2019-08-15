@@ -34,7 +34,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     private AdbBackend adbBackend;
     private Thread thread;
-//    private FrameGrabber frameGrabber;
     private FFmpegFrameGrabber frameGrabber;
     private BufferedImage currentImage;
     private Device device;
@@ -72,7 +71,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     @Override
     public void start(String command) {
         isThreadRunning.set(true);
-        presenter.startCheckOrientationThread(device, 5000, 5000);
+        presenter.startCheckOrientationThread(device.getDeviceId(), 5000, 5000);
 
         try {
             InputStream inputStream = presenter.getInputScream(command);

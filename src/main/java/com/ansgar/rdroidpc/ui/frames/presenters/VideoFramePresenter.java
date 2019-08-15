@@ -5,19 +5,18 @@ import com.ansgar.filemanager.DesktopUtil;
 import com.ansgar.rdroidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.constants.StringConst;
-import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
 import com.ansgar.rdroidpc.enums.MenuItemsEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.ui.components.*;
-import com.ansgar.rdroidpc.ui.frames.DumpsysPanel;
+import com.ansgar.rdroidpc.commands.tasks.DumpsysPanel;
 import com.ansgar.rdroidpc.ui.frames.ScreenRecordOptionsFrame;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
 import com.ansgar.rdroidpc.utils.DateUtil;
-import com.ansgar.rdroidpc.utils.OrientationUtil;
+import com.ansgar.rdroidpc.commands.tasks.OrientationCommandTask;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +31,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
 
     private VideoFrameView view;
     private DeviceActions deviceActions;
-    private OrientationUtil orientationUtil;
+    private OrientationCommandTask orientationCommandTask;
     private AtomicInteger screenRecordTimeLeft;
     private SpinnerDialog spinnerDialog;
 
@@ -88,14 +87,16 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         return deviceActions.getInputStream(command);
     }
 
-    public void startCheckOrientationThread(Device device, int delay, int period) {
-        this.orientationUtil = new OrientationUtil(device, this);
-        orientationUtil.start(delay, period);
+    public void startCheckOrientationThread(String deviceId, int delay, int period) {
+        orientationCommandTask = new OrientationCommandTask();
+        orientationCommandTask.setDeviceId(deviceId);
+        orientationCommandTask.setListener(this);
+        orientationCommandTask.start(delay, period);
     }
 
     @Override
     public void destroy() {
-        if (orientationUtil != null) orientationUtil.stop();
+        if (orientationCommandTask != null) orientationCommandTask.stop();
         if (deviceActions != null) {
             deviceActions.disableAccelerometer(1);
             deviceActions.destroy();
@@ -199,7 +200,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                     view.disposeChimpDevice();
                     view.initChimpDevice();
                     if (view.isScreenEmpty()) {
-                        if (orientationUtil != null) orientationUtil.stop();
+                        if (orientationCommandTask != null) orientationCommandTask.stop();
                         view.stopThread();
                         view.stopFrameGrabber();
                         view.startNewThread();

@@ -1,28 +1,20 @@
-package com.ansgar.rdroidpc.utils;
+package com.ansgar.rdroidpc.commands.tasks;
 
 import com.ansgar.rdroidpc.commands.CommandExecutor;
-import com.ansgar.rdroidpc.enums.AdbCommandEnum;
-import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class DumpsysUtil extends TimerTask implements CommandExecutor.OnFinishExecuteListener,
+public abstract class BaseCommandTask extends TimerTask implements CommandExecutor.OnFinishExecuteListener,
         CommandExecutor.OnExecuteErrorListener {
 
     private Timer timer;
     private CommandExecutor executor;
-    private String command;
-    @Nullable
-    private OnDumpsysListener listener;
 
-    public DumpsysUtil(String deviceId, @Nullable OnDumpsysListener listener) {
+    public BaseCommandTask() {
         this.executor = new CommandExecutor();
         this.timer = new Timer();
-        this.command = String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.DUMPSYS),
-                deviceId, "com.ansgar.motusmontis");
-        this.listener = listener;
         executor.setOnFinishExecuteListener(this);
         executor.setOnExecuteErrorListener(this);
     }
@@ -40,7 +32,7 @@ public class DumpsysUtil extends TimerTask implements CommandExecutor.OnFinishEx
 
     @Override
     public void run() {
-        executor.execute(command);
+        executor.execute(command());
     }
 
     @Override
@@ -50,6 +42,10 @@ public class DumpsysUtil extends TimerTask implements CommandExecutor.OnFinishEx
 
     @Override
     public void onFinish(StringBuilder result) {
-        System.out.println(result.toString());
+
     }
+
+    @NotNull
+    public abstract String command();
+
 }
