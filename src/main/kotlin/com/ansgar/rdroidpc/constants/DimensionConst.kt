@@ -12,7 +12,7 @@ class DimensionConst {
         const val DEFAULT_WIDTH = 720
         const val DEFAULT_HEIGHT = 1280
         const val DEVICE_CONTAINER_HEIGHT = 50
-        const val MENU_HEIGHT = 25;
+        const val MENU_HEIGHT = 25
     }
 
 }

@@ -2,6 +2,7 @@ package com.ansgar.rdroidpc.listeners;
 
 import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
+import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 
@@ -48,13 +49,19 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
     public void mouseExited(MouseEvent e) {
     }
 
+    /**
+     * TODO
+     * Have problem with calculate of precision coordinates. To fix it you should separate {@link VideoFrame} class
+     * for several component (menu, right panel and video stream) and define mouse listener ONLY for video stream component
+     */
     private void handleMouseListener(int x, int y, TouchPressType type) {
-        int _x = (int) convertCoordinates(getOriginalScreenSize()[0], frame.getFrameWidth(), x);
-        int _y = (int) convertCoordinates(getOriginalScreenSize()[1], frame.getFrameHeight(), y);
+        int _x = (int) convertCoordinates(getOriginalScreenSize()[0],
+                frame.getFrameWidth(), x);
+        int _y = (int) convertCoordinates(getOriginalScreenSize()[1],
+                frame.getFrameHeight(), y - DimensionConst.MENU_HEIGHT);
+
         IChimpDevice chimpDevice = frame.getChimpDevice();
-        if (chimpDevice != null) {
-            frame.getChimpDevice().touch(_x, _y, type);
-        }
+        if (chimpDevice != null) frame.getChimpDevice().touch(_x, _y, type);
     }
 
     private int[] getOriginalScreenSize() {

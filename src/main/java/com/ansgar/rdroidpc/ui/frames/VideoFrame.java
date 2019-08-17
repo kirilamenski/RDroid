@@ -307,7 +307,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     }
 
     public int getFrameHeight() {
-        return getHeight();
+        return getHeight() - DimensionConst.MENU_HEIGHT;
     }
 
     public int getFrameWidth() {
