@@ -41,7 +41,6 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         this.view = view;
         VideoFrame frame = (VideoFrame) view.getChildComponent();
         view.setKeyboardListener(new KeyboardListener(frame));
-        initMouseListener(frame);
     }
 
     public void iniDeviceAction(String deviceId) {
@@ -165,12 +164,6 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 }
             }
         }, 0, 1000);
-    }
-
-    private void initMouseListener(VideoFrame frame) {
-        FrameMouseListener listener = new FrameMouseListener(frame);
-        frame.addMouseListener(listener);
-        frame.addMouseMotionListener(listener);
     }
 
     private void openFileChooser() {

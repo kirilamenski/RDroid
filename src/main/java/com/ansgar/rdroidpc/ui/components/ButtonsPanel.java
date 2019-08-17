@@ -144,6 +144,11 @@ public class ButtonsPanel extends JPanel {
             return this;
         }
 
+        public ButtonsPanelBuilder setBounds(Rectangle rectangle) {
+            panel.setBounds(rectangle);
+            return this;
+        }
+
         public ButtonsPanelBuilder setItemClickListener(OnButtonPanelListener listener) {
             panel.setItemClickListener(listener);
             return this;

@@ -12,6 +12,7 @@ import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.listeners.impl.VideoFrameMenuListenerImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
+import com.ansgar.rdroidpc.ui.components.videocomponent.VideoComponent;
 import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
 import com.ansgar.rdroidpc.ui.frames.presenters.VideoFramePresenter;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
@@ -47,6 +48,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     private VideoFramePresenter presenter;
     private String adbStreamCommand;
     private MenuBar menuBar;
+    private VideoComponent videoComponent;
 
     private int imageWidth, imageHeight, imageCoordinateX;
     private float deviceScreenRatio;
@@ -86,7 +88,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
             while (isThreadRunning.get()) {
                 currentImage = converter.getBufferedImage(frameGrabber.grab());
                 if (currentImage != null) {
-                    repaint();
+                    videoComponent.displayImage(currentImage);
                 } else {
                     presenter.reconnect();
                     break;
@@ -146,16 +148,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (currentImage != null) {
-            Graphics2D g2d = (Graphics2D) g.create();
-            g2d.drawImage(currentImage, imageCoordinateX, DimensionConst.MENU_HEIGHT, imageWidth, imageHeight, this);
-            g2d.dispose();
-        }
-    }
-
-    @Override
     public void initChimpDevice() {
         this.chimpDevice = adbBackend.waitForConnection(2147483647L, device.getDeviceId());
     }
@@ -183,54 +175,62 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
 
     @Override
     public void changeOrientation(OrientationEnum orientationEnum) {
-        Rectangle rectangle = new Rectangle(
-                getRectangle().x,
-                getRectangle().y,
-                DEFAULT_WIDTH / 2 + 10,
-                DEFAULT_HEIGHT / 2
-        );
+        Rectangle rectangle = new Rectangle(getRectangle().x, getRectangle().y,
+                DEFAULT_WIDTH / 2, DEFAULT_HEIGHT / 2);
         if (orientationEnum == OrientationEnum.PORTRAIT) {
             initPortraitOrientationSize();
-            rectangle.width = (int) Math.ceil(imageHeight * deviceScreenRatio + getRightOffset()
-                    + DimensionConst.RIGHT_ACTION_PANEL_WIDTH);
+            rectangle.width = (int) Math.ceil(imageHeight * deviceScreenRatio + getRightOffset());
         } else {
             initLandscapeOrientationSize();
-            rectangle.width = imageWidth + DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
+            rectangle.width = imageWidth;
         }
-        rectangle.height = imageHeight + OsEnum.Companion.getOsType().getHeightOffset() + DimensionConst.MENU_HEIGHT;
-        updateWindowSize(rectangle);
+        rectangle.height = imageHeight;
         currentOrientation = orientationEnum;
+        updateWindowSize(rectangle);
     }
 
-    private void createMenu() {
-        menuBar = new MenuBar();
-        menuBar.setListener(new VideoFrameMenuListenerImpl(this));
-        add(menuBar.getMenuBar(
-                StringConst.Companion.getVideoMenuItems(),
-                new Rectangle(0, 0,
-                        frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH, DimensionConst.MENU_HEIGHT)
-        ));
-        updateUI();
+    private void addVideo(int width, int height) {
+        Rectangle bounds = new Rectangle(0, menuBar.getHeight(), width, height);
+        if (videoComponent == null) {
+            videoComponent = new VideoComponent(device, chimpDevice);
+            add(videoComponent);
+        }
+        videoComponent.setBounds(bounds);
+        videoComponent.setCoordinateX(imageCoordinateX);
+        videoComponent.setImageWidth(imageWidth);
+        videoComponent.setImageHeight(imageHeight);
+        videoComponent.setCurrentOrientation(currentOrientation);
+    }
+
+    private void addMenu() {
+        Rectangle bounds = new Rectangle(0, 0, frame.getWidth(), DimensionConst.MENU_HEIGHT);
+        if (menuBar == null) {
+            menuBar = new MenuBar();
+            menuBar.setListener(new VideoFrameMenuListenerImpl(this));
+            add(menuBar.getMenuBar(StringConst.Companion.getVideoMenuItems(), bounds));
+        } else {
+            menuBar.setBounds(bounds);
+        }
     }
 
     private void addRightPanel() {
-        if (rightPanel != null) remove(rightPanel);
-        rightPanel = new ButtonsPanel.ButtonsPanelBuilder()
-                .setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK))
-                .setIcons(StringConst.Companion.getNavigationPanelIcons())
-                .setToolTips(StringConst.Companion.getNavigationPanelTooltips())
-                .setState(ButtonsPanelStateEnum.VERTICAL)
-                .setIconSize(42, 42)
-                .setBounds(
-                        frame.getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
-                        0,
-                        DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
-                        imageHeight + DimensionConst.MENU_HEIGHT
-                )
-                .setItemClickListener(presenter.rightActionsListener)
-                .build();
+        Rectangle bounds = new Rectangle(videoComponent.getWidth(), menuBar.getHeight(),
+                DimensionConst.RIGHT_ACTION_PANEL_WIDTH, imageHeight);
+        if (rightPanel == null) {
+            rightPanel = new ButtonsPanel.ButtonsPanelBuilder()
+                    .setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK))
+                    .setIcons(StringConst.Companion.getNavigationPanelIcons())
+                    .setToolTips(StringConst.Companion.getNavigationPanelTooltips())
+                    .setState(ButtonsPanelStateEnum.VERTICAL)
+                    .setIconSize(42, 42)
+                    .setBounds(bounds)
+                    .setItemClickListener(presenter.rightActionsListener)
+                    .build();
 
-        add(rightPanel);
+            add(rightPanel);
+        } else {
+            rightPanel.setBounds(bounds);
+        }
     }
 
     /**
@@ -253,8 +253,14 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     }
 
     private void updateWindowSize(@NotNull Rectangle rectangle) {
-        frame.setBounds(rectangle);
-        createMenu();
+        frame.setBounds(new Rectangle(
+                rectangle.x,
+                rectangle.y,
+                rectangle.width + DimensionConst.RIGHT_ACTION_PANEL_WIDTH,
+                rectangle.height + DimensionConst.MENU_HEIGHT + OsEnum.Companion.getOsType().getHeightOffset()
+        ));
+        addMenu();
+        addVideo(rectangle.width, rectangle.height);
         addRightPanel();
         repaint();
     }
@@ -295,22 +301,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     @Nullable
     public IChimpDevice getChimpDevice() {
         return chimpDevice;
-    }
-
-    public int getDeviceWidth() {
-        return device.getWidth();
-    }
-
-    public int getDeviceHeight() {
-        return device.getHeight();
-    }
-
-    public int getFrameHeight() {
-        return getHeight() - DimensionConst.MENU_HEIGHT;
-    }
-
-    public int getFrameWidth() {
-        return getWidth() - DimensionConst.RIGHT_ACTION_PANEL_WIDTH;
     }
 
     public OrientationEnum getCurrentOrientation() {

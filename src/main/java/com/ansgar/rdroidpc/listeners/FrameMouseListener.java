@@ -2,9 +2,8 @@ package com.ansgar.rdroidpc.listeners;
 
 import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
-import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
-import com.ansgar.rdroidpc.ui.frames.VideoFrame;
+import com.ansgar.rdroidpc.ui.components.videocomponent.VideoComponent;
 
 import java.awt.event.*;
 
@@ -12,10 +11,10 @@ import static com.ansgar.rdroidpc.utils.DimensionUtils.convertCoordinates;
 
 public class FrameMouseListener implements MouseMotionListener, MouseListener {
 
-    private VideoFrame frame;
+    private VideoComponent component;
 
-    public FrameMouseListener(VideoFrame frame) {
-        this.frame = frame;
+    public FrameMouseListener(VideoComponent component) {
+        this.component = component;
     }
 
     @Override
@@ -49,29 +48,25 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
     public void mouseExited(MouseEvent e) {
     }
 
-    /**
-     * TODO
-     * Have problem with calculate of precision coordinates. To fix it you should separate {@link VideoFrame} class
-     * for several component (menu, right panel and video stream) and define mouse listener ONLY for video stream component
-     */
     private void handleMouseListener(int x, int y, TouchPressType type) {
-        int _x = (int) convertCoordinates(getOriginalScreenSize()[0],
-                frame.getFrameWidth(), x);
-        int _y = (int) convertCoordinates(getOriginalScreenSize()[1],
-                frame.getFrameHeight(), y - DimensionConst.MENU_HEIGHT);
+        int width = component.getWidth();
+        int height = component.getHeight();
+        int _x = (int) convertCoordinates(getOriginalScreenSize()[0], width, x);
+        int _y = (int) convertCoordinates(getOriginalScreenSize()[1], height, y);
+        System.out.println("Width:" + width + ", height: " + height + "||" + getOriginalScreenSize()[0] + "x" + getOriginalScreenSize()[1] + ", " + x + "x" + y);
 
-        IChimpDevice chimpDevice = frame.getChimpDevice();
-        if (chimpDevice != null) frame.getChimpDevice().touch(_x, _y, type);
+        IChimpDevice chimpDevice = component.getChimpDevice();
+        if (chimpDevice != null) component.getChimpDevice().touch(_x, _y, type);
     }
 
     private int[] getOriginalScreenSize() {
         int[] originalSize = new int[2];
-        if (frame.getCurrentOrientation() == OrientationEnum.PORTRAIT) {
-            originalSize[0] = frame.getDeviceWidth();
-            originalSize[1] = frame.getDeviceHeight();
+        if (component.getCurrentOrientation() == OrientationEnum.PORTRAIT) {
+            originalSize[0] = component.getDeviceWidth();
+            originalSize[1] = component.getDeviceHeight();
         } else {
-            originalSize[0] = frame.getDeviceHeight();
-            originalSize[1] = frame.getDeviceWidth();
+            originalSize[0] = component.getDeviceHeight();
+            originalSize[1] = component.getDeviceWidth();
         }
         return originalSize;
     }
