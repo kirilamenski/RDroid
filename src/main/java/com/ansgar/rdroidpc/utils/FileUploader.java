@@ -6,7 +6,6 @@ import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.FilesEnum;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
-import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.ui.components.OptionDialog;
 import com.ansgar.rdroidpc.ui.components.OverlayComponent;
 
@@ -26,11 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileUploader extends DropTarget {
 
-    private Device device;
+    private String deviceId;
     private JPanel panel;
 
-    public FileUploader(JPanel panel, Device device) {
-        this.device = device;
+    public FileUploader(JPanel panel, String deviceId) {
+        this.deviceId = deviceId;
         this.panel = panel;
         this.panel.setDropTarget(this);
     }
@@ -57,7 +56,7 @@ public class FileUploader extends DropTarget {
             String command = String.format(
                     Locale.ENGLISH,
                     AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.UPLOAD_FILES),
-                    device.getDeviceId(),
+                    deviceId,
                     filePath,
                     uploadFolder
             );
@@ -80,7 +79,7 @@ public class FileUploader extends DropTarget {
         if (!adbPath.isEmpty()) cmd.add(adbPath);
         else cmd.add("adb");
         cmd.add("-s");
-        cmd.add(device.getDeviceId());
+        cmd.add(deviceId);
         cmd.add("push");
         cmd.add(filePath);
         cmd.add(uploadFolder);
@@ -126,7 +125,7 @@ public class FileUploader extends DropTarget {
         if (result == 0) {
             CommandExecutor executor = new CommandExecutor();
             executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.INSTALL_APK),
-                    device.getDeviceId(), pathToApk));
+                    deviceId, pathToApk));
         }
     }
 

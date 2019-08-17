@@ -58,7 +58,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         this.isThreadRunning = new AtomicBoolean();
         this.adbStreamCommand = StringUtils.getScreenRecordCommand(device, 45);
         this.deviceScreenRatio = device.getWidth() * 1f / device.getHeight();
-        new FileUploader(this, device);
+        presenter.iniDeviceAction(device.getDeviceId());
+        new FileUploader(this, device.getDeviceId());
         initChimpDevice();
         setLayout(null);
         changeOrientation(OrientationEnum.PORTRAIT);
@@ -82,15 +83,13 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
             frameGrabber.start();
 
             Java2DFrameConverter converter = new Java2DFrameConverter();
-            while (isThreadRunning.get() && frameGrabber != null) {
-                if (isThreadRunning.get()) {
-                    currentImage = converter.getBufferedImage(frameGrabber.grab());
-                    if (currentImage == null) {
-                        presenter.reconnect();
-                        break;
-                    } else {
-                        repaint();
-                    }
+            while (isThreadRunning.get()) {
+                currentImage = converter.getBufferedImage(frameGrabber.grab());
+                if (currentImage != null) {
+                    repaint();
+                } else {
+                    presenter.reconnect();
+                    break;
                 }
             }
         } catch (IOException | NullPointerException e) {

@@ -16,7 +16,7 @@ public interface DeviceActions {
 
     void killServer();
 
-    boolean isDevicesConnected(Device device);
+    boolean isDevicesConnected(String deviceId);
 
     InputStream getInputStream(String command) throws IOException;
 
@@ -29,8 +29,6 @@ public interface DeviceActions {
     void screenCapture(String fileName, String path, OnSaveScreenListener listener);
 
     void pressKeyCode(AdbKeyCode keyCode);
-
-    void restart();
 
     void destroy();
 

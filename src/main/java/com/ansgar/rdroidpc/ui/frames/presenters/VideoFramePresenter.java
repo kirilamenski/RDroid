@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class VideoFramePresenter extends BasePresenter implements OnFileChooserListener,
         OnDeviceOrientationListener, OnScreenRecordOptionsListener {
 
+    private String deviceId;
     private VideoFrameView view;
     private DeviceActions deviceActions;
     private OrientationCommandTask orientationCommandTask;
@@ -39,9 +40,13 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
         super(view);
         this.view = view;
         VideoFrame frame = (VideoFrame) view.getChildComponent();
-        this.deviceActions = new DeviceActionsImpl(frame);
         view.setKeyboardListener(new KeyboardListener(frame));
         initMouseListener(frame);
+    }
+
+    public void iniDeviceAction(String deviceId) {
+        this.deviceId = deviceId;
+        this.deviceActions = new DeviceActionsImpl(deviceId);
     }
 
     public ButtonsPanel.OnButtonPanelListener rightActionsListener = id -> {
@@ -193,7 +198,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
      * then reconnect adb screenrecord.
      */
     public void reconnect() {
-        if (deviceActions.isDevicesConnected(view.getDevice())) {
+        if (deviceActions.isDevicesConnected(deviceId)) {
             spinnerDialog = new SpinnerDialog(view.getParentComponent().getBounds()) {
                 @Override
                 public void doInBack() {
@@ -222,7 +227,7 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (value == 0) {
             view.onCloseFrame();
-            deviceActions.restart();
+//            view.getChimpDevice().reboot("None");
         }
     }
 

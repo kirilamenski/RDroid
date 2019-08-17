@@ -10,6 +10,7 @@ import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.listeners.DeviceActions;
 import com.ansgar.rdroidpc.listeners.OnSaveScreenListener;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -21,8 +22,7 @@ import java.util.Locale;
 
 public class DeviceActionsImpl implements DeviceActions {
 
-    @Nullable
-    private VideoFrame frame;
+    private String deviceId;
     private CommandExecutor executor;
     private boolean isAccelerometerDisabled;
 
@@ -30,9 +30,9 @@ public class DeviceActionsImpl implements DeviceActions {
         this.executor = new CommandExecutor();
     }
 
-    public DeviceActionsImpl(@Nullable VideoFrame frame) {
+    public DeviceActionsImpl(@NotNull String deviceId) {
         this.executor = new CommandExecutor();
-        this.frame = frame;
+        this.deviceId = deviceId;
     }
 
     @Override
@@ -57,11 +57,11 @@ public class DeviceActionsImpl implements DeviceActions {
     }
 
     @Override
-    public boolean isDevicesConnected(Device device) {
+    public boolean isDevicesConnected(String deviceId) {
         for (Device connectedDevice : getConnectedDevices()) {
-            String deviceId = connectedDevice.getDeviceId();
+            String connectedDeviceId = connectedDevice.getDeviceId();
             String deviceStatus = connectedDevice.getDeviceStatus();
-            if (deviceId != null && deviceId.equals(device.getDeviceId())
+            if (connectedDeviceId != null && connectedDeviceId.equals(deviceId)
                     && deviceStatus != null && deviceStatus.contains("device")) {
                 return true;
             }
@@ -76,32 +76,29 @@ public class DeviceActionsImpl implements DeviceActions {
 
     @Override
     public void disableAccelerometer(int disable) {
-        if (frame == null) return;
         executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ACCELEROMETER_ENABLE),
-                frame.getDevice().getDeviceId(), disable));
+                deviceId, disable));
     }
 
     @Override
     public void changeOrientation(int orientation) {
-        if (frame == null) return;
         if (!isAccelerometerDisabled) {
             disableAccelerometer(0);
             isAccelerometerDisabled = true;
         }
         executor.execute(String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ROTATE_DEVICE),
-                frame.getDevice().getDeviceId(), orientation));
+                deviceId, orientation));
     }
 
     @Override
     public void screenRecord(ScreenRecordOptions options, String fileName, OnSaveScreenListener listener) {
-        if (frame == null) return;
         WeakReference<Thread> weakThread = new WeakReference<>(
                 new Thread(() -> {
                     String devicePath = String.format("%s%s", StringConst.DEFAULT_DEVICE_FOLDER, fileName);
                     String command = String.format(
                             Locale.ENGLISH,
                             AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.SCREEN_RECORD),
-                            frame.getDevice().getDeviceId(),
+                            deviceId,
                             options.getBitRate(),
                             options.getTime(),
                             options.getWidth(),
@@ -113,9 +110,9 @@ public class DeviceActionsImpl implements DeviceActions {
                             options.getDownloadFolder(),
                             command,
                             String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_PULL_SNAPSHOT),
-                                    frame.getDevice().getDeviceId(), devicePath, options.getDownloadFolder()),
+                                    deviceId, devicePath, options.getDownloadFolder()),
                             String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_REMOVE_FILE),
-                                    frame.getDevice().getDeviceId(), devicePath)
+                                    deviceId, devicePath)
                     );
                 })
         );
@@ -124,7 +121,6 @@ public class DeviceActionsImpl implements DeviceActions {
 
     @Override
     public void screenCapture(String fileName, String path, OnSaveScreenListener listener) {
-        if (frame == null) return;
         String devicePath = String.format("%s%s", StringConst.DEFAULT_DEVICE_FOLDER, fileName);
         WeakReference<Thread> thread = new WeakReference<>(
                 new Thread(() -> {
@@ -132,11 +128,11 @@ public class DeviceActionsImpl implements DeviceActions {
                             listener,
                             path,
                             String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_TAKE_SNAPSHOT),
-                                    frame.getDevice().getDeviceId(), devicePath),
+                                    deviceId, devicePath),
                             String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_PULL_SNAPSHOT),
-                                    frame.getDevice().getDeviceId(), devicePath, path),
+                                    deviceId, devicePath, path),
                             String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.ADB_REMOVE_FILE),
-                                    frame.getDevice().getDeviceId(), devicePath)
+                                    deviceId, devicePath)
                     );
                 })
         );
@@ -145,20 +141,12 @@ public class DeviceActionsImpl implements DeviceActions {
 
     @Override
     public void pressKeyCode(AdbKeyCode keyCode) {
-        if (frame == null) return;
         String command = String.format(
                 AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.KEY_EVENT),
-                frame.getDevice().getDeviceId(),
+                deviceId,
                 keyCode.name()
         );
         executor.execute(command);
-    }
-
-    @Override
-    public void restart() {
-        if (frame != null && frame.getChimpDevice() != null) {
-            frame.getChimpDevice().reboot("None");
-        }
     }
 
     @Override
