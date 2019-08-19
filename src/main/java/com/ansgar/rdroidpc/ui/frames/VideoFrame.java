@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_HEIGHT;
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
-public class VideoFrame extends BasePanel implements VideoFrameView {
+public class VideoFrame extends BasePanel implements VideoFrameView, OnDeviceInputListener {
 
     private AdbBackend adbBackend;
     private Thread thread;
@@ -163,8 +163,18 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     }
 
     @Override
+    public void type(String type) {
+        chimpDevice.type(type);
+    }
+
+    @Override
+    public void touch(int x, int y, TouchPressType type) {
+        chimpDevice.touch(x, y, type);
+    }
+
+    @Override
     public void createPresenter() {
-        presenter = new VideoFramePresenter(this);
+        presenter = new VideoFramePresenter(this, this);
     }
 
     @Nullable
@@ -224,7 +234,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     private void addVideo(int width, int height) {
         Rectangle bounds = new Rectangle(0, menuBar.getHeight(), width, height);
         if (videoComponent == null) {
-            videoComponent = new VideoComponent(device, chimpDevice);
+            videoComponent = new VideoComponent(device, this);
             add(videoComponent);
         }
         videoComponent.setBounds(bounds);
@@ -295,11 +305,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
     @Override
     public Device getDevice() {
         return device;
-    }
-
-    @Nullable
-    public IChimpDevice getChimpDevice() {
-        return chimpDevice;
     }
 
     public OrientationEnum getCurrentOrientation() {

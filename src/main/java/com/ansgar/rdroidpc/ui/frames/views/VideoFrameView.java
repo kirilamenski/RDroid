@@ -1,7 +1,5 @@
 package com.ansgar.rdroidpc.ui.frames.views;
 
-import com.android.chimpchat.core.TouchPressType;
-import com.android.ddmlib.AdbCommandRejectedException;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 
@@ -24,8 +22,6 @@ public interface VideoFrameView extends BaseFrameView {
     void initChimpDevice();
 
     void changeOrientation(OrientationEnum orientation);
-
-    void press(String value, TouchPressType type);
 
     OrientationEnum getCurrentOrientation();
 

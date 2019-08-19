@@ -31,14 +31,16 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
 
     private String deviceId;
     private VideoFrameView view;
+    private OnDeviceInputListener inputListener;
     private DeviceActions deviceActions;
     private OrientationCommandTask orientationCommandTask;
     private AtomicInteger screenRecordTimeLeft;
     private SpinnerDialog spinnerDialog;
 
-    public VideoFramePresenter(VideoFrameView view) {
+    public VideoFramePresenter(VideoFrameView view, OnDeviceInputListener listener) {
         super(view);
         this.view = view;
+        this.inputListener = listener;
         VideoFrame frame = (VideoFrame) view.getChildComponent();
         view.setKeyboardListener(new KeyboardListener(frame));
     }
@@ -72,13 +74,14 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
                 reconnect();
                 break;
             case 5:
-                view.press(String.valueOf(AdbKeyCode.KEYCODE_BACK.getKeyCode()), TouchPressType.DOWN_AND_UP);
+                inputListener.press(String.valueOf(AdbKeyCode.KEYCODE_BACK.getKeyCode()), TouchPressType.DOWN_AND_UP);
                 break;
             case 6:
-                view.press(String.valueOf(AdbKeyCode.KEYCODE_HOME.getKeyCode()), TouchPressType.DOWN_AND_UP);
+                inputListener.press(String.valueOf(AdbKeyCode.KEYCODE_HOME.getKeyCode()), TouchPressType.DOWN_AND_UP);
                 break;
             case 7:
-                view.press(String.valueOf(AdbKeyCode.KEYCODE_APP_SWITCH.getKeyCode()), TouchPressType.DOWN_AND_UP);
+                inputListener.press(String.valueOf(AdbKeyCode.KEYCODE_APP_SWITCH.getKeyCode()),
+                        TouchPressType.DOWN_AND_UP);
                 break;
             case 8:
                 new DumpsysPanel(view.getDevice().getDeviceId(),

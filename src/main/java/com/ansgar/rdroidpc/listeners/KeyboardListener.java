@@ -1,27 +1,21 @@
 package com.ansgar.rdroidpc.listeners;
 
-import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.enums.HotKeys;
-import com.ansgar.rdroidpc.ui.frames.VideoFrame;
-import com.ansgar.rdroidpc.utils.ToolkitUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class KeyboardListener implements KeyListener {
 
-    private VideoFrame frame;
     private HashSet<Integer> pressedKey = new HashSet<>();
+    private OnDeviceInputListener listener;
 
-    public KeyboardListener(VideoFrame frame) {
-        this.frame = frame;
+    public KeyboardListener(OnDeviceInputListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -30,21 +24,20 @@ public class KeyboardListener implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        IChimpDevice chimpDevice = frame.getChimpDevice();
-        if (chimpDevice != null) {
+        if (listener != null) {
             pressedKey.add(e.getKeyCode());
 
             if (pressedKey.size() > 1 && !(pressedKey.size() == 2 && pressedKey.contains(KeyEvent.VK_SHIFT))) {
-                executeHotKey(chimpDevice);
+                executeHotKey(listener);
                 return;
             }
 
             AdbKeyCode adbKeyCode = AdbKeyCode.Companion.getAdbKeyEvent(e);
 
             if (adbKeyCode != AdbKeyCode.KEYCODE_UNKNOWN && adbKeyCode.isChar()) {
-                chimpDevice.type(String.valueOf(e.getKeyChar()));
+                listener.type(String.valueOf(e.getKeyChar()));
             } else {
-                chimpDevice.press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);
+                listener.press(String.valueOf(adbKeyCode.getKeyCode()), TouchPressType.DOWN_AND_UP);
             }
         }
     }
@@ -54,8 +47,8 @@ public class KeyboardListener implements KeyListener {
         pressedKey.remove(e.getKeyCode());
     }
 
-    private void executeHotKey(@NotNull IChimpDevice chimpDevice) {
-        HotKeys.Companion.execute(pressedKey, chimpDevice);
+    private void executeHotKey(@NotNull OnDeviceInputListener listener) {
+        HotKeys.Companion.execute(pressedKey, listener);
     }
 
 }

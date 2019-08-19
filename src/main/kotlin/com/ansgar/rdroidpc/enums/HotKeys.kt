@@ -1,17 +1,18 @@
 package com.ansgar.rdroidpc.enums
 
-import com.android.chimpchat.core.IChimpDevice
 import com.android.chimpchat.core.TouchPressType
 import com.ansgar.rdroidpc.constants.AdbKeyCode
+import com.ansgar.rdroidpc.listeners.OnDeviceInputListener
 import com.ansgar.rdroidpc.utils.ToolkitUtils
+import org.jetbrains.annotations.NotNull
 import java.awt.event.KeyEvent
 
 enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
     // TODO can be modified to get HashSet directly when file with saved hot keys will be added
 
     BACK(AdbKeyCode.KEYCODE_BACK) {
-        override fun execute(chimpDevice: IChimpDevice) {
-            chimpDevice.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
+        override fun execute(@NotNull listener: OnDeviceInputListener) {
+            listener.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
         }
 
         override fun getKeyCodes(): HashSet<Int>? {
@@ -22,8 +23,8 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
         }
     },
     HOME(AdbKeyCode.KEYCODE_HOME) {
-        override fun execute(chimpDevice: IChimpDevice) {
-            chimpDevice.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
+        override fun execute(@NotNull listener: OnDeviceInputListener) {
+            listener.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
         }
 
         override fun getKeyCodes(): HashSet<Int>? {
@@ -35,8 +36,8 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
         }
     },
     RECENT_APP(AdbKeyCode.KEYCODE_APP_SWITCH) {
-        override fun execute(chimpDevice: IChimpDevice) {
-            chimpDevice.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
+        override fun execute(@NotNull listener: OnDeviceInputListener) {
+            listener.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
         }
 
         override fun getKeyCodes(): HashSet<Int>? {
@@ -48,8 +49,8 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
         }
     },
     VOLUME_UP(AdbKeyCode.KEYCODE_VOLUME_UP) {
-        override fun execute(chimpDevice: IChimpDevice) {
-            chimpDevice.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
+        override fun execute(@NotNull listener: OnDeviceInputListener) {
+            listener.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
         }
 
         override fun getKeyCodes(): HashSet<Int>? {
@@ -61,8 +62,8 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
         }
     },
     VOLUME_DOWN(AdbKeyCode.KEYCODE_VOLUME_DOWN) {
-        override fun execute(chimpDevice: IChimpDevice) {
-            chimpDevice.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
+        override fun execute(@NotNull listener: OnDeviceInputListener) {
+            listener.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
         }
 
         override fun getKeyCodes(): HashSet<Int>? {
@@ -74,8 +75,8 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
         }
     },
     VOLUME_MUTE(AdbKeyCode.KEYCODE_VOLUME_MUTE) {
-        override fun execute(chimpDevice: IChimpDevice) {
-            chimpDevice.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
+        override fun execute(@NotNull listener: OnDeviceInputListener) {
+            listener.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
         }
 
         override fun getKeyCodes(): HashSet<Int>? {
@@ -87,8 +88,8 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
         }
     },
     PC_PASTE(null) {
-        override fun execute(chimpDevice: IChimpDevice) {
-            chimpDevice.type(ToolkitUtils.getTextFromClipboard())
+        override fun execute(@NotNull listener: OnDeviceInputListener) {
+            listener.type(ToolkitUtils.getTextFromClipboard())
         }
 
         override fun getKeyCodes(): HashSet<Int>? {
@@ -100,8 +101,8 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
         }
     },
     DEVICE_COPY(AdbKeyCode.KEYCODE_COPY) {
-        override fun execute(chimpDevice: IChimpDevice) {
-            chimpDevice.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
+        override fun execute(@NotNull listener: OnDeviceInputListener) {
+            listener.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
         }
 
         override fun getKeyCodes(): HashSet<Int>? {
@@ -112,8 +113,8 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
         }
     },
     DEVICE_PASTE(AdbKeyCode.KEYCODE_PASTE) {
-        override fun execute(chimpDevice: IChimpDevice) {
-            chimpDevice.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
+        override fun execute(@NotNull listener: OnDeviceInputListener) {
+            listener.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
         }
 
         override fun getKeyCodes(): HashSet<Int>? {
@@ -124,8 +125,8 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
         }
     },
     LANGUAGE_SWITCH(AdbKeyCode.KEYCODE_LANGUAGE_SWITCH) {
-        override fun execute(chimpDevice: IChimpDevice) {
-            chimpDevice.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
+        override fun execute(@NotNull listener: OnDeviceInputListener) {
+            listener.press(keyCode.toString(), TouchPressType.DOWN_AND_UP)
         }
 
         override fun getKeyCodes(): HashSet<Int>? {
@@ -139,17 +140,17 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
 
     companion object {
 
-        fun execute(hotKey: HotKeys, chimpDevice: IChimpDevice) {
-            chimpDevice.press(hotKey.keyCode.toString(), TouchPressType.DOWN_AND_UP)
+        fun execute(hotKey: HotKeys, @NotNull listener: OnDeviceInputListener) {
+            listener.press(hotKey.keyCode.toString(), TouchPressType.DOWN_AND_UP)
         }
 
-        fun execute(pressedKeys: HashSet<Int>, chimpDevice: IChimpDevice) {
+        fun execute(pressedKeys: HashSet<Int>, @NotNull listener: OnDeviceInputListener) {
             for (hotKey in values()) {
                 val keyCodes = hotKey.getKeyCodes()
                 if (keyCodes != null
                         && keyCodes.size == pressedKeys.size &&
                         pressedKeys.containsAll(keyCodes)) {
-                    hotKey.execute(chimpDevice)
+                    hotKey.execute(listener)
                     break
                 }
             }
@@ -162,5 +163,5 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
 interface HotKeysActions {
     fun getKeyCodes(): HashSet<Int>?
 
-    fun execute(chimpDevice: IChimpDevice)
+    fun execute(@NotNull listener: OnDeviceInputListener)
 }

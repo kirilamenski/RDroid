@@ -1,9 +1,9 @@
 package com.ansgar.rdroidpc.ui.components.videocomponent;
 
-import com.android.chimpchat.core.IChimpDevice;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.listeners.FrameMouseListener;
+import com.ansgar.rdroidpc.listeners.OnDeviceInputListener;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 
 import javax.swing.*;
@@ -14,16 +14,16 @@ public class VideoComponent extends JPanel {
 
     private String deviceId;
     private FFmpegFrameGrabber frameGrabber;
-    private IChimpDevice chimpDevice;
     private BufferedImage currentImage;
     private int coordinateX, imageWidth, imageHeight, deviceWidth, deviceHeight;
     private OrientationEnum currentOrientation;
+    private OnDeviceInputListener listener;
 
-    public VideoComponent(Device device, IChimpDevice chimpDevice) {
+    public VideoComponent(Device device, OnDeviceInputListener listener) {
         this.deviceId = device.getDeviceId();
         this.deviceWidth = device.getWidth();
         this.deviceHeight = device.getHeight();
-        this.chimpDevice = chimpDevice;
+        this.listener = listener;
         initMouseListener();
     }
 
@@ -42,10 +42,10 @@ public class VideoComponent extends JPanel {
         }
     }
 
-    private void initMouseListener() {
-        FrameMouseListener listener = new FrameMouseListener(this);
-        addMouseListener(listener);
-        addMouseMotionListener(listener);
+    public void initMouseListener() {
+        FrameMouseListener mouseListener = new FrameMouseListener(this, listener);
+        addMouseListener(mouseListener);
+        addMouseMotionListener(mouseListener);
     }
 
     public void setCoordinateX(int coordinateX) {
@@ -68,10 +68,6 @@ public class VideoComponent extends JPanel {
         return deviceHeight;
     }
 
-    public IChimpDevice getChimpDevice() {
-        return chimpDevice;
-    }
-
     public OrientationEnum getCurrentOrientation() {
         return currentOrientation;
     }
@@ -79,4 +75,5 @@ public class VideoComponent extends JPanel {
     public void setCurrentOrientation(OrientationEnum currentOrientation) {
         this.currentOrientation = currentOrientation;
     }
+
 }

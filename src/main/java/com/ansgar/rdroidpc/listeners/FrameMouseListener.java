@@ -1,9 +1,9 @@
 package com.ansgar.rdroidpc.listeners;
 
-import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.ui.components.videocomponent.VideoComponent;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.*;
 
@@ -12,9 +12,12 @@ import static com.ansgar.rdroidpc.utils.DimensionUtils.convertCoordinates;
 public class FrameMouseListener implements MouseMotionListener, MouseListener {
 
     private VideoComponent component;
+    @Nullable
+    private OnDeviceInputListener listener;
 
-    public FrameMouseListener(VideoComponent component) {
+    public FrameMouseListener(VideoComponent component, @Nullable OnDeviceInputListener listener) {
         this.component = component;
+        this.listener = listener;
     }
 
     @Override
@@ -51,9 +54,7 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
     private void handleMouseListener(int x, int y, TouchPressType type) {
         int _x = (int) convertCoordinates(getOriginalScreenSize()[0], component.getWidth(), x);
         int _y = (int) convertCoordinates(getOriginalScreenSize()[1], component.getHeight(), y);
-
-        IChimpDevice chimpDevice = component.getChimpDevice();
-        if (chimpDevice != null) component.getChimpDevice().touch(_x, _y, type);
+        if (listener != null) listener.touch(_x, _y, type);
     }
 
     private int[] getOriginalScreenSize() {
