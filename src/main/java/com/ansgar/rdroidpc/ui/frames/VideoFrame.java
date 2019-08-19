@@ -88,7 +88,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView, OnDeviceInp
             while (isThreadRunning.get()) {
                 currentImage = converter.getBufferedImage(frameGrabber.grab());
                 if (currentImage != null) {
-                    videoComponent.start(currentImage);
+                    videoComponent.showBufferedImage(currentImage);
                 } else {
                     presenter.reconnect();
                     break;

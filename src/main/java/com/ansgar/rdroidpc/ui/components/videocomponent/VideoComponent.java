@@ -27,7 +27,7 @@ public class VideoComponent extends JPanel {
         initMouseListener();
     }
 
-    public void start(BufferedImage image) {
+    public void showBufferedImage(BufferedImage image) {
         currentImage = image;
         repaint();
     }
