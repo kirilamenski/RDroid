@@ -1,8 +1,9 @@
 package com.ansgar.rdroidpc.enums
 
+import com.ansgar.rdroidpc.listeners.MenuItemEnumCommands
 import com.ansgar.rdroidpc.ui.frames.views.MainPanelView
 
-enum class MainMenuItemsEnum(val value: String) : MenuItemEnumCommands {
+enum class MainMenuItemsEnum(val value: String) : MenuItemEnumCommands<MainPanelView> {
     FILE("File") {
         override fun execute(view: MainPanelView) {
 
@@ -34,9 +35,4 @@ enum class MainMenuItemsEnum(val value: String) : MenuItemEnumCommands {
         }
     }
 
-
-}
-
-interface MenuItemEnumCommands {
-    fun execute(view: MainPanelView)
 }

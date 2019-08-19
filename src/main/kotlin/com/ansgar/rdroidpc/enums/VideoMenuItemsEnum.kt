@@ -1,16 +1,43 @@
 package com.ansgar.rdroidpc.enums
 
-enum class VideoMenuItemsEnum(val value: String) {
-    FILE("File"),
-    SETTINGS("Settings"),
-    TOOLS("Tools"),
-    PERFORMANCE_MANAGER("Performance Manager"),
-    EXIT("Exit"),
-    HELP("Help");
+import com.ansgar.rdroidpc.listeners.MenuItemEnumCommands
+import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView
+
+enum class VideoMenuItemsEnum(val value: String): MenuItemEnumCommands<VideoFrameView> {
+    FILE("File") {
+        override fun execute(view: VideoFrameView) {
+
+        }
+    },
+    SETTINGS("Settings") {
+        override fun execute(view: VideoFrameView) {
+
+        }
+    },
+    TOOLS("Tools") {
+        override fun execute(view: VideoFrameView) {
+
+        }
+    },
+    PERFORMANCE_MANAGER("Performance Manager") {
+        override fun execute(view: VideoFrameView) {
+
+        }
+    },
+    EXIT("Exit") {
+        override fun execute(view: VideoFrameView) {
+            view.onCloseFrame()
+        }
+    },
+    HELP("Help") {
+        override fun execute(view: VideoFrameView) {
+
+        }
+    };
 
     companion object {
-        fun getMenuItemEnumByValue(value: String): VideoMenuItemsEnum? = values().firstOrNull { menuItemsEnum ->
-            menuItemsEnum.value == value
+        fun execute(value: String, view: VideoFrameView) {
+            values().filter { it.value == value }.firstOrNull()?.execute(view)
         }
     }
 }

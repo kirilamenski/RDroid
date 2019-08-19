@@ -8,8 +8,8 @@ import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.enums.ButtonsPanelStateEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.enums.OsEnum;
+import com.ansgar.rdroidpc.enums.VideoMenuItemsEnum;
 import com.ansgar.rdroidpc.listeners.*;
-import com.ansgar.rdroidpc.listeners.impl.VideoFrameMenuListenerImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.ui.components.videocomponent.VideoComponent;
@@ -31,7 +31,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_HEIGHT;
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
-public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoFrameView, OnDeviceInputListener {
+public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoFrameView,
+        OnDeviceInputListener, OnMenuItemListener {
 
     private AdbBackend adbBackend;
     private Thread thread;
@@ -239,7 +240,7 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
         Rectangle bounds = new Rectangle(0, 0, frame.getWidth(), DimensionConst.MENU_HEIGHT);
         if (menuBar == null) {
             menuBar = new MenuBar();
-            menuBar.setListener(new VideoFrameMenuListenerImpl(this));
+            menuBar.setListener(this);
             add(menuBar.getMenuBar(StringConst.Companion.getVideoMenuItems(), bounds));
         } else {
             menuBar.setBounds(bounds);
@@ -311,4 +312,8 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
         this.onVideoFrameListener = onVideoFrameListener;
     }
 
+    @Override
+    public void onMenuItemClicked(String name) {
+        VideoMenuItemsEnum.Companion.execute(name, this);
+    }
 }
