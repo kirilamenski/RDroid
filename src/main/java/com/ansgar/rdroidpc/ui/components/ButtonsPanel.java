@@ -69,8 +69,10 @@ public class ButtonsPanel extends JPanel {
 
     @Nullable
     private String getTooltip(int position) {
-        if (toolTips != null && toolTips.length > 0
-                && icons != null && icons.length > 0
+        if (toolTips != null
+                && toolTips.length > 0
+                && icons != null
+                && icons.length > 0
                 && position < icons.length) {
             return toolTips[position];
         }
@@ -104,61 +106,6 @@ public class ButtonsPanel extends JPanel {
 
     public void setItemClickListener(OnButtonPanelListener listener) {
         this.listener = listener;
-    }
-
-    public static class ButtonsPanelBuilder {
-
-        private ButtonsPanel panel;
-
-        public ButtonsPanelBuilder() {
-            panel = new ButtonsPanel();
-        }
-
-        public ButtonsPanelBuilder setBorder(MatteBorder border) {
-            panel.setBorder(border);
-            return this;
-        }
-
-        public ButtonsPanelBuilder setState(ButtonsPanelStateEnum state) {
-            panel.setState(state);
-            return this;
-        }
-
-        public ButtonsPanelBuilder setIconSize(int iconWidth, int iconHeight) {
-            panel.setIconSize(iconWidth, iconHeight);
-            return this;
-        }
-
-        public ButtonsPanelBuilder setIcons(String... icons) {
-            panel.setIcons(icons);
-            return this;
-        }
-
-        public ButtonsPanelBuilder setToolTips(String... toolTips) {
-            panel.setToolTips(toolTips);
-            return this;
-        }
-
-        public ButtonsPanelBuilder setBounds(int x, int y, int width, int height) {
-            panel.setBounds(x, y, width, height);
-            return this;
-        }
-
-        public ButtonsPanelBuilder setBounds(Rectangle rectangle) {
-            panel.setBounds(rectangle);
-            return this;
-        }
-
-        public ButtonsPanelBuilder setItemClickListener(OnButtonPanelListener listener) {
-            panel.setItemClickListener(listener);
-            return this;
-        }
-
-        public ButtonsPanel build() {
-            panel.createPanel();
-            return panel;
-        }
-
     }
 
 }

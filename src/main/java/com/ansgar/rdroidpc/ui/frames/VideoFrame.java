@@ -88,7 +88,7 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
             while (isThreadRunning.get()) {
                 currentImage = converter.getBufferedImage(frameGrabber.grab());
                 if (currentImage != null) {
-                    videoComponent.displayImage(currentImage);
+                    videoComponent.start(currentImage);
                 } else {
                     presenter.reconnect();
                     break;
@@ -189,50 +189,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         updateWindowSize(rectangle);
     }
 
-    private void addVideo(int width, int height) {
-        Rectangle bounds = new Rectangle(0, menuBar.getHeight(), width, height);
-        if (videoComponent == null) {
-            videoComponent = new VideoComponent(device, chimpDevice);
-            add(videoComponent);
-        }
-        videoComponent.setBounds(bounds);
-        videoComponent.setCoordinateX(imageCoordinateX);
-        videoComponent.setImageWidth(imageWidth);
-        videoComponent.setImageHeight(imageHeight);
-        videoComponent.setCurrentOrientation(currentOrientation);
-    }
-
-    private void addMenu() {
-        Rectangle bounds = new Rectangle(0, 0, frame.getWidth(), DimensionConst.MENU_HEIGHT);
-        if (menuBar == null) {
-            menuBar = new MenuBar();
-            menuBar.setListener(new VideoFrameMenuListenerImpl(this));
-            add(menuBar.getMenuBar(StringConst.Companion.getVideoMenuItems(), bounds));
-        } else {
-            menuBar.setBounds(bounds);
-        }
-    }
-
-    private void addRightPanel() {
-        Rectangle bounds = new Rectangle(videoComponent.getWidth(), menuBar.getHeight(),
-                DimensionConst.RIGHT_ACTION_PANEL_WIDTH, imageHeight);
-        if (rightPanel == null) {
-            rightPanel = new ButtonsPanel.ButtonsPanelBuilder()
-                    .setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK))
-                    .setIcons(StringConst.Companion.getNavigationPanelIcons())
-                    .setToolTips(StringConst.Companion.getNavigationPanelTooltips())
-                    .setState(ButtonsPanelStateEnum.VERTICAL)
-                    .setIconSize(42, 42)
-                    .setBounds(bounds)
-                    .setItemClickListener(presenter.rightActionsListener)
-                    .build();
-
-            add(rightPanel);
-        } else {
-            rightPanel.setBounds(bounds);
-        }
-    }
-
     /**
      * Uses a static video frame size equal to 70% of the height of the PC screen to avoid input issues
      * because {@link KeyboardListener} uses resized value from {@link DimensionUtils}
@@ -263,6 +219,49 @@ public class VideoFrame extends BasePanel implements VideoFrameView {
         addVideo(rectangle.width, rectangle.height);
         addRightPanel();
         repaint();
+    }
+
+    private void addVideo(int width, int height) {
+        Rectangle bounds = new Rectangle(0, menuBar.getHeight(), width, height);
+        if (videoComponent == null) {
+            videoComponent = new VideoComponent(device, chimpDevice);
+            add(videoComponent);
+        }
+        videoComponent.setBounds(bounds);
+        videoComponent.setCoordinateX(imageCoordinateX);
+        videoComponent.setImageWidth(imageWidth);
+        videoComponent.setImageHeight(imageHeight);
+        videoComponent.setCurrentOrientation(currentOrientation);
+    }
+
+    private void addMenu() {
+        Rectangle bounds = new Rectangle(0, 0, frame.getWidth(), DimensionConst.MENU_HEIGHT);
+        if (menuBar == null) {
+            menuBar = new MenuBar();
+            menuBar.setListener(new VideoFrameMenuListenerImpl(this));
+            add(menuBar.getMenuBar(StringConst.Companion.getVideoMenuItems(), bounds));
+        } else {
+            menuBar.setBounds(bounds);
+        }
+    }
+
+    private void addRightPanel() {
+        Rectangle bounds = new Rectangle(videoComponent.getWidth(), menuBar.getHeight(),
+                DimensionConst.RIGHT_ACTION_PANEL_WIDTH, imageHeight);
+        if (rightPanel == null) {
+            rightPanel = new ButtonsPanel();
+            rightPanel.setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK));
+            rightPanel.setIcons(StringConst.Companion.getNavigationPanelIcons());
+            rightPanel.setToolTips(StringConst.Companion.getNavigationPanelTooltips());
+            rightPanel.setState(ButtonsPanelStateEnum.VERTICAL);
+            rightPanel.setIconSize(42, 42);
+            rightPanel.setBounds(bounds);
+            rightPanel.setItemClickListener(presenter.rightActionsListener);
+            rightPanel.createPanel();
+            add(rightPanel);
+        } else {
+            rightPanel.setBounds(bounds);
+        }
     }
 
     /**

@@ -49,11 +49,8 @@ public class FrameMouseListener implements MouseMotionListener, MouseListener {
     }
 
     private void handleMouseListener(int x, int y, TouchPressType type) {
-        int width = component.getWidth();
-        int height = component.getHeight();
-        int _x = (int) convertCoordinates(getOriginalScreenSize()[0], width, x);
-        int _y = (int) convertCoordinates(getOriginalScreenSize()[1], height, y);
-        System.out.println("Width:" + width + ", height: " + height + "||" + getOriginalScreenSize()[0] + "x" + getOriginalScreenSize()[1] + ", " + x + "x" + y);
+        int _x = (int) convertCoordinates(getOriginalScreenSize()[0], component.getWidth(), x);
+        int _y = (int) convertCoordinates(getOriginalScreenSize()[1], component.getHeight(), y);
 
         IChimpDevice chimpDevice = component.getChimpDevice();
         if (chimpDevice != null) component.getChimpDevice().touch(_x, _y, type);
