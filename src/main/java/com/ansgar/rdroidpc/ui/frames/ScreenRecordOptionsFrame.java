@@ -164,4 +164,5 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
     public void onPathSelected(String path) {
         downloadFolderTf.setText(path);
     }
+
 }

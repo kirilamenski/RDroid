@@ -13,7 +13,6 @@ import com.ansgar.rdroidpc.listeners.impl.VideoFrameMenuListenerImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.ui.components.videocomponent.VideoComponent;
-import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
 import com.ansgar.rdroidpc.ui.frames.presenters.VideoFramePresenter;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
 import com.ansgar.rdroidpc.utils.*;
@@ -21,7 +20,6 @@ import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.border.MatteBorder;
 import java.awt.*;
@@ -33,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_HEIGHT;
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
-public class VideoFrame extends BasePanel implements VideoFrameView, OnDeviceInputListener {
+public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoFrameView, OnDeviceInputListener {
 
     private AdbBackend adbBackend;
     private Thread thread;
@@ -45,7 +43,6 @@ public class VideoFrame extends BasePanel implements VideoFrameView, OnDeviceInp
     private OnVideoFrameListener onVideoFrameListener;
     private OrientationEnum currentOrientation;
     private ButtonsPanel rightPanel;
-    private VideoFramePresenter presenter;
     private String adbStreamCommand;
     private MenuBar menuBar;
     private VideoComponent videoComponent;
@@ -173,14 +170,8 @@ public class VideoFrame extends BasePanel implements VideoFrameView, OnDeviceInp
     }
 
     @Override
-    public void createPresenter() {
-        presenter = new VideoFramePresenter(this, this);
-    }
-
-    @Nullable
-    @Override
-    public BasePresenter getPresenter() {
-        return presenter;
+    public VideoFramePresenter createPresenter() {
+        return new VideoFramePresenter(this, this);
     }
 
     @Override

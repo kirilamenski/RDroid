@@ -58,4 +58,5 @@ public class SettingsFrame extends BasePanel implements OnFileChooserListener {
 
         }
     }
+
 }

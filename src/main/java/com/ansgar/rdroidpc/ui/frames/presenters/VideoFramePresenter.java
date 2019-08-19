@@ -26,11 +26,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class VideoFramePresenter extends BasePresenter implements OnFileChooserListener,
+public class VideoFramePresenter extends BasePresenter<VideoFrameView> implements OnFileChooserListener,
         OnDeviceOrientationListener, OnScreenRecordOptionsListener {
 
     private String deviceId;
-    private VideoFrameView view;
     private OnDeviceInputListener inputListener;
     private DeviceActions deviceActions;
     private OrientationCommandTask orientationCommandTask;
@@ -39,7 +38,6 @@ public class VideoFramePresenter extends BasePresenter implements OnFileChooserL
 
     public VideoFramePresenter(VideoFrameView view, OnDeviceInputListener listener) {
         super(view);
-        this.view = view;
         this.inputListener = listener;
         VideoFrame frame = (VideoFrame) view.getChildComponent();
         view.setKeyboardListener(new KeyboardListener(frame));

@@ -116,4 +116,5 @@ public class DeviceOptionsFrame extends BasePanel {
         }
         return 3;
     }
+
 }

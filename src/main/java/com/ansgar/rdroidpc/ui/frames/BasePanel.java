@@ -9,17 +9,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public abstract class BasePanel extends JPanel implements WindowListener, BaseFrameView {
+public abstract class BasePanel<T extends BasePresenter> extends JPanel implements WindowListener, BaseFrameView {
 
-    private Rectangle rectangle;
+    protected T presenter;
     protected JFrame frame;
+    private Rectangle rectangle;
 
     public BasePanel(Rectangle rectangle, String title) {
         this.rectangle = rectangle;
         setBounds(rectangle);
         setLayout(null);
         initFrame(rectangle, title, false);
-        createPresenter();
+        presenter = createPresenter();
     }
 
     public BasePanel(JComponent component, String title, boolean undecorated) {
@@ -27,7 +28,7 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
         setBounds(rectangle);
         setLayout(null);
         initFrame(rectangle, title, undecorated);
-        createPresenter();
+        presenter = createPresenter();
     }
 
     private void initFrame(Rectangle rectangle, String title, boolean undecorated) {
@@ -53,8 +54,8 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
     }
 
     protected void closeFrame() {
-        if (getPresenter() != null) {
-            getPresenter().destroy();
+        if (presenter != null) {
+            presenter.destroy();
         }
         if (frame != null) {
             frame.setVisible(false);
@@ -128,11 +129,7 @@ public abstract class BasePanel extends JPanel implements WindowListener, BaseFr
         return frame;
     }
 
-    public void createPresenter() {
-    }
-
-    @Nullable
-    public BasePresenter getPresenter() {
+    public T createPresenter() {
         return null;
     }
 

@@ -2,11 +2,11 @@ package com.ansgar.rdroidpc.ui.frames.presenters;
 
 import com.ansgar.rdroidpc.ui.frames.views.BaseFrameView;
 
-public class BasePresenter {
+public class BasePresenter <T extends BaseFrameView> {
 
-    private BaseFrameView view;
+    protected T view;
 
-    public BasePresenter(BaseFrameView view) {
+    public BasePresenter(T view) {
         this.view = view;
     }
 

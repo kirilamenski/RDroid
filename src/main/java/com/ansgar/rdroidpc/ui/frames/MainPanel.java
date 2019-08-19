@@ -5,15 +5,18 @@ import com.ansgar.rdroidpc.constants.*;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.ResponseParserUtil;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
+import com.ansgar.rdroidpc.enums.MainMenuItemsEnum;
 import com.ansgar.rdroidpc.listeners.DeviceActions;
 import com.ansgar.rdroidpc.listeners.MainActionPanelsListener;
+import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
 import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
-import com.ansgar.rdroidpc.listeners.impl.MainPanelMenuListenerImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.DevicesContainer;
 import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
+import com.ansgar.rdroidpc.ui.frames.presenters.MainPanelPresenter;
+import com.ansgar.rdroidpc.ui.frames.views.MainPanelView;
 
 import javax.swing.border.MatteBorder;
 import java.awt.*;
@@ -22,7 +25,8 @@ import java.util.List;
 
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
-public class MainPanel extends BasePanel implements OnVideoFrameListener, DevicesContainer.OnItemClicked {
+public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPanelView,
+        OnVideoFrameListener, DevicesContainer.OnItemClicked, OnMenuItemListener {
 
     private MenuBar menuBar;
     private DevicesContainer devicesContainer;
@@ -37,7 +41,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         this.openedDevices = new HashMap<>();
         this.devices = new ArrayList<>();
         this.listener = new MainActionPanelsListener(this);
-        new SpinnerDialog(getRectangle()) {
+        new SpinnerDialog(rectangle) {
             @Override
             public void doInBack() {
                 adbBackend = new AdbBackend();
@@ -48,7 +52,7 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
 
     private void setUpMainPanel() {
         menuBar = new MenuBar();
-        menuBar.setListener(new MainPanelMenuListenerImpl(this));
+        menuBar.setListener(this);
         add(menuBar.getMenuBar(
                 StringConst.Companion.getMainMenuItems(),
                 new Rectangle(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 25)
@@ -120,6 +124,16 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
     }
 
     @Override
+    public void openSettings() {
+        presenter.openSettings();
+    }
+
+    @Override
+    public void openInformation() {
+        presenter.openInformation();
+    }
+
+    @Override
     public void onCloseFrame() {
         new SpinnerDialog(getRectangle()) {
             @Override
@@ -166,6 +180,12 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         new DeviceOptionsFrame(this, device, rectangle);
     }
 
+    @Override
+    public MainPanelPresenter createPresenter() {
+        return new MainPanelPresenter(this);
+    }
+
+    @Override
     public void closeDevicesConnections() {
         if (openedDevices.size() > 0) {
             openedDevices.values().forEach(obj -> {
@@ -188,4 +208,8 @@ public class MainPanel extends BasePanel implements OnVideoFrameListener, Device
         actions.startServer();
     }
 
+    @Override
+    public void onMenuItemClicked(String name) {
+        MainMenuItemsEnum.Companion.execute(name, this);
+    }
 }

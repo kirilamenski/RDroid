@@ -2,6 +2,7 @@ package com.ansgar.rdroidpc.commands.tasks;
 
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
 import com.ansgar.rdroidpc.ui.frames.BasePanel;
+import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
 import com.ansgar.rdroidpc.utils.DumpsysCommandTask;
 
 import java.awt.*;
