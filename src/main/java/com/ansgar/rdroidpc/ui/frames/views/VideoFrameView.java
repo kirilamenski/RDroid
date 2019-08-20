@@ -1,6 +1,5 @@
 package com.ansgar.rdroidpc.ui.frames.views;
 
-import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
 
 public interface VideoFrameView extends BaseFrameView {
@@ -27,6 +26,6 @@ public interface VideoFrameView extends BaseFrameView {
 
     boolean isScreenEmpty();
 
-    Device getDevice();
+    void openDumpsysPanel();
 
 }

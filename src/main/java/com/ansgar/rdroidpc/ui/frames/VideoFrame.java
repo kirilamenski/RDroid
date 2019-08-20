@@ -191,6 +191,30 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
         updateWindowSize(rectangle);
     }
 
+    @Override
+    public OrientationEnum getCurrentOrientation() {
+        return currentOrientation;
+    }
+
+    @Override
+    public boolean isScreenEmpty() {
+        return currentImage == null;
+    }
+
+    @Override
+    public void openDumpsysPanel() {
+        presenter.openDumsysPanel(device.getDeviceId());
+    }
+
+    public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
+        this.onVideoFrameListener = onVideoFrameListener;
+    }
+
+    @Override
+    public void onMenuItemClicked(String name) {
+        VideoMenuItemsEnum.Companion.execute(name, this);
+    }
+
     /**
      * Uses a static video frame size equal to 70% of the height of the PC screen to avoid input issues
      * because {@link KeyboardListener} uses resized value from {@link DimensionUtils}
@@ -294,26 +318,4 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
         return 10;
     }
 
-    @Override
-    public Device getDevice() {
-        return device;
-    }
-
-    public OrientationEnum getCurrentOrientation() {
-        return currentOrientation;
-    }
-
-    @Override
-    public boolean isScreenEmpty() {
-        return currentImage == null;
-    }
-
-    public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {
-        this.onVideoFrameListener = onVideoFrameListener;
-    }
-
-    @Override
-    public void onMenuItemClicked(String name) {
-        VideoMenuItemsEnum.Companion.execute(name, this);
-    }
 }

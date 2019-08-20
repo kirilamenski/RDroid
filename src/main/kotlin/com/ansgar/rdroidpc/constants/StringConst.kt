@@ -29,8 +29,7 @@ class StringConst {
                 "icons/ic_reconnect_64.png",
                 "icons/ic_back_64.png",
                 "icons/ic_home_64.png",
-                "icons/ic_recent_app_64.png",
-                "icons/ic_other_64.png"
+                "icons/ic_recent_app_64.png"
         )
         val navigationPanelTooltips = arrayOf(
                 "Rotate",
@@ -40,8 +39,7 @@ class StringConst {
                 "Reconnect",
                 "Back",
                 "Home",
-                "Recent Application",
-                "Other"
+                "Recent Application"
         )
 
         const val INFORMATION = "<html><h2>FEATURES:</h2>" +

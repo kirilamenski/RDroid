@@ -4,11 +4,7 @@ import com.ansgar.rdroidpc.listeners.MenuItemEnumCommands
 import com.ansgar.rdroidpc.ui.frames.views.MainPanelView
 
 enum class MainMenuItemsEnum(val value: String) : MenuItemEnumCommands<MainPanelView> {
-    FILE("File") {
-        override fun execute(view: MainPanelView) {
-
-        }
-    },
+    FILE("File"),
     SETTINGS("Settings") {
         override fun execute(view: MainPanelView) {
             view.openSettings()
@@ -19,10 +15,7 @@ enum class MainMenuItemsEnum(val value: String) : MenuItemEnumCommands<MainPanel
             view.onCloseFrame()
         }
     },
-    HELP("Help") {
-        override fun execute(view: MainPanelView) {
-        }
-    },
+    HELP("Help"),
     INFORMATION("Information") {
         override fun execute(view: MainPanelView) {
             view.openInformation()
@@ -31,7 +24,7 @@ enum class MainMenuItemsEnum(val value: String) : MenuItemEnumCommands<MainPanel
 
     companion object {
         fun execute(value: String, view: MainPanelView) {
-            values().filter { it.value == value }.firstOrNull()?.execute(view)
+            values().firstOrNull { it.value == value }?.execute(view)
         }
     }
 

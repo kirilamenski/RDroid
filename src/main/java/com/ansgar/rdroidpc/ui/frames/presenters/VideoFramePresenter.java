@@ -81,10 +81,6 @@ public class VideoFramePresenter extends BasePresenter<VideoFrameView> implement
                 inputListener.press(String.valueOf(AdbKeyCode.KEYCODE_APP_SWITCH.getKeyCode()),
                         TouchPressType.DOWN_AND_UP);
                 break;
-            case 8:
-                new DumpsysPanel(view.getDevice().getDeviceId(),
-                        new Rectangle(100, 0, 600, 400), "Dumpsys Manager");
-                break;
         }
     };
 
@@ -211,6 +207,10 @@ public class VideoFramePresenter extends BasePresenter<VideoFrameView> implement
         } else {
             view.onCloseFrame();
         }
+    }
+
+    public void openDumsysPanel(String deviceId) {
+        new DumpsysPanel(deviceId, new Rectangle(100, 0, 600, 400), "Dumpsys Manager");
     }
 
     /**
