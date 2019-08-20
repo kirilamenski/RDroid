@@ -2,7 +2,7 @@ package com.ansgar.rdroidpc.utils;
 
 import java.util.HashMap;
 
-public class SharedValues {
+public class SharedValues<T> {
 
     private static SharedValues instance;
     private static HashMap<String, Object> sharedVal;
@@ -45,6 +45,10 @@ public class SharedValues {
         sharedVal.put(key, value);
     }
 
+    public static <T> void put(String key, T value) {
+        sharedVal.put(key, value);
+    }
+
     public static int get(String key, int defaultValue) {
         return (int) getValue(key, defaultValue);
     }
@@ -67,6 +71,10 @@ public class SharedValues {
 
     public static long get(String key, long defaultValue) {
         return (long) getValue(key, defaultValue);
+    }
+
+    public static <T> Object get(String key, T defaultValue) {
+        return getValue(key, defaultValue);
     }
 
     private static Object getValue(String key, Object defaultValue) {

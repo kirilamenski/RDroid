@@ -70,9 +70,6 @@ class StringConst {
         const val OK = "Ok"
         const val CANCEL = "Cancel"
 
-        const val SHARED_VAL_SCREEN_WIDTH = "shared_val_screen_width"
-        const val SHARED_VAL_SCREEN_HEIGHT = "shared_val_screen_height"
-
         const val ASK_REBOOT = "Do you want to reboot device?"
 
         const val DEFAULT_DEVICE_FOLDER = "/sdcard/"

@@ -210,7 +210,12 @@ public class VideoFramePresenter extends BasePresenter<VideoFrameView> implement
     }
 
     public void openDumsysPanel(String deviceId) {
-        new DumpsysPanel(deviceId, new Rectangle(100, 0, 600, 400), "Dumpsys Manager");
+        new DumpsysPanel(deviceId, new Rectangle(
+                view.getChildComponent().getBounds().x,
+                view.getRectangle().y,
+                600,
+                400
+        ), "Dumpsys Manager");
     }
 
     /**

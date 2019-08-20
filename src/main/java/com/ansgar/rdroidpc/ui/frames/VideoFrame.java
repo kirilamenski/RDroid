@@ -12,7 +12,7 @@ import com.ansgar.rdroidpc.enums.VideoMenuItemsEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
-import com.ansgar.rdroidpc.ui.components.videocomponent.VideoComponent;
+import com.ansgar.rdroidpc.ui.components.VideoComponent;
 import com.ansgar.rdroidpc.ui.frames.presenters.VideoFramePresenter;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
 import com.ansgar.rdroidpc.utils.*;
@@ -221,14 +221,14 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
      * which related of device screen size and video frame size.
      */
     private void initPortraitOrientationSize() {
-        int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
+        int screenHeight = SharedValues.get(SharedValuesKey.SHARED_VAL_SCREEN_HEIGHT, 0);
         imageHeight = (int) (screenHeight * 0.7f) + DimensionConst.MENU_HEIGHT;
         imageWidth = (int) (imageHeight * getWidthOffset() * deviceScreenRatio);
         imageCoordinateX = -(imageWidth / 3 + getCoordinateOffset(getWidthOffset()));
     }
 
     private void initLandscapeOrientationSize() {
-        int screenHeight = SharedValues.get(StringConst.SHARED_VAL_SCREEN_HEIGHT, 0);
+        int screenHeight = SharedValues.get(SharedValuesKey.SHARED_VAL_SCREEN_HEIGHT, 0);
         imageHeight = (int) (screenHeight * 0.7f) + DimensionConst.MENU_HEIGHT;
         imageWidth = (int) (imageHeight / deviceScreenRatio);
         imageCoordinateX = 0;

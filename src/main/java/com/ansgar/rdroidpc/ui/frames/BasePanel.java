@@ -1,5 +1,6 @@
 package com.ansgar.rdroidpc.ui.frames;
 
+import com.ansgar.rdroidpc.listeners.OnWindowResizedListener;
 import com.ansgar.rdroidpc.ui.components.OptionDialog;
 import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
 import com.ansgar.rdroidpc.ui.frames.views.BaseFrameView;
@@ -14,9 +15,20 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
     protected T presenter;
     protected JFrame frame;
     private Rectangle rectangle;
+    private boolean resizable;
+    private OnWindowResizedListener listener;
 
     public BasePanel(Rectangle rectangle, String title) {
         this.rectangle = rectangle;
+        setBounds(rectangle);
+        setLayout(null);
+        initFrame(rectangle, title, false);
+        presenter = createPresenter();
+    }
+
+    public BasePanel(Rectangle rectangle, String title, boolean resizable) {
+        this.rectangle = rectangle;
+        this.resizable = resizable;
         setBounds(rectangle);
         setLayout(null);
         initFrame(rectangle, title, false);
@@ -37,7 +49,7 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
         frame.setVisible(true);
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
-        frame.setResizable(false);
+        frame.setResizable(resizable);
         frame.setPreferredSize(new Dimension(rectangle.width, rectangle.height));
         frame.setLocationRelativeTo(null);
         frame.add(this);
@@ -49,6 +61,13 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
                 Component component = e.getComponent();
                 rectangle.x = component.getX();
                 rectangle.y = component.getY();
+            }
+
+            @Override
+            public void componentResized(ComponentEvent e) {
+                if (listener != null) {
+                    listener.windowResized(new Rectangle(e.getComponent().getBounds()));
+                }
             }
         });
     }
@@ -135,6 +154,10 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
 
     protected void relativeTo(Component component) {
         if (frame != null) frame.setLocationRelativeTo(component);
+    }
+
+    public void setWindowResizedListener(OnWindowResizedListener listener) {
+        this.listener = listener;
     }
 
 }

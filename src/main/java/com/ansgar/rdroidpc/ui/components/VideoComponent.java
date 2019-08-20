@@ -1,4 +1,4 @@
-package com.ansgar.rdroidpc.ui.components.videocomponent;
+package com.ansgar.rdroidpc.ui.components;
 
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.enums.OrientationEnum;

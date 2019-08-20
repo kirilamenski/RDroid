@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class DumpsysCommandTask extends BaseCommandTask {
 
-    private String deviceId;
+    private String deviceId, packageName;
     @Nullable
     private OnDumpsysListener listener;
 
@@ -21,7 +21,7 @@ public class DumpsysCommandTask extends BaseCommandTask {
     @Override
     public String command() {
         return String.format(AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.DUMPSYS),
-                deviceId, "com.fishbowlmedia.fishbowl.dev");
+                deviceId, packageName);
     }
 
     public void setDeviceId(String deviceId) {
@@ -30,5 +30,9 @@ public class DumpsysCommandTask extends BaseCommandTask {
 
     public void setListener(@Nullable OnDumpsysListener listener) {
         this.listener = listener;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 }

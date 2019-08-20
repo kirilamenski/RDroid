@@ -2,7 +2,7 @@ package com.ansgar.rdroidpc.listeners;
 
 import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
-import com.ansgar.rdroidpc.ui.components.videocomponent.VideoComponent;
+import com.ansgar.rdroidpc.ui.components.VideoComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.*;

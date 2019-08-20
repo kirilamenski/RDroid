@@ -1,18 +1,23 @@
 package com.ansgar.rdroidpc.commands.tasks;
 
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
+import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
+import com.ansgar.rdroidpc.listeners.OnWindowResizedListener;
+import com.ansgar.rdroidpc.ui.components.InputFieldComponent;
 import com.ansgar.rdroidpc.ui.frames.BasePanel;
 import com.ansgar.rdroidpc.utils.DumpsysCommandTask;
 
 import java.awt.*;
 
-public class DumpsysPanel extends BasePanel implements OnDumpsysListener {
+public class DumpsysPanel extends BasePanel implements OnDumpsysListener, OnInputPackageListener, OnWindowResizedListener {
 
     private DumpsysCommandTask dumpsysCommandTask;
+    private InputFieldComponent inputFieldComponent;
 
     public DumpsysPanel(String deviceId, Rectangle rectangle, String title) {
-        super(rectangle, title);
+        super(rectangle, title, true);
         setDumpsysTask(deviceId);
+        addPackageNameInputComponent();
     }
 
     @Override
@@ -30,7 +35,24 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener {
         dumpsysCommandTask = new DumpsysCommandTask();
         dumpsysCommandTask.setDeviceId(deviceId);
         dumpsysCommandTask.setListener(this);
+    }
+
+    private void addPackageNameInputComponent() {
+        inputFieldComponent = new InputFieldComponent();
+        inputFieldComponent.setListener(this);
+        add(inputFieldComponent);
+        setWindowResizedListener(this);
+    }
+
+    @Override
+    public void runDumpsys(String packageName) {
+        dumpsysCommandTask.setPackageName(packageName);
         dumpsysCommandTask.start(10000, 5000);
     }
 
+    @Override
+    public void windowResized(Rectangle rectangle) {
+        inputFieldComponent.setBounds(5, 5, rectangle.width - 20, 40);
+        inputFieldComponent.updateComponent();
+    }
 }
