@@ -9,7 +9,8 @@ import com.ansgar.rdroidpc.utils.DumpsysCommandTask;
 
 import java.awt.*;
 
-public class DumpsysPanel extends BasePanel implements OnDumpsysListener, OnInputPackageListener, OnWindowResizedListener {
+public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
+        OnInputPackageListener, OnWindowResizedListener {
 
     private DumpsysCommandTask dumpsysCommandTask;
     private InputFieldComponent inputFieldComponent;
@@ -47,7 +48,7 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener, OnInpu
     @Override
     public void runDumpsys(String packageName) {
         dumpsysCommandTask.setPackageName(packageName);
-        dumpsysCommandTask.start(10000, 5000);
+        dumpsysCommandTask.start(1000, 5000);
     }
 
     @Override

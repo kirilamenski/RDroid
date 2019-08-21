@@ -16,7 +16,7 @@ public class InputFieldComponent extends JPanel {
     private DefaultComboBoxModel<String> defaultComboBoxModel;
 
     public InputFieldComponent() {
-        this.values = (Vector) SharedValues.get(SharedValuesKey.PACKAGES, new Vector());
+        this.values = SharedValues.get(SharedValuesKey.PACKAGES, new Vector());
         this.defaultComboBoxModel = new DefaultComboBoxModel<String>(values);
         setLayout(null);
         updateComboBox();
@@ -44,9 +44,15 @@ public class InputFieldComponent extends JPanel {
             btn.setFocusable(false);
             btn.addActionListener(e -> {
                 if (listener != null) {
-                    String value = (String) packagesCb.getSelectedItem();
-                    addItemToList(value);
-                    listener.runDumpsys(value);
+                    String value = String.valueOf(packagesCb.getEditor().getItem());
+
+                    if (value == null) {
+                        value = (String) packagesCb.getSelectedItem();
+                    }
+                    if (value != null && value.length() > 0) {
+                        addItemToList(value);
+                        listener.runDumpsys(value);
+                    }
                 }
             });
             add(btn);

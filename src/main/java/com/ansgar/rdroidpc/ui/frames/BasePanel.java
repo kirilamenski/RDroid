@@ -59,8 +59,8 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
             @Override
             public void componentMoved(ComponentEvent e) {
                 Component component = e.getComponent();
-                rectangle.x = component.getX();
-                rectangle.y = component.getY();
+                rectangle.x = component.getBounds().x;
+                rectangle.y = component.getBounds().y;
             }
 
             @Override
