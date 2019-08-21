@@ -203,7 +203,9 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
 
     @Override
     public void openDumpsysPanel() {
-        presenter.openDumsysPanel(device.getDeviceId());
+        Rectangle rectangle = new Rectangle(frame.getX() + frame.getWidth(), frame.getY(), 600, 400);
+        if (currentOrientation == OrientationEnum.LANDSCAPE) rectangle.x = frame.getX();
+        presenter.openDumsysPanel(device.getDeviceId(), rectangle);
     }
 
     public void setOnVideoFrameListener(OnVideoFrameListener onVideoFrameListener) {

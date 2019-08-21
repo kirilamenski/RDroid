@@ -51,11 +51,8 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
         frame.setFocusTraversalKeysEnabled(false);
         frame.setBounds(rectangle);
         frame.setResizable(resizable);
-//        frame.setPreferredSize(new Dimension(rectangle.width, rectangle.height));
-        frame.setLocationRelativeTo(null);
         frame.add(this);
         frame.addWindowListener(this);
-//        frame.pack();
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {

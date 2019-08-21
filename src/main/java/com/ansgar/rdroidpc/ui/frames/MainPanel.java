@@ -54,7 +54,7 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
         menuBar.setListener(this);
         add(menuBar.getMenuBar(
                 StringConst.Companion.getMainMenuItems(),
-                new Rectangle(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 35)
+                new Rectangle(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 25)
         ));
         add(getActionsPanel());
         executeAdbDevices();
@@ -188,17 +188,13 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
     public void closeDevicesConnections() {
         if (openedDevices.size() > 0) {
             openedDevices.values().forEach(obj -> {
-                if (obj != null) {
-                    obj.stop(false);
-                }
+                if (obj != null) obj.stop(false);
             });
         }
     }
 
     private void stopAdbConnection() throws NullPointerException {
-        if (adbBackend != null) {
-            adbBackend.shutdown();
-        }
+        if (adbBackend != null) adbBackend.shutdown();
     }
 
     private void restartServer() {
