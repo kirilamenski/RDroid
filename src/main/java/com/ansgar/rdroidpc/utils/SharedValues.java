@@ -29,6 +29,7 @@ public class SharedValues {
         return getValue(key, defaultValue);
     }
 
+    @SuppressWarnings("unchecked")
     private static <T> T getValue(String key, T defaultValue) {
         if (sharedVal != null && sharedVal.containsKey(key)) {
             return (T) sharedVal.get(key);

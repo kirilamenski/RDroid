@@ -37,7 +37,6 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
 
     public MainPanel(Rectangle rectangle, String title) {
         super(rectangle, title);
-        this.menuBar = new MenuBar();
         this.openedDevices = new HashMap<>();
         this.devices = new ArrayList<>();
         this.listener = new MainActionPanelsListener(this);
@@ -55,7 +54,7 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
         menuBar.setListener(this);
         add(menuBar.getMenuBar(
                 StringConst.Companion.getMainMenuItems(),
-                new Rectangle(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 25)
+                new Rectangle(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 35)
         ));
         add(getActionsPanel());
         executeAdbDevices();

@@ -22,7 +22,7 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
         this.rectangle = rectangle;
         setBounds(rectangle);
         setLayout(null);
-        initFrame(rectangle, title, false);
+        initFrame(title, false);
         presenter = createPresenter();
     }
 
@@ -31,7 +31,7 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
         this.resizable = resizable;
         setBounds(rectangle);
         setLayout(null);
-        initFrame(rectangle, title, false);
+        initFrame(title, false);
         presenter = createPresenter();
     }
 
@@ -39,22 +39,23 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
         this.rectangle = component.getBounds();
         setBounds(rectangle);
         setLayout(null);
-        initFrame(rectangle, title, undecorated);
+        initFrame(title, undecorated);
         presenter = createPresenter();
     }
 
-    private void initFrame(Rectangle rectangle, String title, boolean undecorated) {
+    private void initFrame(String title, boolean undecorated) {
         frame = new JFrame(title);
         frame.setUndecorated(undecorated);
         frame.setVisible(true);
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
+        frame.setBounds(rectangle);
         frame.setResizable(resizable);
-        frame.setPreferredSize(new Dimension(rectangle.width, rectangle.height));
+//        frame.setPreferredSize(new Dimension(rectangle.width, rectangle.height));
         frame.setLocationRelativeTo(null);
         frame.add(this);
         frame.addWindowListener(this);
-        frame.pack();
+//        frame.pack();
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {

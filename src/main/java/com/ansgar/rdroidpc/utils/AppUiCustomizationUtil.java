@@ -3,6 +3,7 @@ package com.ansgar.rdroidpc.utils;
 import com.ansgar.rdroidpc.constants.Colors;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class AppUiCustomizationUtil {
@@ -23,6 +24,7 @@ public class AppUiCustomizationUtil {
 
         UIManager.put("MenuItem.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         UIManager.put("MenuItem.foreground", Color.WHITE);
+        UIManager.put("MenuItem.border", new LineBorder(Color.BLACK));
 
         UIManager.put("MenuBar.background", Color.decode(Colors.MENU_BACKGROUND_COLOR));
 
@@ -55,6 +57,8 @@ public class AppUiCustomizationUtil {
 
         UIManager.put("ToolTip.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         UIManager.put("ToolTip.foreground", Color.WHITE);
+
+        UIManager.put("PopupMenu.border", new LineBorder(Color.BLACK));
     }
 
 }
