@@ -20,13 +20,8 @@ public class Main {
         initScreenSize();
         AppUiCustomizationUtil.customizeApp();
 
-        Rectangle rectangle = new Rectangle(
-                10,
-                10,
-                DimensionConst.MAIN_WINDOW_WIDTH,
-                DimensionConst.MAIN_WINDOW_HEIGHT
-        );
-
+        Rectangle rectangle = new Rectangle(10, 10,
+                DimensionConst.MAIN_WINDOW_WIDTH, DimensionConst.MAIN_WINDOW_HEIGHT);
         MainPanel panel = new MainPanel(rectangle, ProgrammInf.NAME + ProgrammInf.VERSION);
         panel.updateUI();
     }
