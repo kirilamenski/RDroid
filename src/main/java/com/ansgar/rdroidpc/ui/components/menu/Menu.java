@@ -1,6 +1,7 @@
 package com.ansgar.rdroidpc.ui.components.menu;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 
 public class Menu extends JMenu {
@@ -8,18 +9,14 @@ public class Menu extends JMenu {
     private String name;
     private String color = "#ffffff";
 
-    public Menu() {
-
-    }
-
     public Menu(String name) {
         this.name = name;
     }
 
     public Menu getMenu() {
         setText(name);
-        setBounds(0, 0, 200, 100);
         setMnemonic(name.charAt(0));
+        setBorder(new MatteBorder(0,0,0,0,Color.BLACK));
         setForeground(Color.decode(color));
         return this;
     }
