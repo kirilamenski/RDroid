@@ -7,7 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public abstract class BaseCommandTask extends TimerTask implements CommandExecutor.OnFinishExecuteListener,
-        CommandExecutor.OnExecuteErrorListener {
+        CommandExecutor.OnExecuteErrorListener, CommandExecutor.OnExecuteNextListener {
 
     private Timer timer;
     private CommandExecutor executor;
@@ -17,6 +17,7 @@ public abstract class BaseCommandTask extends TimerTask implements CommandExecut
         this.timer = new Timer();
         executor.setOnFinishExecuteListener(this);
         executor.setOnExecuteErrorListener(this);
+        executor.setOnExecuteNextListener(this);
     }
 
     public void start(long delay, long period) {
@@ -42,6 +43,11 @@ public abstract class BaseCommandTask extends TimerTask implements CommandExecut
 
     @Override
     public void onFinish(StringBuilder result) {
+
+    }
+
+    @Override
+    public void onNext(String line) {
 
     }
 

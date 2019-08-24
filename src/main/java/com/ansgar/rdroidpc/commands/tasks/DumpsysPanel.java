@@ -1,5 +1,7 @@
 package com.ansgar.rdroidpc.commands.tasks;
 
+import com.ansgar.rdroidpc.entities.DumpsysModel;
+import com.ansgar.rdroidpc.entities.ProfileData;
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
 import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
 import com.ansgar.rdroidpc.listeners.OnWindowResizedListener;
@@ -28,8 +30,10 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
     }
 
     @Override
-    public void getDumpsys(StringBuilder result) {
-        System.out.println(result.toString());
+    public void getDumpsys(DumpsysModel dumpsysModel) {
+        for (ProfileData data : dumpsysModel.getProfileData()) {
+            System.out.println(data.toString());
+        }
     }
 
     private void setDumpsysTask(String deviceId) {

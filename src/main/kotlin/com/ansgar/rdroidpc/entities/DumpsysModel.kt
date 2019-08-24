@@ -1,6 +1,6 @@
 package com.ansgar.rdroidpc.entities
 
-import java.util.*
+import kotlin.collections.ArrayList
 
 class DumpsysModel {
     var window: String? = null
@@ -11,8 +11,10 @@ class DumpsysModel {
     var numberHighInputLatency: Int = 0
     var numberSlowUiThread: Int = 0
     var numberSlowBitmapUploads: Int = 0
-    var slowissueDrawCommands: Int = 0
+    var slowIssueDrawCommands: Int = 0
     var frameDeadLineMissed: Int = 0
-    //TODO LinkedList should be more faster. Lets check
-    var profileDatas: LinkedList<ProfileData>? = null
+    var profileData: ArrayList<ProfileData> = ArrayList()
+    var totlaViews: Int = 0
+    var totalDisplayList: String? = null
+    var totalGpuMemoryUsage: String? = null
 }

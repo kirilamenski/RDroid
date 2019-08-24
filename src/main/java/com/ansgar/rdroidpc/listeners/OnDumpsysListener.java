@@ -1,7 +1,9 @@
 package com.ansgar.rdroidpc.listeners;
 
+import com.ansgar.rdroidpc.entities.DumpsysModel;
+
 public interface OnDumpsysListener {
 
-    void getDumpsys(StringBuilder result);
+    void getDumpsys(DumpsysModel dumpsysModel);
 
 }
