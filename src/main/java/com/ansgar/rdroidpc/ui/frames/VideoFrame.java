@@ -11,6 +11,7 @@ import com.ansgar.rdroidpc.enums.OsEnum;
 import com.ansgar.rdroidpc.enums.VideoMenuItemsEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
+import com.ansgar.rdroidpc.ui.components.OverlayComponent;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.ui.components.VideoComponent;
 import com.ansgar.rdroidpc.ui.frames.presenters.VideoFramePresenter;
@@ -21,6 +22,7 @@ import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -300,7 +302,7 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
      */
     private int getRightOffset() {
         if (deviceScreenRatio != DimensionConst.SCREEN_RATIO) {
-            return (int) Math.ceil(deviceScreenRatio * DimensionConst.SCREEN_RATIO * 100) + 10;
+            return (int) Math.ceil(deviceScreenRatio * DimensionConst.SCREEN_RATIO * 100) + 18;
         }
         return 5;
     }

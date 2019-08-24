@@ -26,9 +26,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FileUploader extends DropTarget {
 
     private String deviceId;
-    private JPanel panel;
+    private JComponent panel;
 
-    public FileUploader(JPanel panel, String deviceId) {
+    public FileUploader(JComponent panel, String deviceId) {
         this.deviceId = deviceId;
         this.panel = panel;
         this.panel.setDropTarget(this);
@@ -88,7 +88,7 @@ public class FileUploader extends DropTarget {
 
     private void showMessage() {
         OverlayComponent component = getOverlayComponent();
-        panel.add(component);
+        panel.add(component, 0);
         component.updateTitle("File uploaded to \"sdcard/Download\" folder.");
         panel.repaint();
 

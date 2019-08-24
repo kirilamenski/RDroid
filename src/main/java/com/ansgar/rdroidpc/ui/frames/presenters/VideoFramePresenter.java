@@ -145,8 +145,7 @@ public class VideoFramePresenter extends BasePresenter<VideoFrameView> implement
         screenRecordTimeLeft.set(time);
 
         OverlayComponent component = getOverlayComponent();
-        view.getChildComponent().add(component);
-        view.getChildComponent().repaint();
+        view.getChildComponent().add(component, 0);
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -154,6 +153,7 @@ public class VideoFramePresenter extends BasePresenter<VideoFrameView> implement
             public void run() {
                 screenRecordTimeLeft.set(screenRecordTimeLeft.get() - 1);
                 component.updateTitle(String.format(StringConst.SCREEN_RECORDING_L, screenRecordTimeLeft.get()));
+                view.getChildComponent().repaint();
                 if (screenRecordTimeLeft.get() <= 0) {
                     screenRecordTimeLeft = null;
                     timer.cancel();
@@ -225,10 +225,10 @@ public class VideoFramePresenter extends BasePresenter<VideoFrameView> implement
         }
     }
 
-    private OverlayComponent getOverlayComponent() {
+    public OverlayComponent getOverlayComponent() {
         OverlayComponent component = new OverlayComponent();
-        component.setBounds(new Rectangle(0, view.getChildComponent().getHeight() - 30,
-                view.getChildComponent().getWidth(), 30));
+        component.setBounds(new Rectangle(0, view.getParentComponent().getHeight() - 85,
+                view.getParentComponent().getWidth(), 30));
         component.setImageSrc("icons/ic_screen_record_64.png");
         component.setImageWidth(30);
         component.setImageHeight(30);
