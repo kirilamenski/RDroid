@@ -89,7 +89,7 @@ enum class HotKeys(val keyCode: AdbKeyCode?) : HotKeysActions {
     },
     PC_PASTE(null) {
         override fun execute(@NotNull listener: OnDeviceInputListener) {
-            listener.type(ToolkitUtils.getTextFromClipboard())
+            listener.inputText(ToolkitUtils.getTextFromClipboard())
         }
 
         override fun getKeyCodes(): HashSet<Int>? {

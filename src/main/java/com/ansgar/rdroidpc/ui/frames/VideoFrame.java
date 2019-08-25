@@ -11,7 +11,6 @@ import com.ansgar.rdroidpc.enums.OsEnum;
 import com.ansgar.rdroidpc.enums.VideoMenuItemsEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
-import com.ansgar.rdroidpc.ui.components.OverlayComponent;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.ui.components.VideoComponent;
 import com.ansgar.rdroidpc.ui.frames.presenters.VideoFramePresenter;
@@ -22,7 +21,6 @@ import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -170,6 +168,11 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
     @Override
     public void touch(int x, int y, TouchPressType type) {
         chimpDevice.touch(x, y, type);
+    }
+
+    @Override
+    public void inputText(String text) {
+        presenter.inputText(text);
     }
 
     @Override

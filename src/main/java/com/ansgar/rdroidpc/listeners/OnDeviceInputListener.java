@@ -9,4 +9,6 @@ public interface OnDeviceInputListener {
     void press(String value, TouchPressType type);
 
     void type(String type);
+
+    void inputText(String text);
 }

@@ -95,6 +95,10 @@ public class VideoFramePresenter extends BasePresenter<VideoFrameView> implement
         orientationCommandTask.start(delay, period);
     }
 
+    public void inputText(String text) {
+        deviceActions.inputText(text);
+    }
+
     @Override
     public void destroy() {
         if (orientationCommandTask != null) orientationCommandTask.stop();

@@ -154,6 +154,16 @@ public class DeviceActionsImpl implements DeviceActions {
         if (executor != null) executor.destroy();
     }
 
+    @Override
+    public void inputText(String text) {
+        String command = String.format(
+                AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.INPUT_TEXT),
+                deviceId,
+                text
+        );
+        executor.execute(command);
+    }
+
     private void executeScreenActions(OnSaveScreenListener listener, String uploadFolder, String... commands) {
         WeakReference<CommandExecutor> executorWeakReference = new WeakReference<>(new CommandExecutor());
         for (int i = 0; i < commands.length; i++) {

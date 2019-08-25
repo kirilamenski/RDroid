@@ -32,4 +32,6 @@ public interface DeviceActions {
 
     void destroy();
 
+    void inputText(String text);
+
 }
