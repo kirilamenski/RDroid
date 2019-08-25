@@ -1,7 +1,6 @@
 package com.ansgar.rdroidpc.commands.tasks;
 
 import com.ansgar.rdroidpc.entities.DumpsysModel;
-import com.ansgar.rdroidpc.entities.ProfileData;
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
 import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
 import com.ansgar.rdroidpc.listeners.OnWindowResizedListener;
