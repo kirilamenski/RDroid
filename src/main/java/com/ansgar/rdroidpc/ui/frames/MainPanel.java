@@ -200,7 +200,6 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
     private void restartServer() {
         DeviceActions actions = new DeviceActionsImpl();
         actions.killServer();
-        actions.startServer();
     }
 
     @Override
