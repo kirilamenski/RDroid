@@ -9,6 +9,7 @@ import com.ansgar.rdroidpc.ui.frames.MainPanel;
 import com.ansgar.rdroidpc.utils.AppUiCustomizationUtil;
 import com.ansgar.rdroidpc.utils.SharedValues;
 import com.ansgar.rdroidpc.utils.ToolkitUtils;
+import com.ansgar.rdroidpc.utils.TotalMemoryUtils;
 
 import java.awt.*;
 
@@ -19,6 +20,9 @@ public class Main {
         initAdbPath();
         initScreenSize();
         AppUiCustomizationUtil.customizeApp();
+
+        TotalMemoryUtils totalMemoryUtils = new TotalMemoryUtils();
+        totalMemoryUtils.start(10000, 10000);
 
         Rectangle rectangle = new Rectangle(10, 10,
                 DimensionConst.MAIN_WINDOW_WIDTH, DimensionConst.MAIN_WINDOW_HEIGHT);
