@@ -22,7 +22,7 @@ public class Main {
         AppUiCustomizationUtil.customizeApp();
 
         TotalMemoryUtils totalMemoryUtils = new TotalMemoryUtils();
-        totalMemoryUtils.start(10000, 10000);
+        totalMemoryUtils.start(10000, 20000);
 
         Rectangle rectangle = new Rectangle(10, 10,
                 DimensionConst.MAIN_WINDOW_WIDTH, DimensionConst.MAIN_WINDOW_HEIGHT);

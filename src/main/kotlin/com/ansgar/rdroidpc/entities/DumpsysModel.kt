@@ -19,23 +19,4 @@ class DumpsysModel {
     var totalGpuMemoryUsage: String? = null
     var other: ArrayList<String> = ArrayList()
 
-    override fun toString(): String {
-        return "DumpsysModel(window=$window," +
-                " statsSince=$statsSince," +
-                " totalFramesRendered=$totalFramesRendered," +
-                " jankyFrames=$jankyFrames," +
-                " numberMissedVsync=$numberMissedVsync," +
-                " numberHighInputLatency=$numberHighInputLatency," +
-                " numberSlowUiThread=$numberSlowUiThread," +
-                " numberSlowBitmapUploads=$numberSlowBitmapUploads," +
-                " slowIssueDrawCommands=$slowIssueDrawCommands," +
-                " frameDeadLineMissed=$frameDeadLineMissed," +
-                " profileData=$profileData," +
-                " totalViews=$totalViews," +
-                " totalDisplayList=$totalDisplayList," +
-                " totalGpuMemoryUsage=$totalGpuMemoryUsage," +
-                " other=$other)"
-    }
-
-
 }

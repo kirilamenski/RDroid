@@ -15,23 +15,4 @@ class ProfileData {
     var issueDrawCommandsStart: Long = 0
     var swapBuffers: Long = 0
     var frameCompleted: Long = 0
-
-    override fun toString(): String {
-        return "ProfileData(flags=$flags," +
-                " intendedVsync=$intendedVsync," +
-                " vsync=$vsync," +
-                " oldestInputEvent=$oldestInputEvent," +
-                " newestInputEvent=$newestInputEvent," +
-                " handleInputStart=$handleInputStart," +
-                " animationStart=$animationStart," +
-                " performTraverSalsStart=$performTraverSalsStart," +
-                " drawStart=$drawStart," +
-                " syncQueued=$syncQueued," +
-                " syncStart=$syncStart," +
-                " issueDrawCommandsStart=$issueDrawCommandsStart," +
-                " swapBuffers=$swapBuffers," +
-                " frameCompleted=$frameCompleted)"
-    }
-
-
 }

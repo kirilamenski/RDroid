@@ -1,5 +1,7 @@
 package com.ansgar.rdroidpc.utils;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,8 +13,21 @@ public class TotalMemoryUtils extends TimerTask {
     }
 
     private void showMemoryUsage() {
+        OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         long bytes = Runtime.getRuntime().totalMemory();
-        System.out.println(String.valueOf("Total memory: " + (bytes / 1000000.0) + " Mb"));
+        String builder = "Total memory: " +
+                (bytes / 1000000.0) +
+                " Mb \n " +
+                operatingSystemMXBean.getName() +
+                "(" +
+                operatingSystemMXBean.getVersion() +
+                ", " +
+                operatingSystemMXBean.getArch() +
+                "),\n Available Processors: " +
+                operatingSystemMXBean.getAvailableProcessors() +
+                ", Average system load: " +
+                operatingSystemMXBean.getSystemLoadAverage();
+        System.out.println(builder);
     }
 
     public void start(long delay, long period) {
