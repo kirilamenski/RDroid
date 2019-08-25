@@ -25,9 +25,7 @@ public abstract class BaseCommandTask extends TimerTask implements CommandExecut
     }
 
     public void stop() {
-        if (timer != null) {
-            timer.cancel();
-        }
+        if (timer != null) timer.cancel();
         cancel();
     }
 
