@@ -31,9 +31,7 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
 
     @Override
     public void getDumpsys(DumpsysModel dumpsysModel) {
-        for (ProfileData data : dumpsysModel.getProfileData()) {
-            System.out.println(data.toString());
-        }
+        System.out.println(dumpsysModel.toString());
     }
 
     private void setDumpsysTask(String deviceId) {

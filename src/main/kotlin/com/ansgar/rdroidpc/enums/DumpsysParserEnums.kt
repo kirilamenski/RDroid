@@ -7,52 +7,52 @@ import java.lang.StringBuilder
 enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
     WINDOW("Window") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.window = line
         }
     },
     STATUS_SINCE("Stats since") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.statsSince = line
         }
     },
     TOTAL_FRAMES_RENDERED("Total frames rendered") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.totalFramesRendered = line.toInt()
         }
     },
     JANKY_FRAMES("Janky frames") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.jankyFrames = line
         }
     },
     NUMBER_MISSED_VSYNC("Number Missed Vsync") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.numberMissedVsync = line.toInt()
         }
     },
     NUMBER_HIGHT_INPUT_LATENCY("Number High input latency") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.numberHighInputLatency = line.toInt()
         }
     },
     NUMBER_SLOW_UI_THREAD("Number Slow UI thread") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.numberSlowUiThread = line.toInt()
         }
     },
     NUMBER_SLOW_BITMAP_UPLOADS("Number Slow bitmap uploads") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.numberSlowBitmapUploads = line.toInt()
         }
     },
     SLOW_ISSUE_DRAW_COMMANDS("Number Slow issue draw commands") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.slowIssueDrawCommands = line.toInt()
         }
     },
     NUMBER_FRAME_DEAD_LINE_MISSED("Number Frame deadline missed") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.frameDeadLineMissed = line.toInt()
         }
     },
     PROFILE_DATE("PROFILEDATA") {
@@ -86,12 +86,12 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
     },
     TOTAL_VIEWS("Total Views") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.totalViews = line.toInt()
         }
     },
     TOTAL_DISPLAY_LIST("Total DisplayList") {
         override fun parse(model: DumpsysModel, line: String) {
-
+            model.totalDisplayList = line
         }
     };
 
@@ -99,28 +99,17 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
 
         fun parse(model: DumpsysModel, builder: StringBuilder) {
             val lines = builder.split("\n")
-            lines.forEachIndexed { i, s ->
-                when {
-                    s.split(":").size == 2 -> {
-                        val splittedLine = s.split(":")
-                        get(splittedLine[0])?.parse(model, splittedLine[1])
-                    }
-                    s.split(",").size >= 16 -> {
-                        PROFILE_DATE.parse(model, s)
-                    }
-                }
-            }
+            lines.forEachIndexed { i, s -> Companion.parse(model, s) }
         }
 
         fun parse(model: DumpsysModel, line: String) {
             when {
                 line.split(":").size == 2 -> {
                     val splittedLine = line.split(":")
-                    get(splittedLine[0])?.parse(model, splittedLine[1])
+                    get(splittedLine[0].trim())?.parse(model, splittedLine[1].trim())
                 }
-                line.split(",").size >= 16 -> {
-                    PROFILE_DATE.parse(model, line)
-                }
+                line.split(",").size >= 16 -> PROFILE_DATE.parse(model, line.trim())
+                else -> model.other.add(line)
             }
         }
 

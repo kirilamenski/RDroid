@@ -18,8 +18,9 @@ public class DumpsysCommandTask extends BaseCommandTask {
     @Override
     public void onFinish(StringBuilder result) {
         if (listener != null) {
-//            DumpsysParserEnums.Companion.parse(dumpsysModel, result);
             listener.getDumpsys(dumpsysModel);
+            dumpsysModel.getProfileData().clear();
+            dumpsysModel.getOther().clear();
         }
     }
 
