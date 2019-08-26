@@ -26,7 +26,7 @@ public class ResponseParserUtil {
         return devices;
     }
 
-    public Device setDeviceName(Device device, String command) {
+    public void setDeviceName(Device device, String command) {
         CommandExecutor executor = new CommandExecutor();
         executor.setOnFinishExecuteListener(result -> {
             String[] lines = result.toString().split("\n");
@@ -39,15 +39,14 @@ public class ResponseParserUtil {
             }
         });
         executor.execute(command);
-        return device;
     }
 
-    public Device setDeviceSize(Device device, String command) {
+    public void setDeviceSize(Device device, String command) {
         CommandExecutor executor = new CommandExecutor();
         executor.setOnFinishExecuteListener(result -> {
-            String[] splitedResult = result.toString().split(" ");
-            if (splitedResult.length > 0) {
-                String[] sizes = splitedResult[splitedResult.length - 1]
+            String[] splittedResult = result.toString().split(" ");
+            if (splittedResult.length > 0) {
+                String[] sizes = splittedResult[splittedResult.length - 1]
                         .split("x");
                 if (sizes.length > 1) {
                     device.setWidth(Integer.parseInt(sizes[0].trim()));
@@ -56,7 +55,6 @@ public class ResponseParserUtil {
             }
         });
         executor.execute(command);
-        return device;
     }
 
     public void setDeviceOption(Device device) {
