@@ -18,15 +18,12 @@ public class StringUtils {
         ))
                 .append(" ");
         Option option = device.getOption();
-        int _bitRate = option != null ? option.getBitRate() : 4;
-        int height = option != null ? option.getHeight() : device.getHeight();
-        int width = option != null ? option.getWidth() : device.getWidth();
         String command = String.format(
                 Locale.ENGLISH,
                 AdbCommandEnum.SCREEN_STREAMING.getCommand(),
-                _bitRate,
-                height,
-                width
+                option.getBitRate(),
+                option.getHeight(),
+                option.getWidth()
         );
 
         for (int i = 0; i <= count; i++) {

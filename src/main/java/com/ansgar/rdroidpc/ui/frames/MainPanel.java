@@ -6,18 +6,16 @@ import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.commands.ResponseParserUtil;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.enums.MainMenuItemsEnum;
-import com.ansgar.rdroidpc.listeners.DeviceActions;
-import com.ansgar.rdroidpc.listeners.MainActionPanelsListener;
-import com.ansgar.rdroidpc.listeners.OnMenuItemListener;
+import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.DevicesContainer;
 import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
-import com.ansgar.rdroidpc.listeners.OnVideoFrameListener;
 import com.ansgar.rdroidpc.ui.frames.presenters.MainPanelPresenter;
 import com.ansgar.rdroidpc.ui.frames.views.MainPanelView;
 
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.*;
@@ -26,9 +24,10 @@ import java.util.List;
 import static com.ansgar.rdroidpc.constants.DimensionConst.DEFAULT_WIDTH;
 
 public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPanelView,
-        OnVideoFrameListener, DevicesContainer.OnItemClicked, OnMenuItemListener {
+        OnVideoFrameListener, DevicesContainer.OnItemClicked, OnMenuItemListener, OnDeviceOptionListener {
 
     private MenuBar menuBar;
+    private ButtonsPanel buttonsPanel;
     private DevicesContainer devicesContainer;
     private MainActionPanelsListener listener;
     private HashMap<String, VideoFrame> openedDevices;
@@ -56,7 +55,7 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
                 StringConst.Companion.getMainMenuItems(),
                 new Rectangle(0, 0, DimensionConst.MAIN_WINDOW_WIDTH, 25)
         ));
-        add(getActionsPanel());
+        addActionsPanel();
         executeAdbDevices();
         updateUI();
     }
@@ -88,7 +87,8 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
                             device.getDeviceId()
                     )
             );
-            responseUtil.setDeviceSize(device,
+            responseUtil.setDeviceSize(
+                    device,
                     String.format(
                             Locale.ENGLISH,
                             AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.DEVICE_SCREEN_SIZE),
@@ -100,26 +100,25 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
         createDeviceContainer();
     }
 
-    private ButtonsPanel getActionsPanel() {
-        ButtonsPanel panel = new ButtonsPanel();
-        panel.setIcons("icons/ic_restart_64.png", "icons/ic_kill_server_64.png");
-        panel.setToolTips("Restart", "Kill Server");
-        panel.setBounds(0, menuBar.getHeight(), 96, 48);
-        panel.setIconSize(30, 30);
-        panel.setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
-        panel.setItemClickListener(listener);
-        panel.createPanel();
-        return panel;
+    private void addActionsPanel() {
+        buttonsPanel = new ButtonsPanel();
+        buttonsPanel.setIcons("icons/ic_restart_64.png", "icons/ic_kill_server_64.png");
+        buttonsPanel.setToolTips("Restart", "Kill Server");
+        buttonsPanel.setBounds(0, menuBar.getHeight(), 96, 48);
+        buttonsPanel.setIconSize(30, 30);
+        buttonsPanel.setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
+        buttonsPanel.setItemClickListener(listener);
+        buttonsPanel.createPanel();
+        add(buttonsPanel);
     }
 
     private void createDeviceContainer() {
         if (devicesContainer != null) remove(devicesContainer);
         devicesContainer = new DevicesContainer();
-        devicesContainer.setBounds(0, menuBar.getHeight() + 48, getWidth(), getHeight());
+        devicesContainer.setBounds(0, menuBar.getHeight() + buttonsPanel.getHeight(), getWidth(), getHeight());
         devicesContainer.createContainer(devices, (Object[]) StringConst.Companion.getDeviceHeaderNames());
         devicesContainer.setListener(this);
         add(devicesContainer);
-        repaint();
     }
 
     @Override
@@ -142,7 +141,7 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
                     stopAdbConnection();
                 } catch (NullPointerException ignored) {
                 }
-                restartServer();
+                killServer();
                 System.exit(0);
             }
         }.execute();
@@ -150,9 +149,7 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
 
     @Override
     public void onDeviceConnectionClosed(Device device) {
-        if (openedDevices != null) {
-            openedDevices.remove(device.getDeviceId());
-        }
+        if (openedDevices != null) openedDevices.remove(device.getDeviceId());
     }
 
     @Override
@@ -169,14 +166,16 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
             videoFrame.startNewThread();
             openedDevices.put(device.getDeviceId(), videoFrame);
         } else {
-            System.out.println("Device is already opened.");
+            showMessageDialog("Error", "Device is already opened.",
+                    JOptionPane.CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
     @Override
     public void onDeviceSettings(int position, Device device) {
         Rectangle rectangle = new Rectangle(getRectangle().x, getRectangle().y, 400, 400);
-        new DeviceOptionsFrame(this, device, rectangle);
+        DeviceOptionsFrame deviceOptionsFrame = new DeviceOptionsFrame(this, device, rectangle);
+        deviceOptionsFrame.setListener(this);
     }
 
     @Override
@@ -197,13 +196,17 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
         if (adbBackend != null) adbBackend.shutdown();
     }
 
-    private void restartServer() {
-        DeviceActions actions = new DeviceActionsImpl();
-        actions.killServer();
-    }
-
     @Override
     public void onMenuItemClicked(String name) {
         MainMenuItemsEnum.Companion.execute(name, this);
+    }
+
+    @Override
+    public void onOptionSelected(Device device) {
+        devices.forEach(d -> {
+            if (d.getDeviceId().equals(device.getDeviceId())) {
+                d.setOption(device.getOption());
+            }
+        });
     }
 }

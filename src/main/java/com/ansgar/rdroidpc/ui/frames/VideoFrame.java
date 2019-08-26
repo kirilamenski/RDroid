@@ -52,7 +52,8 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
     private float deviceScreenRatio;
 
     public VideoFrame(Device device, AdbBackend adbBackend, Rectangle rectangle) {
-        super(rectangle, String.format("%s(%dx%d)", device.getDeviceName(), device.getWidth(), device.getHeight()));
+        super(rectangle, String.format("%s(%dx%d)", device.getDeviceName(),
+                device.getOption().getWidth(), device.getOption().getHeight()));
         this.adbBackend = adbBackend;
         this.device = device;
         this.isThreadRunning = new AtomicBoolean();

@@ -99,7 +99,7 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
 
         fun parse(model: DumpsysModel, builder: StringBuilder) {
             val lines = builder.split("\n")
-            lines.forEachIndexed { i, s -> Companion.parse(model, s) }
+            lines.forEach { parse(model, it) }
         }
 
         fun parse(model: DumpsysModel, line: String) {
@@ -113,9 +113,7 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
             }
         }
 
-        fun get(key: String): DumpsysParserEnums? = values().firstOrNull {
-            it.key == key
-        }
+        fun get(key: String) = values().firstOrNull { it.key == key }
 
     }
 

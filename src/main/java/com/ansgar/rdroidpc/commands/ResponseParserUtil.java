@@ -4,6 +4,7 @@ import com.ansgar.filemanager.FileManager;
 import com.ansgar.filemanager.FileManagerImpl;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.entities.FilesEnum;
+import com.ansgar.rdroidpc.entities.Option;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class ResponseParserUtil {
         for (String line : lines) {
             String[] deviceInf = line.split("\t");
             if (deviceInf.length == 2) {
-                devices.add(new Device(deviceInf[0], deviceInf[1], null, 0, 0, null));
+                devices.add(new Device(deviceInf[0], deviceInf[1], null, 0, 0, new Option()));
             }
         }
 
@@ -58,13 +59,10 @@ public class ResponseParserUtil {
         return device;
     }
 
-    public Device setDeviceOption(Device device) {
+    public void setDeviceOption(Device device) {
         FileManager fileManager = new FileManagerImpl(FilesEnum.CACHE.getValue());
         Device savedDevice = fileManager.getClass(FilesEnum.DEVICES.getValue(), device.getDeviceId(), Device.class);
-        if (savedDevice != null && savedDevice.getOption() != null) {
-            device.setOption(savedDevice.getOption());
-        }
-        return device;
+        if (savedDevice != null) device.setOption(savedDevice.getOption());
     }
 
 }

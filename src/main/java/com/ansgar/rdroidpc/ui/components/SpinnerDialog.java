@@ -17,7 +17,7 @@ import java.util.List;
 public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
 
     private Rectangle rectangle;
-    private final JDialog dialog = new JDialog();
+    private JDialog dialog;
     private String spinnerSrc = "gifs/loading.gif";
     private int imageWidth = 60;
     private int imageHeight = 60;
@@ -25,6 +25,7 @@ public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
 
     public SpinnerDialog(Rectangle rectangle) {
         this.rectangle = rectangle;
+        this.dialog = new JDialog();
     }
 
     @Override

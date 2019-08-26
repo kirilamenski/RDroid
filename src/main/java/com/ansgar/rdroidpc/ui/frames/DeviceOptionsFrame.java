@@ -6,6 +6,8 @@ import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.Device;
 import com.ansgar.rdroidpc.entities.FilesEnum;
 import com.ansgar.rdroidpc.entities.Option;
+import com.ansgar.rdroidpc.listeners.OnDeviceOptionListener;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +19,8 @@ public class DeviceOptionsFrame extends BasePanel {
     private int bitRate = 4;
     private int deviceWidth;
     private int deviceHeight;
+    @Nullable
+    private OnDeviceOptionListener listener;
 
     public DeviceOptionsFrame(Component component, Device device, Rectangle rectangle) {
         super(rectangle, String.format("%s Options", device.getDeviceName()));
@@ -51,7 +55,7 @@ public class DeviceOptionsFrame extends BasePanel {
             int index = bitRateCb.getSelectedIndex();
             bitRate = Integer.valueOf(StringConst.Companion.getBitRates()[index]);
         });
-        bitRateCb.setSelectedIndex(getBitRateIndex());
+        bitRateCb.setSelectedIndex(device.getOption().getBitRate() - 1);
 
         String[] screenSizes = StringConst.Companion.getDefaultScreenSizes();
         JComboBox screenResolutionCb = new JComboBox<>(screenSizes);
@@ -73,8 +77,9 @@ public class DeviceOptionsFrame extends BasePanel {
         okBtn.setBounds(getRectangle().width - 225, getRectangle().height - 100, 100, 50);
         okBtn.setFocusable(false);
         okBtn.addActionListener(e -> {
-            device.setOption(createDeviceOption());
+            device.setOption(new Option(bitRate, deviceWidth, deviceHeight));
             fileManager.save(FilesEnum.DEVICES.getValue(), device.getDeviceId(), device);
+            if (listener != null) listener.onOptionSelected(device);
             closeFrame();
         });
 
@@ -91,30 +96,19 @@ public class DeviceOptionsFrame extends BasePanel {
         add(okBtn);
     }
 
-    private Option createDeviceOption() {
-        return new Option(bitRate, deviceWidth, deviceHeight);
-    }
-
     private int getSelectedIndex(String[] screens) {
         for (int i = 0; i < screens.length; i++) {
             String[] screenSizes = screens[i].split("x");
-            boolean widthEqual = device.getWidth() == Integer.valueOf(screenSizes[0]);
-            boolean heightEqual = device.getHeight() == Integer.valueOf(screenSizes[1]);
-            if (device.getOption() != null) {
-                widthEqual = device.getOption().getWidth() == Integer.valueOf(screenSizes[0]);
-                heightEqual = device.getOption().getHeight() == Integer.valueOf(screenSizes[1]);
-            }
+            boolean widthEqual = device.getOption().getWidth() == Integer.valueOf(screenSizes[0]);
+            boolean heightEqual = device.getOption().getHeight() == Integer.valueOf(screenSizes[1]);
             if (widthEqual && heightEqual) return i;
         }
 
         return 0;
     }
 
-    public int getBitRateIndex() {
-        if (device.getOption() != null) {
-            return device.getOption().getBitRate() - 1;
-        }
-        return 3;
+    public void setListener(@Nullable OnDeviceOptionListener listener) {
+        this.listener = listener;
     }
 
 }

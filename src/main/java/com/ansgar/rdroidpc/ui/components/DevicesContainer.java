@@ -19,7 +19,8 @@ public class DevicesContainer extends JPanel {
         add(createChildContainer(-1, 0, headerNames));
         for (int i = 0; i < devices.size(); i++) {
             Device device = devices.get(i);
-            Object[] values = {device.getDeviceName(),
+            Object[] values = {
+                    device.getDeviceName(),
                     String.format("%dx%d", device.getWidth(), device.getHeight()),
                     device.getDeviceId(),
                     device.getDeviceStatus(),
