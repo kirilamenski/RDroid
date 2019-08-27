@@ -141,7 +141,6 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
                     stopAdbConnection();
                 } catch (NullPointerException ignored) {
                 }
-                killServer();
                 System.exit(0);
             }
         }.execute();
