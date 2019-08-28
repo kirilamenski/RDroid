@@ -36,6 +36,7 @@ public class ResponseParserUtil {
                         .replace("[", "")
                         .replace("]", "");
                 device.setDeviceName(name);
+                executor.destroy();
             }
         });
         executor.execute(command);
@@ -53,6 +54,7 @@ public class ResponseParserUtil {
                     device.setHeight(Integer.parseInt(sizes[1].trim()));
                 }
             }
+            executor.destroy();
         });
         executor.execute(command);
     }

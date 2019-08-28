@@ -119,6 +119,7 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
         devicesContainer.createContainer(devices, (Object[]) StringConst.Companion.getDeviceHeaderNames());
         devicesContainer.setListener(this);
         add(devicesContainer);
+        repaint();
     }
 
     @Override
@@ -184,10 +185,8 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
 
     @Override
     public void closeDevicesConnections() {
-        if (openedDevices.size() > 0) {
-            openedDevices.values().forEach(obj -> {
-                if (obj != null) obj.stop(false);
-            });
+        for (Map.Entry me : openedDevices.entrySet()) {
+            ((VideoFrame) me.getValue()).stop(true);
         }
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CommandExecutor {
 
-    private Process process;
+    private Process process, videoProcess;
     private OnExecuteNextListener onExecuteNextListener;
     private OnExecuteErrorListener onExecuteErrorListener;
     private OnFinishExecuteListener onFinishExecuteListener;
@@ -31,10 +31,8 @@ public class CommandExecutor {
     public void execute(String command) {
         try {
             process = Runtime.getRuntime().exec(command);
-
-            executeInputStream();
             executeErrorStream();
-
+            executeInputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,8 +57,8 @@ public class CommandExecutor {
     }
 
     public InputStream getInputStream(String command) throws IOException {
-        Process process = Runtime.getRuntime().exec(command);
-        return process.getInputStream();
+        videoProcess = Runtime.getRuntime().exec(command);
+        return videoProcess.getInputStream();
     }
 
     private void executeInputStream() throws IOException {
@@ -85,20 +83,8 @@ public class CommandExecutor {
     }
 
     public void destroy() {
-        if (process != null) {
-            OutputStream outputStream = process.getOutputStream();
-            InputStream inputStream = process.getInputStream();
-            InputStream errorStream = process.getErrorStream();
-            try {
-                outputStream.close();
-                outputStream.flush();
-                inputStream.close();
-                errorStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            process.destroyForcibly();
-        }
+        destroyProcess(process);
+        destroyProcess(videoProcess);
     }
 
     public void setOnExecuteNextListener(OnExecuteNextListener onExecuteNextListener) {
@@ -123,6 +109,23 @@ public class CommandExecutor {
 
     public interface OnFinishExecuteListener {
         void onFinish(StringBuilder result);
+    }
+
+    private void destroyProcess(Process process) {
+        if (process != null) {
+            OutputStream outputStream = process.getOutputStream();
+            InputStream inputStream = process.getInputStream();
+            InputStream errorStream = process.getErrorStream();
+            try {
+                outputStream.close();
+                outputStream.flush();
+                inputStream.close();
+                errorStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            process.destroyForcibly();
+        }
     }
 
 }

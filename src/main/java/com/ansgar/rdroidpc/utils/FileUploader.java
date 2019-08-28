@@ -49,7 +49,10 @@ public class FileUploader extends DropTarget {
 
     private void uploadFiles(List<File> droppedFiles) {
         CommandExecutor executor = new CommandExecutor();
-        executor.setOnFinishExecuteListener(result -> showMessage());
+        executor.setOnFinishExecuteListener(result -> {
+            showMessage();
+            executor.destroy();
+        });
         String uploadFolder = SharedValues.get(SharedValuesKey.UPLOAD_FOLDER, "/sdcard/Download");
         for (File file : droppedFiles) {
             String filePath = file.getAbsolutePath();
