@@ -41,7 +41,6 @@ public abstract class BaseCommandTask extends TimerTask implements CommandExecut
 
     @Override
     public void onFinish(StringBuilder result) {
-
     }
 
     @Override
