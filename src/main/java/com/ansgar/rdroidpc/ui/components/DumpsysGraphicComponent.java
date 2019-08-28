@@ -1,16 +1,33 @@
 package com.ansgar.rdroidpc.ui.components;
 
+import com.ansgar.rdroidpc.entities.DumpsysModel;
+import com.ansgar.rdroidpc.ui.components.graphicpanel.DumpsysViewHolder;
 import com.ansgar.rdroidpc.ui.components.graphicpanel.GraphicPanel;
-import com.ansgar.rdroidpc.ui.components.graphicpanel.GraphicViewHolder;
 
-public class DumpsysGraphicComponent extends GraphicPanel<GraphicViewHolder> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class DumpsysGraphicComponent extends GraphicPanel<DumpsysViewHolder> {
+
+    private List<DumpsysModel> items = new ArrayList<>();
+
     @Override
-    public GraphicViewHolder onCreateViewHolder() {
-        return null;
+    public DumpsysViewHolder onCreateViewHolder() {
+        return new DumpsysViewHolder();
     }
 
     @Override
-    public void onBindViewHolder(GraphicViewHolder holder, int position) {
+    public void onBindViewHolder(DumpsysViewHolder holder, int position) {
+        holder.setModel(items.get(position));
+    }
 
+    @Override
+    public int getItemSize() {
+        return items.size();
+    }
+
+    public void addItem(DumpsysModel model) {
+        items.add(model);
+        repaint();
     }
 }

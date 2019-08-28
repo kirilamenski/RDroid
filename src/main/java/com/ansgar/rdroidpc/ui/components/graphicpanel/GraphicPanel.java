@@ -8,21 +8,13 @@ import java.util.List;
 public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel {
 
     private List<GVH> holders;
+    private int lastItemsSize;
     private int xAxisOffset = 5, yAxisOffset = 50;
     private int leftMargin = 30, topMargin = 10, rightMargin = 10, bottomMargin = 10;
-    private boolean useGrid = true;
+    private boolean useGrid = false;
 
     public GraphicPanel() {
-
-    }
-
-    public void updateAll() {
         holders = new ArrayList<>();
-        for (int i = 0; i < getItemSize(); i++) {
-            holders.add(onCreateViewHolder());
-            onBindViewHolder(holders.get(i), i);
-        }
-        repaint();
     }
 
     @Override
@@ -32,6 +24,7 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         drawYAxis(g2d);
         drawXAxis(g2d);
         drawString(g2d, "Frame latency", getWidth() / 2, topMargin * 2);
+        if (getItemSize() != holders.size()) updateAll(g2d);
         g2d.dispose();
     }
 
@@ -62,7 +55,7 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
                                 BasicStroke.CAP_BUTT,
                                 BasicStroke.JOIN_MITER,
                                 10.0f,
-                                new float[]{ 10.0f },
+                                new float[]{10.0f},
                                 0.0f
                         )
                 );
@@ -90,7 +83,7 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
                                 BasicStroke.CAP_BUTT,
                                 BasicStroke.JOIN_MITER,
                                 10.0f,
-                                new float[]{ 10.0f },
+                                new float[]{10.0f},
                                 0.0f
                         )
                 );
@@ -114,6 +107,18 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         g2d.drawLine(x1, y1, x2, y2);
     }
 
+    private void updateAll(Graphics2D g2d) {
+//        for (int i = lastItemsSize; i < getItemSize(); i++) {
+        for (int i = 0; i < getItemSize(); i++) {
+            GVH holder = onCreateViewHolder();
+            holders.add(holder);
+            onBindViewHolder(holder, i);
+            holder.panel = this;
+            holder.draw(g2d, i);
+        }
+        lastItemsSize = holders.size();
+    }
+
     public void setxAxisOffset(int xAxisOffset) {
         this.xAxisOffset = xAxisOffset;
     }
@@ -132,6 +137,30 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
 
     public void setRightMargin(int rightMargin) {
         this.rightMargin = rightMargin;
+    }
+
+    public int getxAxisOffset() {
+        return xAxisOffset;
+    }
+
+    public int getyAxisOffset() {
+        return yAxisOffset;
+    }
+
+    public int getLeftMargin() {
+        return leftMargin;
+    }
+
+    public int getTopMargin() {
+        return topMargin;
+    }
+
+    public int getRightMargin() {
+        return rightMargin;
+    }
+
+    public int getBottomMargin() {
+        return bottomMargin;
     }
 
     public void setBottomMargin(int bottomMargin) {

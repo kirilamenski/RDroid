@@ -1,7 +1,6 @@
 package com.ansgar.rdroidpc.utils;
 
 import com.ansgar.rdroidpc.commands.tasks.BaseCommandTask;
-import com.ansgar.rdroidpc.entities.DumpsysModel;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.enums.DumpsysParserEnums;
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
@@ -13,20 +12,17 @@ public class DumpsysCommandTask extends BaseCommandTask {
     private String deviceId, packageName;
     @Nullable
     private OnDumpsysListener listener;
-    private DumpsysModel dumpsysModel = new DumpsysModel();
 
     @Override
     public void onFinish(StringBuilder result) {
         if (listener != null) {
-            listener.getDumpsys(dumpsysModel);
-            dumpsysModel.getProfileData().clear();
-            dumpsysModel.getOther().clear();
+            listener.getDumpsys(DumpsysParserEnums.Companion.parse(result));
         }
     }
 
     @Override
     public void onNext(String line) {
-        DumpsysParserEnums.Companion.parse(dumpsysModel, line);
+//        DumpsysParserEnums.Companion.parse(dumpsysModel, line);
     }
 
     @NotNull

@@ -35,15 +35,7 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
 
     @Override
     public void getDumpsys(DumpsysModel dumpsysModel) {
-        for (ProfileData profileData : dumpsysModel.getProfileData()) {
-            if (profileData.getFlags() == 0) {
-                System.out.println(
-                        "Window: " + dumpsysModel.getWindow()
-                                + "Frame latency: " + ((profileData.getFrameCompleted() - profileData.getIntendedVsync()) / 1000000)
-                                + ", size: " + dumpsysModel.getProfileData().size()
-                );
-            }
-        }
+        if (dumpsysModel.getProfileData().size() > 0) dumpsysGraphicComponent.addItem(dumpsysModel);
     }
 
     private void setDumpsysTask(String deviceId) {

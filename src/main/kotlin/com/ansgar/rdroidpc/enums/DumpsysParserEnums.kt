@@ -74,7 +74,6 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
                 profileData.issueDrawCommandsStart = profilesDatas[11].toLong()
                 profileData.swapBuffers = profilesDatas[12].toLong()
                 profileData.frameCompleted = profilesDatas[13].toLong()
-
                 model.profileData.add(profileData)
             }
         }
@@ -97,9 +96,11 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
 
     companion object {
 
-        fun parse(model: DumpsysModel, builder: StringBuilder) {
+        fun parse(builder: StringBuilder): DumpsysModel {
+            val model = DumpsysModel()
             val lines = builder.split("\n")
             lines.forEach { parse(model, it) }
+            return model;
         }
 
         fun parse(model: DumpsysModel, line: String) {
