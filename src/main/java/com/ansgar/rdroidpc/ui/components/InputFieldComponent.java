@@ -18,6 +18,7 @@ public class InputFieldComponent extends JPanel {
     public InputFieldComponent() {
         this.values = SharedValues.get(SharedValuesKey.PACKAGES, new Vector());
         this.defaultComboBoxModel = new DefaultComboBoxModel<String>(values);
+        defaultComboBoxModel.addElement("com.fishbowlmedia.fishbowl.dev");
         setLayout(null);
         updateComboBox();
     }

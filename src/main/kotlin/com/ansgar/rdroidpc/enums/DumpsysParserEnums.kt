@@ -109,7 +109,7 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
                     val splittedLine = line.split(":")
                     get(splittedLine[0].trim())?.parse(model, splittedLine[1].trim())
                 }
-                line.split(",").size >= 16 -> PROFILE_DATE.parse(model, line.trim())
+                line.split(",").size >= 14 -> PROFILE_DATE.parse(model, line.trim())
                 else -> model.other.add(line)
             }
         }

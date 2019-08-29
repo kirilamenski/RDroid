@@ -8,7 +8,6 @@ import java.util.List;
 public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel {
 
     private List<GVH> holders;
-    private int lastItemsSize;
     private int xAxisOffset = 5, yAxisOffset = 50;
     private int leftMargin = 30, topMargin = 10, rightMargin = 10, bottomMargin = 10;
     private boolean useGrid = false;
@@ -23,8 +22,7 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         Graphics2D g2d = (Graphics2D) g;
         drawYAxis(g2d);
         drawXAxis(g2d);
-        drawString(g2d, "Frame latency", getWidth() / 2, topMargin * 2);
-        if (getItemSize() != holders.size()) updateAll(g2d);
+        updateAll(g2d);
         g2d.dispose();
     }
 
@@ -108,15 +106,26 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
     }
 
     private void updateAll(Graphics2D g2d) {
-//        for (int i = lastItemsSize; i < getItemSize(); i++) {
-        for (int i = 0; i < getItemSize(); i++) {
-            GVH holder = onCreateViewHolder();
-            holders.add(holder);
-            onBindViewHolder(holder, i);
-            holder.panel = this;
+        for (int i = 0; i < holders.size(); i++) {
+            GVH holder = holders.get(i);
             holder.draw(g2d, i);
         }
-        lastItemsSize = holders.size();
+    }
+
+    private void addItem(Graphics2D g2d, int position) {
+        GVH holder = onCreateViewHolder();
+        holders.add(holder);
+        onBindViewHolder(holder, position);
+        holder.panel = this;
+        holder.draw(g2d, position);
+    }
+
+    public void notifyItemsUpdateChanged() {
+        repaint();
+    }
+
+    public void notifyItemAdded() {
+        addItem((Graphics2D) getGraphics(), getItemSize() - 1);
     }
 
     public void setxAxisOffset(int xAxisOffset) {
@@ -166,4 +175,13 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
     public void setBottomMargin(int bottomMargin) {
         this.bottomMargin = bottomMargin;
     }
+
+    public int getPrevHolderWidth(int position) {
+        int width = leftMargin;
+        if (position > 0 && position < holders.size()) {
+            width += holders.get(position).getWidth();
+        }
+        return width;
+    }
+
 }

@@ -28,6 +28,6 @@ public class DumpsysGraphicComponent extends GraphicPanel<DumpsysViewHolder> {
 
     public void addItem(DumpsysModel model) {
         items.add(model);
-        repaint();
+        notifyItemAdded();
     }
 }
