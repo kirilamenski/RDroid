@@ -15,16 +15,16 @@ public class TotalMemoryUtils extends TimerTask {
     private void showMemoryUsage() {
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         long bytes = Runtime.getRuntime().totalMemory();
-        String builder = "Total memory: " +
-                (bytes / 1000000.0) +
-                " Mb \n " +
-                operatingSystemMXBean.getName() +
+        String builder = operatingSystemMXBean.getName() +
                 "(" +
                 operatingSystemMXBean.getVersion() +
                 ", " +
                 operatingSystemMXBean.getArch() +
-                "),\n Available Processors: " +
+                "), Available Processors: " +
                 operatingSystemMXBean.getAvailableProcessors() +
+                "\nTotal memory: " +
+                (bytes / 1000000.0) +
+                " Mb" +
                 ", Average system load: " +
                 operatingSystemMXBean.getSystemLoadAverage();
         System.out.println(builder);
