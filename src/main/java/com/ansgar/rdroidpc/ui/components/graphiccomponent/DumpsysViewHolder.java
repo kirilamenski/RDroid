@@ -1,5 +1,6 @@
-package com.ansgar.rdroidpc.ui.components.graphicpanel;
+package com.ansgar.rdroidpc.ui.components.graphiccomponent;
 
+import com.ansgar.graphic.GraphicViewHolder;
 import com.ansgar.rdroidpc.entities.DumpsysModel;
 import com.ansgar.rdroidpc.entities.ProfileData;
 

@@ -1,4 +1,4 @@
-package com.ansgar.rdroidpc.ui.components.graphicpanel;
+package com.ansgar.graphic;
 
 import javax.swing.*;
 import java.awt.*;
@@ -178,8 +178,8 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
 
     public int getPrevHolderWidth(int position) {
         int width = leftMargin;
-        if (position > 0 && position < holders.size()) {
-            width += holders.get(position).getWidth();
+        if (position >= 0 && position < holders.size()) {
+            width = 10 + holders.get(position).getWidth();
         }
         return width;
     }

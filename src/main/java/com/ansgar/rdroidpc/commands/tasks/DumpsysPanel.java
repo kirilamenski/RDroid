@@ -1,11 +1,10 @@
 package com.ansgar.rdroidpc.commands.tasks;
 
 import com.ansgar.rdroidpc.entities.DumpsysModel;
-import com.ansgar.rdroidpc.entities.ProfileData;
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
 import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
 import com.ansgar.rdroidpc.listeners.OnWindowResizedListener;
-import com.ansgar.rdroidpc.ui.components.DumpsysGraphicComponent;
+import com.ansgar.rdroidpc.ui.components.graphiccomponent.DumpsysGraphicComponent;
 import com.ansgar.rdroidpc.ui.components.InputFieldComponent;
 import com.ansgar.rdroidpc.ui.frames.BasePanel;
 import com.ansgar.rdroidpc.utils.DumpsysCommandTask;

@@ -34,6 +34,7 @@ dependencies {
     implementation group: 'com.android.tools', name: 'sdk-common', version: '25.3.0'
     implementation group: 'com.android.tools.ddms', name: 'ddmlib', version: '25.3.0'
     compile project(':filemanager')
+    compile project(':graphic')
 
     extraLibs "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     extraLibs group: 'org.bytedeco', name: 'javacv-platform', version: '1.4.3'
@@ -46,6 +47,7 @@ dependencies {
     extraLibs group: 'com.android.tools', name: 'sdk-common', version: '25.3.0'
     extraLibs group: 'com.android.tools.ddms', name: 'ddmlib', version: '25.3.0'
     extraLibs project(':filemanager')
+    extraLibs project(':graphic')
 }
 
 compileKotlin {

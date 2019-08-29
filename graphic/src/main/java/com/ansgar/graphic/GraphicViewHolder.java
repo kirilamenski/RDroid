@@ -1,4 +1,4 @@
-package com.ansgar.rdroidpc.ui.components.graphicpanel;
+package com.ansgar.graphic;
 
 import java.awt.*;
 

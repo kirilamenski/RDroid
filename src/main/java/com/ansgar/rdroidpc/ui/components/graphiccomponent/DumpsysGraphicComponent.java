@@ -1,8 +1,7 @@
-package com.ansgar.rdroidpc.ui.components;
+package com.ansgar.rdroidpc.ui.components.graphiccomponent;
 
 import com.ansgar.rdroidpc.entities.DumpsysModel;
-import com.ansgar.rdroidpc.ui.components.graphicpanel.DumpsysViewHolder;
-import com.ansgar.rdroidpc.ui.components.graphicpanel.GraphicPanel;
+import com.ansgar.graphic.GraphicPanel;
 
 import java.util.ArrayList;
 import java.util.List;
