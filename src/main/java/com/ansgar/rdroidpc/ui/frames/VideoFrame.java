@@ -121,7 +121,6 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
         try {
             if (frameGrabber != null && frameGrabber.hasVideo()) {
                 frameGrabber.stop();
-                frameGrabber = null;
             }
         } catch (FrameGrabber.Exception e) {
             e.printStackTrace();
