@@ -85,7 +85,7 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
 
             Java2DFrameConverter converter = new Java2DFrameConverter();
             while (isThreadRunning.get()) {
-                currentImage = converter.getBufferedImage(frameGrabber.grab());
+                if (frameGrabber != null) currentImage = converter.getBufferedImage(frameGrabber.grab());
                 if (currentImage != null) {
                     videoComponent.showBufferedImage(currentImage);
                 } else {
@@ -121,6 +121,7 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
         try {
             if (frameGrabber != null && frameGrabber.hasVideo()) {
                 frameGrabber.stop();
+                frameGrabber = null;
             }
         } catch (FrameGrabber.Exception e) {
             e.printStackTrace();
