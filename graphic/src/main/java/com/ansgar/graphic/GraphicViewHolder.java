@@ -29,4 +29,5 @@ public abstract class GraphicViewHolder<T> {
     public void setHeight(int height) {
         this.height = height;
     }
+
 }

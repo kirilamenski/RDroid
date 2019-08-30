@@ -5,6 +5,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 class GraphicMouseListener implements MouseMotionListener, MouseListener {
+
     private int clickedXPos, xLastPos, xDraggedOffset;
     private OnDraggedListener listener;
 
@@ -39,13 +40,24 @@ class GraphicMouseListener implements MouseMotionListener, MouseListener {
     public void mouseDragged(MouseEvent e) {
         int delta = clickedXPos - (e.getXOnScreen());
         xDraggedOffset = delta + xLastPos;
-        if (xDraggedOffset < 0) xDraggedOffset = 0;
         listener.onDragged(xDraggedOffset);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
 
+    }
+
+    public void setClickedXPos(int clickedXPos) {
+        this.clickedXPos = clickedXPos;
+    }
+
+    public void setxLastPos(int xLastPos) {
+        this.xLastPos = xLastPos;
+    }
+
+    public void setxDraggedOffset(int xDraggedOffset) {
+        this.xDraggedOffset = xDraggedOffset;
     }
 
     interface OnDraggedListener{
