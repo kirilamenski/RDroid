@@ -31,8 +31,8 @@ public class CommandExecutor {
     public void execute(String command) {
         try {
             process = Runtime.getRuntime().exec(command);
-            executeErrorStream();
             executeInputStream();
+//            executeErrorStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
