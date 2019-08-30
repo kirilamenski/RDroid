@@ -1,17 +1,14 @@
 package com.ansgar.graphic;
 
-import com.sun.istack.internal.NotNull;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 class GraphicMouseListener implements MouseMotionListener, MouseListener {
     private int clickedXPos, xLastPos, xDraggedOffset;
-    @NotNull
     private OnDraggedListener listener;
 
-    GraphicMouseListener(@NotNull OnDraggedListener listener) {
+    GraphicMouseListener(OnDraggedListener listener) {
         this.listener = listener;
     }
 
