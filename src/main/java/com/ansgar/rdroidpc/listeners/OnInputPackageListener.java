@@ -4,4 +4,6 @@ public interface OnInputPackageListener {
 
     void runDumpsys(String packageName);
 
+    void stopDumpsys();
+
 }

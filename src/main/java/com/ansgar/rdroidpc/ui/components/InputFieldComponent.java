@@ -1,6 +1,7 @@
 package com.ansgar.rdroidpc.ui.components;
 
 import com.ansgar.rdroidpc.constants.SharedValuesKey;
+import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
 import com.ansgar.rdroidpc.utils.SharedValues;
 
@@ -14,11 +15,13 @@ public class InputFieldComponent extends JPanel {
     private JButton btn;
     private Vector values;
     private DefaultComboBoxModel<String> defaultComboBoxModel;
+    private boolean isPressed = false;
 
     public InputFieldComponent() {
         this.values = SharedValues.get(SharedValuesKey.PACKAGES, new Vector());
         this.defaultComboBoxModel = new DefaultComboBoxModel<String>(values);
         defaultComboBoxModel.addElement("com.fishbowlmedia.fishbowl.dev");
+        defaultComboBoxModel.addElement("com.ansgar.motusmontis");
         setLayout(null);
         updateComboBox();
     }
@@ -41,18 +44,23 @@ public class InputFieldComponent extends JPanel {
     private void updateRunBtn() {
         if (btn == null) {
             btn = new JButton();
-            btn.setText("Run");
+            btn.setText(StringConst.RUN);
             btn.setFocusable(false);
             btn.addActionListener(e -> {
                 if (listener != null) {
-                    String value = String.valueOf(packagesCb.getEditor().getItem());
-
-                    if (value == null) {
-                        value = (String) packagesCb.getSelectedItem();
-                    }
-                    if (value != null && value.length() > 0) {
-                        addItemToList(value);
-                        listener.runDumpsys(value);
+                    if (!isPressed) {
+                        String value = String.valueOf(packagesCb.getEditor().getItem());
+                        if (value == null) value = (String) packagesCb.getSelectedItem();
+                        if (value != null && value.length() > 0) {
+                            addItemToList(value);
+                            listener.runDumpsys(value);
+                            btn.setText(StringConst.CANCEL);
+                        }
+                        isPressed = true;
+                    } else {
+                        btn.setText(StringConst.RUN);
+                        listener.stopDumpsys();
+                        isPressed = false;
                     }
                 }
             });
