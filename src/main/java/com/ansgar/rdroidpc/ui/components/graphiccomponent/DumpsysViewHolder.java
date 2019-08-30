@@ -17,7 +17,7 @@ public class DumpsysViewHolder extends GraphicViewHolder<DumpsysModel> {
             int frameLatency = (int) ((data.getFrameCompleted() - data.getIntendedVsync()) / 1000000);
             Color color = frameLatency > 16 ? Color.RED : Color.GREEN;
             g2d.setColor(color);
-            int x = i + panel.getPrevHolderWidth(position - 1);
+            int x = i + panel.getHolderWidthByPos(position - 1);
             int panelHeight = panel.getHeight() - panel.getBottomMargin();
             int frameLatencyHeight = panelHeight - frameLatency * 10;
             if (frameLatencyHeight > panelHeight) frameLatencyHeight = panelHeight;

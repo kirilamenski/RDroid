@@ -10,6 +10,10 @@ public class DumpsysGraphicComponent extends GraphicPanel<DumpsysViewHolder> {
 
     private List<DumpsysModel> items = new ArrayList<>();
 
+    public DumpsysGraphicComponent() {
+        setAutoMoving(true);
+    }
+
     @Override
     public DumpsysViewHolder onCreateViewHolder() {
         return new DumpsysViewHolder();

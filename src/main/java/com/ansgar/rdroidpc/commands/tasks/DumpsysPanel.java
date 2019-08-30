@@ -17,10 +17,11 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
     private DumpsysCommandTask dumpsysCommandTask;
     private DumpsysGraphicComponent dumpsysGraphicComponent;
     private InputFieldComponent inputFieldComponent;
+    private String deviceId;
 
     public DumpsysPanel(String deviceId, Rectangle rectangle, String title) {
         super(rectangle, title, true);
-        setDumpsysTask(deviceId);
+        this.deviceId = deviceId;
         addPackageNameInputComponent();
         addDumpsysGraphic();
         setWindowResizedListener(this);
@@ -29,7 +30,7 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
     @Override
     public void onCloseFrame() {
         super.onCloseFrame();
-        if (dumpsysCommandTask != null) dumpsysCommandTask.stop();
+        stopDumpsys();
     }
 
     @Override
@@ -37,10 +38,12 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
         if (dumpsysModel.getProfileData().size() > 0) dumpsysGraphicComponent.addItem(dumpsysModel);
     }
 
-    private void setDumpsysTask(String deviceId) {
-        dumpsysCommandTask = new DumpsysCommandTask();
-        dumpsysCommandTask.setDeviceId(deviceId);
-        dumpsysCommandTask.setListener(this);
+    private void setDumpsysTask() {
+        if (dumpsysCommandTask == null) {
+            dumpsysCommandTask = new DumpsysCommandTask();
+            dumpsysCommandTask.setDeviceId(deviceId);
+            dumpsysCommandTask.setListener(this);
+        }
     }
 
     private void addPackageNameInputComponent() {
@@ -56,8 +59,15 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
 
     @Override
     public void runDumpsys(String packageName) {
+        setDumpsysTask();
         dumpsysCommandTask.setPackageName(packageName);
         dumpsysCommandTask.start(1000, 5000);
+    }
+
+    @Override
+    public void stopDumpsys() {
+        if (dumpsysCommandTask != null) dumpsysCommandTask.stop();
+        dumpsysCommandTask = null;
     }
 
     @Override
