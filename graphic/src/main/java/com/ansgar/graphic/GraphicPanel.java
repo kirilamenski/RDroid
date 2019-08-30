@@ -8,12 +8,13 @@ import java.util.List;
 public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel {
 
     private List<GVH> holders;
-    private int xAxisOffset = 5, yAxisOffset = 50;
+    private int xAxisOffset = 5, yAxisOffset = 50, xDraggedOffset;
     private int leftMargin = 30, topMargin = 10, rightMargin = 10, bottomMargin = 10;
     private boolean useGrid = false;
 
     public GraphicPanel() {
         holders = new ArrayList<>();
+        initMouseListener();
     }
 
     @Override
@@ -35,11 +36,12 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
     }
 
     public void drawYAxis(Graphics2D g2d) {
-        drawLine(g2d, leftMargin, topMargin, leftMargin, getHeight() - bottomMargin, Color.WHITE);
+        int left = leftMargin - xDraggedOffset;
+        drawLine(g2d, left, topMargin, left, getHeight() - bottomMargin, Color.WHITE);
         int width = getHeight() - bottomMargin - topMargin;
         int step = yAxisOffset < 50 ? yAxisOffset * 10 : yAxisOffset;
         for (int i = yAxisOffset; i < width; i = i + step) {
-            drawString(g2d, String.valueOf(xAxisOffset * (i / step)), 0, width - i);
+            drawString(g2d, String.valueOf(xAxisOffset * (i / step)), 0 - xDraggedOffset, width - i);
             if (useGrid) {
                 drawLine(
                         g2d,
@@ -62,12 +64,12 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
     }
 
     public void drawXAxis(Graphics2D g2d) {
-        drawLine(g2d, leftMargin, getHeight() - bottomMargin,
+        drawLine(g2d, leftMargin - xDraggedOffset, getHeight() - bottomMargin,
                 getWidth() - rightMargin, getHeight() - bottomMargin, Color.WHITE);
-        int width = getWidth() - rightMargin - leftMargin;
+        int width = getWidth() - rightMargin - leftMargin + xDraggedOffset;
         int step = xAxisOffset < 50 ? xAxisOffset * 10 : xAxisOffset;
         for (int i = 0; i < width; i = i + step) {
-            drawString(g2d, String.valueOf(xAxisOffset * (i / step)), leftMargin + i, getHeight());
+            drawString(g2d, String.valueOf(xAxisOffset * (i / step)), leftMargin + i - xDraggedOffset, getHeight());
             if (useGrid && i > 0) {
                 drawLine(
                         g2d,
@@ -118,6 +120,15 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         onBindViewHolder(holder, position);
         holder.panel = this;
         holder.draw(g2d, position);
+    }
+
+    private void initMouseListener() {
+        GraphicMouseListener listener = new GraphicMouseListener(offset -> {
+            xDraggedOffset = offset;
+            repaint();
+        });
+        addMouseListener(listener);
+        addMouseMotionListener(listener);
     }
 
     public void notifyItemsUpdateChanged() {
@@ -177,7 +188,7 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
     }
 
     public int getPrevHolderWidth(int position) {
-        int width = leftMargin;
+        int width = leftMargin  - xDraggedOffset;
         if (position >= 0 && position < holders.size()) {
             width = 10 + holders.get(position).getWidth();
         }
