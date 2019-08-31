@@ -69,6 +69,7 @@ class StringConst {
         const val SCREEN_RESOLUTION_L = "Screen Resolution"
         const val OK = "Ok"
         const val CANCEL = "Cancel"
+        const val PAUSE = "Pause"
 
         const val ASK_REBOOT = "Do you want to reboot device?"
 
