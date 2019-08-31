@@ -23,12 +23,11 @@ public class InputFieldComponent extends JPanel {
         defaultComboBoxModel.addElement("com.fishbowlmedia.fishbowl.dev");
         defaultComboBoxModel.addElement("com.ansgar.motusmontis");
         setLayout(null);
-        updateComboBox();
     }
 
     public void updateComponent() {
-        updateComboBox();
         updateRunBtn();
+        updateComboBox();
         updateUI();
     }
 
@@ -38,7 +37,7 @@ public class InputFieldComponent extends JPanel {
             packagesCb.setEditable(true);
             add(packagesCb);
         }
-        packagesCb.setBounds(0, 0, (int) (getWidth() * 0.7), getHeight() - 10);
+        packagesCb.setBounds(0, 0, btn.getX() - 10, getHeight() - 10);
     }
 
     private void updateRunBtn() {
@@ -54,7 +53,7 @@ public class InputFieldComponent extends JPanel {
                         if (value != null && value.length() > 0) {
                             addItemToList(value);
                             listener.runDumpsys(value);
-                            btn.setText(StringConst.CANCEL);
+                            btn.setText(StringConst.PAUSE);
                         }
                         isPressed = true;
                     } else {
@@ -66,7 +65,7 @@ public class InputFieldComponent extends JPanel {
             });
             add(btn);
         }
-        btn.setBounds(packagesCb.getWidth(), 0, (int) (getWidth() * 0.30), getHeight() - 10);
+        btn.setBounds(getWidth() - 100, 0, 100, getHeight() - 10);
     }
 
     private void addItemToList(String value) {
