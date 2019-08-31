@@ -4,15 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel implements GraphicMouseListener.OnDraggedListener {
 
     private List<GVH> holders;
     private int xAxisOffset = 5, yAxisOffset = 50, xDraggedOffset, xAxisWidth;
     private int leftMargin = 30, topMargin = 10, rightMargin = 10, bottomMargin = 10;
-    private boolean useGrid;
+    private boolean useXGrid, useYGrid;
     private GraphicMouseListener mouseEventListener;
     private GraphicMoveTask moveTask;
 
@@ -46,16 +44,16 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         int step = yAxisOffset < 50 ? yAxisOffset * 10 : yAxisOffset;
         for (int i = yAxisOffset; i < width; i = i + step) {
             drawString(g2d, String.valueOf(xAxisOffset * (i / step)), 0 - xDraggedOffset, width - i);
-            if (useGrid) {
+            if (useYGrid) {
                 drawLine(
                         g2d,
                         leftMargin,
                         width - i,
                         getWidth() - rightMargin,
                         width - i,
-                        Color.BLUE,
+                        Color.GRAY,
                         new BasicStroke(
-                                1.0f,
+                                0.5f,
                                 BasicStroke.CAP_BUTT,
                                 BasicStroke.JOIN_MITER,
                                 10.0f,
@@ -74,16 +72,16 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         int step = xAxisOffset < 50 ? xAxisOffset * 10 : xAxisOffset;
         for (int i = 0; i < xAxisWidth; i = i + step) {
             drawString(g2d, String.valueOf(xAxisOffset * (i / step)), leftMargin + i - xDraggedOffset, getHeight());
-            if (useGrid && i > 0) {
+            if (useXGrid && i > 0) {
                 drawLine(
                         g2d,
-                        leftMargin + i,
+                        leftMargin + i - xDraggedOffset,
                         getHeight() - bottomMargin,
-                        leftMargin + i,
+                        leftMargin + i - xDraggedOffset,
                         topMargin,
-                        Color.BLUE,
+                        Color.GRAY,
                         new BasicStroke(
-                                1.0f,
+                                0.5f,
                                 BasicStroke.CAP_BUTT,
                                 BasicStroke.JOIN_MITER,
                                 10.0f,
@@ -130,17 +128,6 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         mouseEventListener = new GraphicMouseListener(this);
         addMouseListener(mouseEventListener);
         addMouseMotionListener(mouseEventListener);
-    }
-
-    private TimerTask getTimerTask() {
-        return new TimerTask() {
-            @Override
-            public void run() {
-                int offset = xDraggedOffset + 1;
-                mouseEventListener.setxLastPos(offset);
-                onDragged(offset);
-            }
-        };
     }
 
     public void startAutoMoving() {
@@ -209,6 +196,14 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
 
     public void setBottomMargin(int bottomMargin) {
         this.bottomMargin = bottomMargin;
+    }
+
+    public void setUseXGrid(boolean useXGrid) {
+        this.useXGrid = useXGrid;
+    }
+
+    public void setUseYGrid(boolean useYGrid) {
+        this.useYGrid = useYGrid;
     }
 
     public int getHolderWidthByPos(int position) {
