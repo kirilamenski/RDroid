@@ -62,12 +62,14 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
         setDumpsysTask();
         dumpsysCommandTask.setPackageName(packageName);
         dumpsysCommandTask.start(1000, 5000);
+        dumpsysGraphicComponent.startAutoMoving();
     }
 
     @Override
     public void stopDumpsys() {
         if (dumpsysCommandTask != null) dumpsysCommandTask.stop();
         dumpsysCommandTask = null;
+        if (dumpsysGraphicComponent != null) dumpsysGraphicComponent.destroy();
     }
 
     @Override

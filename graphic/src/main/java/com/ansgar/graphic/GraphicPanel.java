@@ -4,14 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel implements GraphicMouseListener.OnDraggedListener {
 
     private List<GVH> holders;
     private int xAxisOffset = 5, yAxisOffset = 50, xDraggedOffset, xAxisWidth;
     private int leftMargin = 30, topMargin = 10, rightMargin = 10, bottomMargin = 10;
-    private boolean useGrid, autoMoving;
+    private boolean useGrid;
     private GraphicMouseListener mouseEventListener;
+    private GraphicMoveTask moveTask;
 
     public GraphicPanel() {
         holders = new ArrayList<>();
@@ -121,14 +124,30 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         onBindViewHolder(holder, position);
         holder.panel = this;
         holder.draw(g2d, position);
-
-        if (autoMoving) moveTo(position);
     }
 
     private void initMouseListener() {
         mouseEventListener = new GraphicMouseListener(this);
         addMouseListener(mouseEventListener);
         addMouseMotionListener(mouseEventListener);
+    }
+
+    private TimerTask getTimerTask() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                int offset = xDraggedOffset + 1;
+                mouseEventListener.setxLastPos(offset);
+                onDragged(offset);
+            }
+        };
+    }
+
+    public void startAutoMoving() {
+        if (moveTask == null) {
+            moveTask = new GraphicMoveTask(this);
+            moveTask.start(6000, 25);
+        }
     }
 
     public void notifyItemsUpdateChanged() {
@@ -139,16 +158,9 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         addItem((Graphics2D) getGraphics(), getItemSize() - 1);
     }
 
-    public void moveTo(int position) {
-        if (position < 0 || position > holders.size() - 1) return;
-        GVH holder = holders.get(position);
-        int holderWidth = holder.getWidth();
-        int holderX = getHolderWidthByPos(position - 1);
-        if (holderX + holderWidth > getWidth()) {
-            int delay = holderX + holderWidth + xDraggedOffset;
-            mouseEventListener.setxLastPos(delay);
-            onDragged(delay);
-        }
+    public void destroy() {
+        if (moveTask != null) moveTask.cancel();
+        moveTask = null;
     }
 
     public void setxAxisOffset(int xAxisOffset) {
@@ -197,14 +209,6 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
 
     public void setBottomMargin(int bottomMargin) {
         this.bottomMargin = bottomMargin;
-    }
-
-    public boolean isAutoMoving() {
-        return autoMoving;
-    }
-
-    public void setAutoMoving(boolean autoMoving) {
-        this.autoMoving = autoMoving;
     }
 
     public int getHolderWidthByPos(int position) {
