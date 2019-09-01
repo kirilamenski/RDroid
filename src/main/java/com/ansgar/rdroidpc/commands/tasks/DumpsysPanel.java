@@ -4,6 +4,7 @@ import com.ansgar.rdroidpc.entities.DumpsysModel;
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
 import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
 import com.ansgar.rdroidpc.listeners.OnWindowResizedListener;
+import com.ansgar.rdroidpc.ui.components.DumpsysReportComponent;
 import com.ansgar.rdroidpc.ui.components.graphiccomponent.DumpsysGraphicComponent;
 import com.ansgar.rdroidpc.ui.components.InputFieldComponent;
 import com.ansgar.rdroidpc.ui.frames.BasePanel;
@@ -16,6 +17,7 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
 
     private DumpsysCommandTask dumpsysCommandTask;
     private DumpsysGraphicComponent dumpsysGraphicComponent;
+    private DumpsysReportComponent reportComponent;
     private InputFieldComponent inputFieldComponent;
     private String deviceId;
 
@@ -23,6 +25,7 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
         super(rectangle, title, true);
         this.deviceId = deviceId;
         addPackageNameInputComponent();
+        addReportComponent();
         addDumpsysGraphic();
         setWindowResizedListener(this);
     }
@@ -35,6 +38,7 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
 
     @Override
     public void getDumpsys(DumpsysModel dumpsysModel) {
+        System.out.println("Window name: " + dumpsysModel.getWindow() + "size: " + dumpsysModel.getProfileData().size());
         if (dumpsysModel.getProfileData().size() > 0) dumpsysGraphicComponent.addItem(dumpsysModel);
     }
 
@@ -50,6 +54,11 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
         inputFieldComponent = new InputFieldComponent();
         inputFieldComponent.setListener(this);
         add(inputFieldComponent);
+    }
+
+    private void addReportComponent() {
+        reportComponent = new DumpsysReportComponent();
+        add(reportComponent);
     }
 
     private void addDumpsysGraphic() {
@@ -74,10 +83,14 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
 
     @Override
     public void windowResized(Rectangle rectangle) {
-        inputFieldComponent.setBounds(5, 5, rectangle.width - 20, 40);
+        int height = 40;
+        inputFieldComponent.setBounds(5, 5, rectangle.width - 20, height);
         inputFieldComponent.updateComponent();
-        dumpsysGraphicComponent.setBounds(5, inputFieldComponent.getHeight(),
-                rectangle.width - 20, rectangle.height - 70 - inputFieldComponent.getHeight());
+        int reportComponentXPos = (int) (rectangle.width * 0.6);
+        reportComponent.setBounds(reportComponentXPos, height,
+                rectangle.width - reportComponentXPos - 20, rectangle.height - 70 - height);
+        dumpsysGraphicComponent.setBounds(5, height,
+                reportComponentXPos - 20, rectangle.height - 70 - height);
 
     }
 }

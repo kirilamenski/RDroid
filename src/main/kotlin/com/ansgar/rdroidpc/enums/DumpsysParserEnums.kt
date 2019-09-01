@@ -91,7 +91,7 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
 
      Need to find the way to parse it correctly.
      */
-    VIEW_HIERARCHY("View hierarchy:") {
+    VIEW_HIERARCHY("View hierarchy") {
         override fun parse(model: DumpsysModel, line: String) {
 
         }
@@ -123,9 +123,6 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
 
         fun parse(model: DumpsysModel, line: String) {
             when {
-                line.split(":").size == 1 -> {
-
-                }
                 line.split(":").size == 2 -> {
                     val splittedLine = line.split(":")
                     get(splittedLine[0].trim())?.parse(model, splittedLine[1].trim())
