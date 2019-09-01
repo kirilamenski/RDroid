@@ -73,9 +73,7 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
     }
 
     protected void closeFrame() {
-        if (presenter != null) {
-            presenter.destroy();
-        }
+        if (presenter != null) presenter.destroy();
         if (frame != null) {
             frame.setVisible(false);
             frame.dispose();
