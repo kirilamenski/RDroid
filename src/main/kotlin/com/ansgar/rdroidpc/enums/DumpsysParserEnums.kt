@@ -7,7 +7,7 @@ import java.lang.StringBuilder
 enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
     WINDOW("Window") {
         override fun parse(model: DumpsysModel, line: String) {
-            model.window = line
+            if (!line.isNullOrEmpty()) model.window = line
         }
     },
     STATUS_SINCE("Stats since") {
@@ -78,6 +78,24 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
             }
         }
     },
+    /** TODO
+     * View hierarchy has follow structure:
+     * View hierarchy:
+
+        com.ansgar.motusmontis/com.ansgar.motusmontis.ui.activities.main.MainActivity/android.view.ViewRootImpl@88ad81d
+        48 views, 56,78 kB of display lists
+
+        /android.view.ViewRootImpl@4650a92
+        1 views, 1,04 kB of display lists
+
+
+     Need to find the way to parse it correctly.
+     */
+    VIEW_HIERARCHY("View hierarchy:") {
+        override fun parse(model: DumpsysModel, line: String) {
+
+        }
+    },
     TOTAL_VIEW_ROOT_IMPL("Total ViewRootImpl") {
         override fun parse(model: DumpsysModel, line: String) {
 
@@ -100,11 +118,14 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
             val model = DumpsysModel()
             val lines = builder.split("\n")
             lines.forEach { parse(model, it) }
-            return model;
+            return model
         }
 
         fun parse(model: DumpsysModel, line: String) {
             when {
+                line.split(":").size == 1 -> {
+
+                }
                 line.split(":").size == 2 -> {
                     val splittedLine = line.split(":")
                     get(splittedLine[0].trim())?.parse(model, splittedLine[1].trim())
