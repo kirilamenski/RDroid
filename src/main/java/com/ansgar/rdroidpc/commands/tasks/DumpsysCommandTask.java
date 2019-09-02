@@ -1,6 +1,5 @@
-package com.ansgar.rdroidpc.utils;
+package com.ansgar.rdroidpc.commands.tasks;
 
-import com.ansgar.rdroidpc.commands.tasks.BaseCommandTask;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.enums.DumpsysParserEnums;
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
@@ -20,7 +19,7 @@ public class DumpsysCommandTask extends BaseCommandTask {
 
     @Override
     public void onNext(String line) {
-//        DumpsysParserEnums.Companion.parse(dumpsysModel, line);
+
     }
 
     @NotNull

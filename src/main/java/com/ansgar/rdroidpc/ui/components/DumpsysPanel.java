@@ -1,6 +1,7 @@
-package com.ansgar.rdroidpc.commands.tasks;
+package com.ansgar.rdroidpc.ui.components;
 
 import com.ansgar.graphic.OnGraphicItemClicked;
+import com.ansgar.rdroidpc.commands.tasks.DumpsysCommandTask;
 import com.ansgar.rdroidpc.entities.DumpsysModel;
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
 import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
@@ -9,7 +10,6 @@ import com.ansgar.rdroidpc.ui.components.DumpsysReportComponent;
 import com.ansgar.rdroidpc.ui.components.graphiccomponent.DumpsysGraphicComponent;
 import com.ansgar.rdroidpc.ui.components.InputFieldComponent;
 import com.ansgar.rdroidpc.ui.frames.BasePanel;
-import com.ansgar.rdroidpc.utils.DumpsysCommandTask;
 
 import javax.annotation.Nullable;
 import java.awt.*;

@@ -11,7 +11,7 @@ import com.ansgar.rdroidpc.enums.OrientationEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.ui.components.*;
-import com.ansgar.rdroidpc.commands.tasks.DumpsysPanel;
+import com.ansgar.rdroidpc.ui.components.DumpsysPanel;
 import com.ansgar.rdroidpc.ui.frames.ScreenRecordOptionsFrame;
 import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;

@@ -38,6 +38,15 @@ public class AppUiCustomizationUtil {
         UIManager.put("TextField.foreground", Color.WHITE);
         UIManager.put("TextField.caretForeground", Color.WHITE);
 
+        UIManager.put("TextArea.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("TextArea.border", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("TextArea.foreground", Color.WHITE);
+        UIManager.put("TextArea.caretForeground", Color.WHITE);
+
+        UIManager.put("ScrollBar.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("ScrollBar.thumb", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("ScrollBar.thumb", Color.WHITE);
+
         UIManager.put("Label.foreground", Color.WHITE);
 
         UIManager.put("ToolBar.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
