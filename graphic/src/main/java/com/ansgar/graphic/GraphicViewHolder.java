@@ -6,7 +6,7 @@ public abstract class GraphicViewHolder<T> {
 
     protected T model;
     protected GraphicPanel panel;
-    private int width, height;
+    private int startX, endX;
 
     public void setModel(T model) {
         this.model = model;
@@ -15,19 +15,22 @@ public abstract class GraphicViewHolder<T> {
     protected abstract void draw(Graphics2D g2d, int position);
 
     public int getWidth() {
-        return width;
+        return endX - startX;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
+    public int getStartX() {
+        return startX;
     }
 
-    public int getHeight() {
-        return height;
+    public void setStartX(int startX) {
+        this.startX = startX;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    public int getEndX() {
+        return endX;
     }
 
+    public void setEndX(int endX) {
+        this.endX = endX;
+    }
 }

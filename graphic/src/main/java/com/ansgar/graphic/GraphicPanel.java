@@ -5,14 +5,15 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel implements GraphicMouseListener.OnDraggedListener {
+public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
+        implements GraphicMouseListener.OnDraggedListener {
 
     private List<GVH> holders;
-    private int xAxisOffset = 5, yAxisOffset = 50, xDraggedOffset, xAxisWidth;
+    private int xAxisOffset = 5, yAxisOffset = 50, xDraggedOffset;
     private int leftMargin = 30, topMargin = 10, rightMargin = 10, bottomMargin = 10;
     private boolean useXGrid, useYGrid;
     private GraphicMouseListener mouseEventListener;
-    private GraphicMoveTask moveTask;
+    private OnGraphicItemClicked onItemClickListener;
 
     public GraphicPanel() {
         holders = new ArrayList<>();
@@ -68,7 +69,7 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
     public void drawXAxis(Graphics2D g2d) {
         drawLine(g2d, leftMargin - xDraggedOffset, getHeight() - bottomMargin,
                 getWidth() - rightMargin, getHeight() - bottomMargin, Color.WHITE);
-        xAxisWidth = getWidth() - rightMargin - leftMargin + xDraggedOffset;
+        int xAxisWidth = getWidth() - rightMargin - leftMargin + xDraggedOffset;
         int step = xAxisOffset < 50 ? xAxisOffset * 10 : xAxisOffset;
         for (int i = 0; i < xAxisWidth; i = i + step) {
             drawString(g2d, String.valueOf(xAxisOffset * (i / step)), leftMargin + i - xDraggedOffset, getHeight());
@@ -122,19 +123,25 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         onBindViewHolder(holder, position);
         holder.panel = this;
         holder.draw(g2d, position);
+
+        moveGraphic();
+        repaint();
+    }
+
+    private void moveGraphic() {
+        if (holders.size() > 1) {
+            GVH holder = holders.get(holders.size() - 1);
+            int panelWidth = getWidth() - leftMargin - rightMargin;
+            if (holder.getEndX() > panelWidth) {
+                xDraggedOffset += panelWidth - holder.getWidth();
+            }
+        }
     }
 
     private void initMouseListener() {
         mouseEventListener = new GraphicMouseListener(this);
         addMouseListener(mouseEventListener);
         addMouseMotionListener(mouseEventListener);
-    }
-
-    public void startAutoMoving() {
-        if (moveTask == null) {
-            moveTask = new GraphicMoveTask(this);
-            moveTask.start(6000, 25);
-        }
     }
 
     public void notifyItemsUpdateChanged() {
@@ -145,71 +152,18 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         addItem((Graphics2D) getGraphics(), getItemSize() - 1);
     }
 
-    public void destroy() {
-        if (moveTask != null) moveTask.cancel();
-        moveTask = null;
-    }
-
-    public void setxAxisOffset(int xAxisOffset) {
-        this.xAxisOffset = xAxisOffset;
-    }
-
-    public void setyAxisOffset(int yAxisOffset) {
-        this.yAxisOffset = yAxisOffset;
-    }
-
-    public void setLeftMargin(int leftMargin) {
-        this.leftMargin = leftMargin;
-    }
-
-    public void setTopMargin(int topMargin) {
-        this.topMargin = topMargin;
-    }
-
-    public void setRightMargin(int rightMargin) {
-        this.rightMargin = rightMargin;
-    }
-
-    public int getxAxisOffset() {
-        return xAxisOffset;
-    }
-
-    public int getyAxisOffset() {
-        return yAxisOffset;
-    }
-
-    public int getLeftMargin() {
-        return leftMargin;
-    }
-
-    public int getTopMargin() {
-        return topMargin;
-    }
-
-    public int getRightMargin() {
-        return rightMargin;
-    }
-
     public int getBottomMargin() {
         return bottomMargin;
     }
 
-    public void setBottomMargin(int bottomMargin) {
-        this.bottomMargin = bottomMargin;
+    public void setOnItemClickListener(OnGraphicItemClicked onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
-    public void setUseXGrid(boolean useXGrid) {
-        this.useXGrid = useXGrid;
-    }
-
-    public void setUseYGrid(boolean useYGrid) {
-        this.useYGrid = useYGrid;
-    }
-
-    public int getHolderWidthByPos(int position) {
+    public int getHolderEndXPosByIndex(int index) {
         int width = leftMargin - xDraggedOffset;
-        if (position >= 0 && position < holders.size()) {
-            width = 10 + holders.get(position).getWidth();
+        if (index >= 0 && index < holders.size()) {
+            width = 10 + holders.get(index).getEndX();
         }
         return width;
     }
@@ -219,5 +173,18 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
         if (offset < 0) offset = 0;
         xDraggedOffset = offset;
         repaint();
+    }
+
+    @Override
+    public void onClicked(int x, int y) {
+        if (onItemClickListener == null) return;
+
+        for (int i = 0; i < holders.size(); i++) {
+            GVH holder = holders.get(i);
+            if (x>= holder.getStartX() && x <= holder.getEndX()) {
+                onItemClickListener.onItemClicked(i);
+                break;
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ class GraphicMouseListener implements MouseMotionListener, MouseListener {
 
     private int clickedXPos, xLastPos, xDraggedOffset;
     private OnDraggedListener listener;
+    private boolean isEnabled = true;
 
     GraphicMouseListener(OnDraggedListener listener) {
         this.listener = listener;
@@ -15,6 +16,7 @@ class GraphicMouseListener implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        listener.onClicked(e.getX(), e.getY());
     }
 
     @Override
@@ -38,9 +40,11 @@ class GraphicMouseListener implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        int delta = clickedXPos - (e.getXOnScreen());
-        xDraggedOffset = delta + xLastPos;
-        listener.onDragged(xDraggedOffset);
+        if (isEnabled) {
+            int delta = clickedXPos - (e.getXOnScreen());
+            xDraggedOffset = delta + xLastPos;
+            listener.onDragged(xDraggedOffset);
+        }
     }
 
     @Override
@@ -60,7 +64,13 @@ class GraphicMouseListener implements MouseMotionListener, MouseListener {
         this.xDraggedOffset = xDraggedOffset;
     }
 
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
     interface OnDraggedListener{
+        void onClicked(int x, int y);
+
         void onDragged(int offset);
     }
 
