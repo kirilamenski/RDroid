@@ -7,7 +7,7 @@ import java.lang.StringBuilder
 enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
     WINDOW("Window") {
         override fun parse(model: DumpsysModel, line: String) {
-            if (!line.isNullOrEmpty()) model.window = line
+            if (!line.isEmpty()) model.window = line
         }
     },
     STATUS_SINCE("Stats since") {
@@ -30,7 +30,7 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
             model.numberMissedVsync = line.toInt()
         }
     },
-    NUMBER_HIGHT_INPUT_LATENCY("Number High input latency") {
+    NUMBER_HIGH_INPUT_LATENCY("Number High input latency") {
         override fun parse(model: DumpsysModel, line: String) {
             model.numberHighInputLatency = line.toInt()
         }
@@ -121,14 +121,14 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
             return model
         }
 
-        fun parse(model: DumpsysModel, line: String) {
+        private fun parse(model: DumpsysModel, line: String) {
             when {
-                line.split(":").size == 2 -> {
-                    val splittedLine = line.split(":")
-                    get(splittedLine[0].trim())?.parse(model, splittedLine[1].trim())
-                }
+//                line.split(":").size == 2 -> {
+//                    val splittedLine = line.split(":")
+//                    get(splittedLine[0].trim())?.parse(model, splittedLine[1].trim())
+//                }
                 line.split(",").size >= 14 -> PROFILE_DATE.parse(model, line.trim())
-                else -> model.other.add(line)
+                else -> model.fullInformation.append(line).append("\n")
             }
         }
 

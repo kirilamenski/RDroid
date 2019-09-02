@@ -1,5 +1,6 @@
 package com.ansgar.rdroidpc.commands.tasks;
 
+import com.ansgar.graphic.OnGraphicItemClicked;
 import com.ansgar.rdroidpc.entities.DumpsysModel;
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
 import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
@@ -10,13 +11,15 @@ import com.ansgar.rdroidpc.ui.components.InputFieldComponent;
 import com.ansgar.rdroidpc.ui.frames.BasePanel;
 import com.ansgar.rdroidpc.utils.DumpsysCommandTask;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
-        OnInputPackageListener, OnWindowResizedListener {
+        OnInputPackageListener, OnWindowResizedListener, OnGraphicItemClicked {
 
     private DumpsysCommandTask dumpsysCommandTask;
     private DumpsysGraphicComponent dumpsysGraphicComponent;
+    @Nullable
     private DumpsysReportComponent reportComponent;
     private InputFieldComponent inputFieldComponent;
     private String deviceId;
@@ -25,7 +28,6 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
         super(rectangle, title, true);
         this.deviceId = deviceId;
         addPackageNameInputComponent();
-        addReportComponent();
         addDumpsysGraphic();
         setWindowResizedListener(this);
     }
@@ -38,7 +40,6 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
 
     @Override
     public void getDumpsys(DumpsysModel dumpsysModel) {
-        System.out.println("Window name: " + dumpsysModel.getWindow() + "size: " + dumpsysModel.getProfileData().size());
         if (dumpsysModel.getProfileData().size() > 0) dumpsysGraphicComponent.addItem(dumpsysModel);
     }
 
@@ -56,13 +57,23 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
         add(inputFieldComponent);
     }
 
-    private void addReportComponent() {
-        reportComponent = new DumpsysReportComponent();
-        add(reportComponent);
+    private void showReportComponent(@Nullable DumpsysModel model) {
+        if (model == null) {
+            if (reportComponent != null) remove(reportComponent);
+            reportComponent = null;
+        } else {
+            if (reportComponent == null) {
+                reportComponent = new DumpsysReportComponent(model.getFullInformation().toString());
+                add(reportComponent);
+            } else {
+                reportComponent.updatePanel(model.getFullInformation().toString());
+            }
+        }
     }
 
     private void addDumpsysGraphic() {
         dumpsysGraphicComponent = new DumpsysGraphicComponent();
+        dumpsysGraphicComponent.setOnItemClickListener(this);
         add(dumpsysGraphicComponent);
     }
 
@@ -70,15 +81,13 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
     public void runDumpsys(String packageName) {
         setDumpsysTask();
         dumpsysCommandTask.setPackageName(packageName);
-        dumpsysCommandTask.start(1000, 5000);
-        dumpsysGraphicComponent.startAutoMoving();
+        dumpsysCommandTask.start(1000, 4000);
     }
 
     @Override
     public void stopDumpsys() {
         if (dumpsysCommandTask != null) dumpsysCommandTask.stop();
         dumpsysCommandTask = null;
-        if (dumpsysGraphicComponent != null) dumpsysGraphicComponent.destroy();
     }
 
     @Override
@@ -86,11 +95,23 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
         int height = 40;
         inputFieldComponent.setBounds(5, 5, rectangle.width - 20, height);
         inputFieldComponent.updateComponent();
-        int reportComponentXPos = (int) (rectangle.width * 0.6);
-        reportComponent.setBounds(reportComponentXPos, height,
-                rectangle.width - reportComponentXPos - 20, rectangle.height - 70 - height);
+
+        if (reportComponent != null) {
+            reportComponent.setBounds(
+                    (int) (rectangle.width * 0.5),
+                    height,
+                    rectangle.width - (int) (rectangle.width * 0.5) - 20,
+                    rectangle.height - 70 - height
+            );
+        }
+        int reportComponentXPos = reportComponent != null ? reportComponent.getX() : rectangle.width;
         dumpsysGraphicComponent.setBounds(5, height,
                 reportComponentXPos - 20, rectangle.height - 70 - height);
+    }
 
+    @Override
+    public void onItemClicked(int position) {
+        showReportComponent(dumpsysGraphicComponent.getItem(position));
+        windowResized(getBounds());
     }
 }

@@ -1,8 +1,10 @@
 package com.ansgar.rdroidpc.entities
 
+import java.lang.StringBuilder
 import kotlin.collections.ArrayList
 
 class DumpsysModel {
+    var fullInformation: StringBuilder = StringBuilder()
     var window: String? = null
     var statsSince: String? = null
     var totalFramesRendered: Int = 0
