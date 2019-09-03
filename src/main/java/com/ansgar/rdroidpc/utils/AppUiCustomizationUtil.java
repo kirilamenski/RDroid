@@ -44,8 +44,11 @@ public class AppUiCustomizationUtil {
         UIManager.put("TextArea.caretForeground", Color.WHITE);
 
         UIManager.put("ScrollBar.background", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
-        UIManager.put("ScrollBar.thumb", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
-        UIManager.put("ScrollBar.thumb", Color.WHITE);
+        UIManager.put("ScrollBar.thumb", Color.RED);
+        UIManager.put("ScrollBar.thumbDarkShadow", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("ScrollBar.thumbShadow", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("ScrollBar.thumbHighlight", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        UIManager.put("ScrollBar.track", Color.decode(Colors.MAIN_BACKGROUND_COLOR));
 
         UIManager.put("Label.foreground", Color.WHITE);
 
