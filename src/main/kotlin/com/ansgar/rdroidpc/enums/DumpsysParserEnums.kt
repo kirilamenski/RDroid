@@ -82,14 +82,14 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
      * View hierarchy has follow structure:
      * View hierarchy:
 
-        com.ansgar.motusmontis/com.ansgar.motusmontis.ui.activities.main.MainActivity/android.view.ViewRootImpl@88ad81d
-        48 views, 56,78 kB of display lists
+    com.ansgar.motusmontis/com.ansgar.motusmontis.ui.activities.main.MainActivity/android.view.ViewRootImpl@88ad81d
+    48 views, 56,78 kB of display lists
 
-        /android.view.ViewRootImpl@4650a92
-        1 views, 1,04 kB of display lists
+    /android.view.ViewRootImpl@4650a92
+    1 views, 1,04 kB of display lists
 
 
-     Need to find the way to parse it correctly.
+    Need to find the way to parse it correctly.
      */
     VIEW_HIERARCHY("View hierarchy") {
         override fun parse(model: DumpsysModel, line: String) {
@@ -128,7 +128,11 @@ enum class DumpsysParserEnums(var key: String) : DumpsysEnumsActions {
 //                    get(splittedLine[0].trim())?.parse(model, splittedLine[1].trim())
 //                }
                 line.split(",").size >= 14 -> PROFILE_DATE.parse(model, line.trim())
-                else -> model.fullInformation.append(line).append("\n")
+                else -> {
+                    if (!line.contains(PROFILE_DATE.key)) {
+                        model.fullInformation.append(line.replace("\t", " ")).append("\n")
+                    }
+                }
             }
         }
 
