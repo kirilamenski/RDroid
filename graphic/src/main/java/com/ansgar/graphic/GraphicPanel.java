@@ -134,6 +134,7 @@ public abstract class GraphicPanel<GVH extends GraphicViewHolder> extends JPanel
             int panelWidth = getWidth() - leftMargin - rightMargin;
             if (holder.getEndX() > panelWidth) {
                 xDraggedOffset += panelWidth - holder.getWidth();
+                mouseEventListener.setxLastPos(xDraggedOffset);
             }
         }
     }
