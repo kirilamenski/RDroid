@@ -6,6 +6,7 @@ import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
 import com.ansgar.rdroidpc.utils.SharedValues;
 
 import javax.swing.*;
+import java.util.List;
 import java.util.Vector;
 
 public class InputFieldComponent extends JPanel {
@@ -17,11 +18,12 @@ public class InputFieldComponent extends JPanel {
     private DefaultComboBoxModel<String> defaultComboBoxModel;
     private boolean isPressed = false;
 
-    public InputFieldComponent() {
+    public InputFieldComponent(List<String> packages) {
         this.values = SharedValues.get(SharedValuesKey.PACKAGES, new Vector());
         this.defaultComboBoxModel = new DefaultComboBoxModel<String>(values);
-        defaultComboBoxModel.addElement("com.fishbowlmedia.fishbowl.dev");
-        defaultComboBoxModel.addElement("com.ansgar.motusmontis");
+        for (String pack : packages) {
+            defaultComboBoxModel.addElement(pack);
+        }
         setLayout(null);
     }
 

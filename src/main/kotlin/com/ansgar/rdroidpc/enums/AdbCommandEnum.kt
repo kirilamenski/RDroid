@@ -26,7 +26,8 @@ enum class AdbCommandEnum(val command: String) {
     UPLOAD_FILES("adb -s %s push %s %s"),
     KEY_EVENT("adb -s %s shell input keyevent %s"),
     DUMPSYS("adb -s %s shell dumpsys gfxinfo %s framestats"),
-    INPUT_TEXT("adb -s %s shell input text \"%s\"");
+    INPUT_TEXT("adb -s %s shell input text \"%s\""),
+    PACKAGES("adb -s %s shell pm list packages");
 
     companion object {
         fun getCommandValue(commandEnum: AdbCommandEnum): String {

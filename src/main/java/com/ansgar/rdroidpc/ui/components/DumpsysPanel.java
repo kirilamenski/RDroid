@@ -6,6 +6,7 @@ import com.ansgar.rdroidpc.entities.DumpsysModel;
 import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
 import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
 import com.ansgar.rdroidpc.listeners.OnWindowResizedListener;
+import com.ansgar.rdroidpc.managers.AppPackagesManager;
 import com.ansgar.rdroidpc.ui.components.DumpsysReportComponent;
 import com.ansgar.rdroidpc.ui.components.graphiccomponent.DumpsysGraphicComponent;
 import com.ansgar.rdroidpc.ui.components.InputFieldComponent;
@@ -52,7 +53,8 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
     }
 
     private void addPackageNameInputComponent() {
-        inputFieldComponent = new InputFieldComponent();
+        AppPackagesManager appPackagesManager = new AppPackagesManager(deviceId);
+        inputFieldComponent = new InputFieldComponent(appPackagesManager.getAllPackages());
         inputFieldComponent.setListener(this);
         add(inputFieldComponent);
     }
