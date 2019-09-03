@@ -58,14 +58,13 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {
-                Component component = e.getComponent();
-                rectangle.x = component.getBounds().x;
-                rectangle.y = component.getBounds().y;
+                setRectangle(e.getComponent().getBounds());
             }
 
             @Override
             public void componentResized(ComponentEvent e) {
                 if (listener != null) {
+                    setRectangle(e.getComponent().getBounds());
                     listener.windowResized(new Rectangle(e.getComponent().getBounds()));
                 }
             }
@@ -121,6 +120,10 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
     @Override
     public Rectangle getRectangle() {
         return rectangle;
+    }
+
+    public void setRectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
     }
 
     @Override

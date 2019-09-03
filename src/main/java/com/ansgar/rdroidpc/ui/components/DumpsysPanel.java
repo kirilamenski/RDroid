@@ -114,6 +114,6 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
     @Override
     public void onItemClicked(int position) {
         showReportComponent(dumpsysGraphicComponent.getItem(position));
-        windowResized(getBounds());
+        windowResized(getRectangle());
     }
 }
