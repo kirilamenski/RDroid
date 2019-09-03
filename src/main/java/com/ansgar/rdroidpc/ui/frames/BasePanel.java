@@ -4,7 +4,6 @@ import com.ansgar.rdroidpc.listeners.OnWindowResizedListener;
 import com.ansgar.rdroidpc.ui.components.OptionDialog;
 import com.ansgar.rdroidpc.ui.frames.presenters.BasePresenter;
 import com.ansgar.rdroidpc.ui.frames.views.BaseFrameView;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,11 +18,7 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
     private OnWindowResizedListener listener;
 
     public BasePanel(Rectangle rectangle, String title) {
-        this.rectangle = rectangle;
-        setBounds(rectangle);
-        setLayout(null);
-        initFrame(title, false);
-        presenter = createPresenter();
+        this(rectangle, title, false);
     }
 
     public BasePanel(Rectangle rectangle, String title, boolean resizable) {
@@ -31,21 +26,12 @@ public abstract class BasePanel<T extends BasePresenter> extends JPanel implemen
         this.resizable = resizable;
         setBounds(rectangle);
         setLayout(null);
-        initFrame(title, false);
+        initFrame(title);
         presenter = createPresenter();
     }
 
-    public BasePanel(JComponent component, String title, boolean undecorated) {
-        this.rectangle = component.getBounds();
-        setBounds(rectangle);
-        setLayout(null);
-        initFrame(title, undecorated);
-        presenter = createPresenter();
-    }
-
-    private void initFrame(String title, boolean undecorated) {
+    private void initFrame(String title) {
         frame = new JFrame(title);
-        frame.setUndecorated(undecorated);
         frame.setVisible(true);
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
