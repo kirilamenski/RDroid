@@ -7,13 +7,12 @@ import com.ansgar.rdroidpc.listeners.OnDumpsysListener;
 import com.ansgar.rdroidpc.listeners.OnInputPackageListener;
 import com.ansgar.rdroidpc.listeners.OnWindowResizedListener;
 import com.ansgar.rdroidpc.managers.AppPackagesManager;
-import com.ansgar.rdroidpc.ui.components.DumpsysReportComponent;
 import com.ansgar.rdroidpc.ui.components.graphiccomponent.DumpsysGraphicComponent;
-import com.ansgar.rdroidpc.ui.components.InputFieldComponent;
 import com.ansgar.rdroidpc.ui.frames.BasePanel;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.List;
 
 public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
         OnInputPackageListener, OnWindowResizedListener, OnGraphicItemClicked {
@@ -28,9 +27,16 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
     public DumpsysPanel(String deviceId, Rectangle rectangle, String title) {
         super(rectangle, title, true);
         this.deviceId = deviceId;
-        addPackageNameInputComponent();
-        addDumpsysGraphic();
-        setWindowResizedListener(this);
+        new SpinnerDialog(this) {
+            @Override
+            public void doInBack() {
+                AppPackagesManager appPackagesManager = new AppPackagesManager(deviceId);
+                addPackageNameInputComponent(appPackagesManager.getAllPackages());
+                addDumpsysGraphic();
+                setWindowResizedListener(DumpsysPanel.this);
+                windowResized(getRectangle());
+            }
+        }.execute();
     }
 
     @Override
@@ -52,9 +58,8 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
         }
     }
 
-    private void addPackageNameInputComponent() {
-        AppPackagesManager appPackagesManager = new AppPackagesManager(deviceId);
-        inputFieldComponent = new InputFieldComponent(appPackagesManager.getAllPackages());
+    private void addPackageNameInputComponent(List<String> packages) {
+        inputFieldComponent = new InputFieldComponent(packages);
         inputFieldComponent.setListener(this);
         add(inputFieldComponent);
     }

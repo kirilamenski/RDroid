@@ -11,6 +11,7 @@ import com.ansgar.rdroidpc.enums.OsEnum;
 import com.ansgar.rdroidpc.enums.VideoMenuItemsEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
+import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.ui.components.VideoComponent;
 import com.ansgar.rdroidpc.ui.frames.presenters.VideoFramePresenter;
@@ -54,6 +55,15 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
     public VideoFrame(Device device, AdbBackend adbBackend, Rectangle rectangle) {
         super(rectangle, String.format("%s(%dx%d)", device.getDeviceName(),
                 device.getOption().getWidth(), device.getOption().getHeight()));
+        new SpinnerDialog(this) {
+            @Override
+            public void doInBack() {
+                initFrame(device, adbBackend, rectangle);
+            }
+        }.execute();
+    }
+
+    private void initFrame(Device device, AdbBackend adbBackend, Rectangle rectangle) {
         this.adbBackend = adbBackend;
         this.device = device;
         this.isThreadRunning = new AtomicBoolean();
@@ -64,6 +74,7 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
         initChimpDevice();
         setLayout(null);
         changeOrientation(OrientationEnum.PORTRAIT);
+        startNewThread();
     }
 
     @Override
@@ -253,7 +264,7 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
         addMenu();
         addVideo(rectangle.width, rectangle.height);
         addRightPanel();
-        repaint();
+        updateUI();
     }
 
     private void addVideo(int width, int height) {

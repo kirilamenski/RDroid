@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.List;
 
@@ -16,16 +18,16 @@ import java.util.List;
  */
 public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
 
-    private Rectangle rectangle;
     private JDialog dialog;
     private String spinnerSrc = "gifs/loading.gif";
     private int imageWidth = 60;
     private int imageHeight = 60;
     private boolean undecorated = true;
+    private WeakReference<JComponent> component;
 
-    public SpinnerDialog(Rectangle rectangle) {
-        this.rectangle = rectangle;
+    public SpinnerDialog(JComponent component) {
         this.dialog = new JDialog();
+        this.component = new WeakReference<>(component);
     }
 
     @Override
@@ -50,11 +52,9 @@ public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
     private void initDialog() {
         dialog.getContentPane().add(createSpinner());
         dialog.setUndecorated(undecorated);
-        dialog.pack();
-        dialog.setLocation(rectangle.x, rectangle.y);
-        dialog.setSize(new Dimension(rectangle.width, rectangle.height));
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        dialog.setModal(true);
+        dialog.setBounds(component.get().getBounds());
+        dialog.setLocationRelativeTo(component.get());
         dialog.setVisible(true);
     }
 
@@ -66,9 +66,10 @@ public abstract class SpinnerDialog extends SwingWorker<Void, Void> {
             JPanel spinnerContainer = new JPanel(null);
             ImageIcon icon = new ImageIcon(img);
             JLabel spinner = new JLabel(icon);
+            Rectangle parentRect = component.get().getBounds();
             spinner.setBounds(
-                    (int) (rectangle.getWidth() / 2 - icon.getIconWidth() / 2),
-                    (int) (rectangle.getHeight() / 2 - icon.getIconHeight() / 2),
+                    (int) (parentRect.getWidth() / 2 - icon.getIconWidth() / 2),
+                    (int) (parentRect.getHeight() / 2 - icon.getIconHeight() / 2),
                     icon.getIconWidth(), icon.getIconHeight());
             spinnerContainer.add(spinner);
             return spinnerContainer;

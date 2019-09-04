@@ -193,7 +193,7 @@ public class VideoFramePresenter extends BasePresenter<VideoFrameView> implement
      */
     public void reconnect() {
         if (deviceActions.isDevicesConnected(deviceId)) {
-            spinnerDialog = new SpinnerDialog(view.getParentComponent().getBounds()) {
+            spinnerDialog = new SpinnerDialog(view.getChildComponent()) {
                 @Override
                 public void doInBack() {
                     view.disposeChimpDevice();

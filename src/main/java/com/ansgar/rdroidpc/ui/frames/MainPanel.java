@@ -39,7 +39,7 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
         this.openedDevices = new HashMap<>();
         this.devices = new ArrayList<>();
         this.listener = new MainActionPanelsListener(this);
-        new SpinnerDialog(rectangle) {
+        new SpinnerDialog(this) {
             @Override
             public void doInBack() {
                 adbBackend = new AdbBackend();
@@ -134,7 +134,7 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
 
     @Override
     public void onCloseFrame() {
-        new SpinnerDialog(getRectangle()) {
+        new SpinnerDialog(this) {
             @Override
             public void doInBack() {
                 closeDevicesConnections();
@@ -163,7 +163,6 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
         if (!openedDevices.containsKey(device.getDeviceId())) {
             VideoFrame videoFrame = new VideoFrame(device, adbBackend, rectangle);
             videoFrame.setOnVideoFrameListener(MainPanel.this);
-            videoFrame.startNewThread();
             openedDevices.put(device.getDeviceId(), videoFrame);
         } else {
             showMessageDialog("Error", "Device is already opened.",
