@@ -21,6 +21,7 @@ import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.border.MatteBorder;
 import java.awt.*;
@@ -170,17 +171,17 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
 
     @Override
     public void press(String value, TouchPressType type) {
-        chimpDevice.press(value, TouchPressType.DOWN_AND_UP);
+        if (chimpDevice != null) chimpDevice.press(value, TouchPressType.DOWN_AND_UP);
     }
 
     @Override
     public void type(String type) {
-        chimpDevice.type(type);
+        if (chimpDevice != null) chimpDevice.type(type);
     }
 
     @Override
     public void touch(int x, int y, TouchPressType type) {
-        chimpDevice.touch(x, y, type);
+        if (chimpDevice != null) chimpDevice.touch(x, y, type);
     }
 
     @Override
