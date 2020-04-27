@@ -33,10 +33,7 @@ enum class AdbCommandEnum(val command: String) {
         fun getCommandValue(commandEnum: AdbCommandEnum): String {
             val aheadPath: String = SharedValues.get(SharedValuesKey.ADB_PATH, "")
                     .replace("adb", "")
-            values().forEach { enum ->
-                if (commandEnum == enum) return "$aheadPath${enum.command}"
-            }
-            return ""
+            return "$aheadPath${commandEnum.command}"
         }
     }
 
