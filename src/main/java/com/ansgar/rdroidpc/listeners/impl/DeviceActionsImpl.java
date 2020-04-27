@@ -9,9 +9,7 @@ import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.listeners.DeviceActions;
 import com.ansgar.rdroidpc.listeners.OnSaveScreenListener;
-import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
