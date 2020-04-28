@@ -31,7 +31,7 @@ public class DumpsysPanel extends BasePanel implements OnDumpsysListener,
             @Override
             public void doInBack() {
                 AppPackagesManager appPackagesManager = new AppPackagesManager(deviceId);
-                addPackageNameInputComponent(appPackagesManager.getAllPackages());
+                addPackageNameInputComponent(appPackagesManager.getAllPackages(""));
                 addDumpsysGraphic();
                 setWindowResizedListener(DumpsysPanel.this);
                 windowResized(getRectangle());

@@ -15,14 +15,15 @@ public class AppPackagesManager {
         this.deviceId = deviceId;
     }
 
-    public List<String> getAllPackages() {
+    public List<String> getAllPackages(String query) {
         List<String> packagesList = new ArrayList<>();
         CommandExecutor executor = new CommandExecutor();
         executor.setOnExecuteNextListener(line -> packagesList.add(line.replace("package:", "")));
         executor.execute(String.format(
                 Locale.ENGLISH,
                 AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.PACKAGES),
-                deviceId
+                deviceId,
+                "'" + query + "'"
         ));
         executor.destroy();
         return packagesList;
