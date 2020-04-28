@@ -9,7 +9,12 @@ enum class VideoMenuItemsEnum(val value: String) : MenuItemEnumCommands<VideoFra
     TOOLS("Tools"),
     PERFORMANCE_MANAGER("Performance Manager") {
         override fun execute(view: VideoFrameView) {
-            view.openDumpsysPanel()
+            view.openPanel(this)
+        }
+    },
+    PACKAGE_MANAGER("Package Manger") {
+        override fun execute(view: VideoFrameView) {
+            view.openPanel(this)
         }
     },
     EXIT("Exit") {

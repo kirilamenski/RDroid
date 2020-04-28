@@ -8,6 +8,7 @@ import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
 import com.ansgar.rdroidpc.enums.MainMenuItemsEnum;
 import com.ansgar.rdroidpc.enums.OrientationEnum;
+import com.ansgar.rdroidpc.enums.VideoMenuItemsEnum;
 import com.ansgar.rdroidpc.listeners.*;
 import com.ansgar.rdroidpc.listeners.impl.DeviceActionsImpl;
 import com.ansgar.rdroidpc.ui.components.*;
@@ -213,8 +214,17 @@ public class VideoFramePresenter extends BasePresenter<VideoFrameView> implement
         }
     }
 
-    public void openDumsysPanel(String deviceId, Rectangle rectangle) {
-        new DumpsysPanel(deviceId, rectangle, "Dumpsys Manager");
+    public void openPanel(VideoMenuItemsEnum videoItem, String deviceId, Rectangle rectangle) {
+        switch (videoItem) {
+            case PACKAGE_MANAGER:
+                new PackageManagerPanel(deviceId, rectangle, StringConst.PACKAGE_MANAGER);
+                break;
+            case PERFORMANCE_MANAGER:
+                new DumpsysPanel(deviceId, rectangle, StringConst.DUMP_SYS_MANAGER);
+                break;
+            default:
+                break;
+        }
     }
 
     /**

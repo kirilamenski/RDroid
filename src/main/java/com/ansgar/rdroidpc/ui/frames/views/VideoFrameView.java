@@ -1,6 +1,7 @@
 package com.ansgar.rdroidpc.ui.frames.views;
 
 import com.ansgar.rdroidpc.enums.OrientationEnum;
+import com.ansgar.rdroidpc.enums.VideoMenuItemsEnum;
 
 public interface VideoFrameView extends BaseFrameView {
 
@@ -26,6 +27,6 @@ public interface VideoFrameView extends BaseFrameView {
 
     boolean isScreenEmpty();
 
-    void openDumpsysPanel();
+    void openPanel(VideoMenuItemsEnum menuItem);
 
 }
