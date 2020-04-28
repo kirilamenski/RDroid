@@ -11,7 +11,7 @@ class StringConst {
                 MainMenuItemsEnum.HELP.value, arrayOf(MainMenuItemsEnum.INFORMATION.value))
         var videoMenuItems = arrayOf(
                 VideoMenuItemsEnum.FILE.value, arrayOf(VideoMenuItemsEnum.SETTINGS.value, VideoMenuItemsEnum.EXIT.value),
-                VideoMenuItemsEnum.TOOLS.value, arrayOf(VideoMenuItemsEnum.PERFORMANCE_MANAGER.value),
+                VideoMenuItemsEnum.TOOLS.value, arrayOf(VideoMenuItemsEnum.PACKAGE_MANAGER.value, VideoMenuItemsEnum.PERFORMANCE_MANAGER.value),
                 VideoMenuItemsEnum.HELP.value)
         val deviceHeaderNames = arrayOf("name", "size", "device id", "status", "")
         val defaultScreenSizes = arrayOf("480x640", "540x960", "720x1280", "1080x1920", "540x1140",
@@ -41,7 +41,6 @@ class StringConst {
                 "Home",
                 "Recent Application"
         )
-
         const val INFORMATION = "<html><h2>FEATURES:</h2>" +
                 "- control android device from PC.<br>" +
                 "- video recording and screen capturing.<br>" +
@@ -57,12 +56,10 @@ class StringConst {
                 "|left/top/right/bottom arrows|navigation|<br>" +
                 "<br>" +
                 "<h2>CONTACTS:</h2></html>"
-
         val links = arrayOf(
                 "https://github.com/kirilamenski/RDroid/issues",
                 "<html>Visit <a href=\"https://github.com/kirilamenski/RDroid/issues\">https://github.com/kirilamenski/RDroid/issues</a> to report about issues</html>"
         )
-
         const val BIT_RATE_L = "Bit Rate"
         const val DOWNLOAD_FOLDER = "Download Folder"
         const val TIME_L = "Time"
@@ -70,15 +67,13 @@ class StringConst {
         const val OK = "Ok"
         const val CANCEL = "Cancel"
         const val PAUSE = "Pause"
-
         const val ASK_REBOOT = "Do you want to reboot device?"
-
         const val DEFAULT_DEVICE_FOLDER = "/sdcard/"
-
         const val SCREEN_RECORD_ALREADY_RUNNING = "Screen Record_already_running"
         const val SCREEN_RECORDING_L = "Screen recording %d"
         const val INSTALL_APK_MESSAGE = "Do you want to install this apk?"
-
         const val RUN = "Run"
+        const val DUMP_SYS_MANAGER = "Dumpsys Manager";
+        const val PACKAGE_MANAGER = "Package Manager";
     }
 }
