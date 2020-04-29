@@ -28,7 +28,7 @@ enum class AdbCommandEnum(val command: String) {
     DUMPSYS("adb -s %s shell dumpsys gfxinfo %s framestats"),
     INPUT_TEXT("adb -s %s shell input text \"%s\""),
     PACKAGE_INFO("adb -s %s shell dumpsys package %s"),
-    PACKAGES("adb -s %s shell pm list packages | grep %s"),
+    PACKAGES("adb -s %s shell pm list packages"),
     CLEAR_APP_DATA("adb -s %s shell pm clear %s"),
     UN_INSTALL_APP("adb -s %s uninstall %s");
 
