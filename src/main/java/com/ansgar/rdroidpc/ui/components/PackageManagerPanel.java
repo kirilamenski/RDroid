@@ -4,53 +4,65 @@ import com.ansgar.rdroidpc.constants.DimensionConst;
 import com.ansgar.rdroidpc.listeners.SimpleTextChangeListener;
 import com.ansgar.rdroidpc.managers.AppPackagesManager;
 import com.ansgar.rdroidpc.ui.frames.BasePanel;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PackageManagerPanel extends BasePanel {
 
     private String deviceId;
-    private java.util.List<String> allPackages;
-    private List<String> foundedPackages;
+    private List<String> allPackages, foundedPackages;
+    private JScrollPane scrollPane;
+    private JPanel packagesListPanel;
 
     public PackageManagerPanel(String deviceId, Rectangle rectangle, String title) {
         super(rectangle, title, true);
         this.deviceId = deviceId;
+        this.foundedPackages = new ArrayList<>();
         new SpinnerDialog(this) {
             @Override
             public void doInBack() {
                 AppPackagesManager appPackagesManager = new AppPackagesManager(deviceId);
-                allPackages = appPackagesManager.getAllPackages("");
+                allPackages = appPackagesManager.getAllPackages();
+                foundedPackages.addAll(allPackages);
                 createPanel();
             }
         }.execute();
     }
 
     private void createPanel() {
-        setLayout(new BorderLayout());
-        add(getQueryInput(), BorderLayout.PAGE_START);
-        add(getScrollPanel(getPackagesContainer()), BorderLayout.PAGE_END);
+        if (getLayout() == null) {
+            setLayout(new BorderLayout());
+            add(getQueryInput(), BorderLayout.PAGE_START);
+        } else {
+            remove(scrollPane);
+        }
+        packagesListPanel = getPackagesContainer();
+        scrollPane = getScrollPanel(packagesListPanel);
+        add(scrollPane, BorderLayout.CENTER);
         revalidate();
     }
 
-    @NotNull
     private JTextField getQueryInput() {
         JTextField queryTf = new JTextField();
-        queryTf.setPreferredSize(new Dimension(getWidth(), DimensionConst.DEVICE_CONTAINER_HEIGHT));
+        queryTf.setPreferredSize(new Dimension(getWidth(), 30));
         queryTf.getDocument().addDocumentListener(new SimpleTextChangeListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                //TODO make query after input. Use rx to perform it after delay
+                updatePackagesList(queryTf.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updatePackagesList(queryTf.getText());
             }
         });
         return queryTf;
     }
 
-    @NotNull
     private JScrollPane getScrollPanel(Component component) {
         JScrollPane scrollPane = new JScrollPane(component);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -59,24 +71,33 @@ public class PackageManagerPanel extends BasePanel {
         return scrollPane;
     }
 
-    @NotNull
     private JPanel getPackagesContainer() {
         JPanel container = new JPanel();
-        container.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.weightx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        for (int i = 0; i < allPackages.size(); i++) {
-            container.add(getPackageName(allPackages.get(i), i + 1), gbc);
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        for (String foundedPackage : foundedPackages) {
+            container.add(getPackageName(foundedPackage));
         }
         return container;
     }
 
-    @NotNull
-    private JButton getPackageName(String packageName, int position) {
-        JButton packageNameL = new JButton(packageName);
+    private JLabel getPackageName(String packageName) {
+        JLabel packageNameL = new JLabel(packageName);
         return packageNameL;
     }
+
+    private void updatePackagesList(String query) {
+        foundedPackages.clear();
+        if (query != null && !query.isEmpty()) {
+            for (String packageName : allPackages) {
+                if (packageName.contains(query)) {
+                    foundedPackages.add(packageName);
+                }
+            }
+        } else {
+            foundedPackages.addAll(allPackages);
+        }
+        createPanel();
+    }
+
 }
 
