@@ -14,9 +14,8 @@ public class SimpleMouseListener implements MouseListener {
     @NotNull
     private ComponentProperties properties;
 
-    public SimpleMouseListener(@NotNull Component component, @NotNull ComponentProperties properties) {
+    public SimpleMouseListener(@NotNull Component component) {
         this.component = component;
-        this.properties = properties;
     }
 
     @Override
@@ -39,5 +38,9 @@ public class SimpleMouseListener implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         component.setBackground(properties.getColor());
+    }
+
+    public void setProperties(@NotNull ComponentProperties properties) {
+        this.properties = properties;
     }
 }

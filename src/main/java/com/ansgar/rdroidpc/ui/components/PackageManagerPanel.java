@@ -88,8 +88,7 @@ public class PackageManagerPanel extends BasePanel {
         JLabel packageNameL = new JLabel(packageName);
         packageNameL.setOpaque(true);
         packageNameL.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
-        packageNameL.addMouseListener(new SimpleMouseListener(packageNameL,
-                new ComponentProperties(Color.lightGray, Color.decode(Colors.MAIN_BACKGROUND_COLOR))));
+        packageNameL.addMouseListener(getMouseListener(packageNameL));
         return packageNameL;
     }
 
@@ -105,6 +104,15 @@ public class PackageManagerPanel extends BasePanel {
             foundedPackages.addAll(allPackages);
         }
         createPanel();
+    }
+
+    private SimpleMouseListener getMouseListener(Component component) {
+        SimpleMouseListener mouseListener = new SimpleMouseListener(component);
+        mouseListener.setProperties(new ComponentProperties(
+                Color.lightGray,
+                Color.decode(Colors.MAIN_BACKGROUND_COLOR)
+        ));
+        return mouseListener;
     }
 
 }
