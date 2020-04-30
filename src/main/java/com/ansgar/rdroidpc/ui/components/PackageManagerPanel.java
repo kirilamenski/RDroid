@@ -1,6 +1,9 @@
 package com.ansgar.rdroidpc.ui.components;
 
+import com.ansgar.rdroidpc.constants.Colors;
 import com.ansgar.rdroidpc.constants.DimensionConst;
+import com.ansgar.rdroidpc.entities.ComponentProperties;
+import com.ansgar.rdroidpc.listeners.SimpleMouseListener;
 import com.ansgar.rdroidpc.listeners.SimpleTextChangeListener;
 import com.ansgar.rdroidpc.managers.AppPackagesManager;
 import com.ansgar.rdroidpc.ui.frames.BasePanel;
@@ -8,6 +11,8 @@ import com.ansgar.rdroidpc.ui.frames.BasePanel;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +21,6 @@ public class PackageManagerPanel extends BasePanel {
     private String deviceId;
     private List<String> allPackages, foundedPackages;
     private JScrollPane scrollPane;
-    private JPanel packagesListPanel;
 
     public PackageManagerPanel(String deviceId, Rectangle rectangle, String title) {
         super(rectangle, title, true);
@@ -40,7 +44,7 @@ public class PackageManagerPanel extends BasePanel {
         } else {
             remove(scrollPane);
         }
-        packagesListPanel = getPackagesContainer();
+        JPanel packagesListPanel = getPackagesContainer();
         scrollPane = getScrollPanel(packagesListPanel);
         add(scrollPane, BorderLayout.CENTER);
         revalidate();
@@ -82,6 +86,10 @@ public class PackageManagerPanel extends BasePanel {
 
     private JLabel getPackageName(String packageName) {
         JLabel packageNameL = new JLabel(packageName);
+        packageNameL.setOpaque(true);
+        packageNameL.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
+        packageNameL.addMouseListener(new SimpleMouseListener(packageNameL,
+                new ComponentProperties(Color.lightGray, Color.decode(Colors.MAIN_BACKGROUND_COLOR))));
         return packageNameL;
     }
 
