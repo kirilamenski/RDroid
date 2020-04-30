@@ -11,8 +11,6 @@ import com.ansgar.rdroidpc.ui.frames.BasePanel;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +69,7 @@ public class PackageManagerPanel extends BasePanel {
         JScrollPane scrollPane = new JScrollPane(component);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(25);
         scrollPane.setPreferredSize(new Dimension(getWidth(), getHeight() - DimensionConst.DEVICE_CONTAINER_HEIGHT));
         return scrollPane;
     }
@@ -87,6 +86,7 @@ public class PackageManagerPanel extends BasePanel {
     private JLabel getPackageName(String packageName) {
         JLabel packageNameL = new JLabel(packageName);
         packageNameL.setOpaque(true);
+        packageNameL.setMaximumSize(new Dimension(getWidth(), 20));
         packageNameL.setBackground(Color.decode(Colors.MAIN_BACKGROUND_COLOR));
         packageNameL.addMouseListener(getMouseListener(packageNameL));
         return packageNameL;
