@@ -7,14 +7,13 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class SimpleMouseListener implements MouseListener {
+public class SimpleMouseListener<T extends Component> implements MouseListener {
 
     @NotNull
-    private Component component;
-    @NotNull
+    private T component;
     private ComponentProperties properties;
 
-    public SimpleMouseListener(@NotNull Component component) {
+    public SimpleMouseListener(@NotNull T component) {
         this.component = component;
     }
 
