@@ -1,4 +1,4 @@
-package com.ansgar.rdroidpc.ui.components;
+package com.ansgar.rdroidpc.ui.frames;
 
 import com.ansgar.rdroidpc.constants.Colors;
 import com.ansgar.rdroidpc.constants.DimensionConst;
@@ -6,11 +6,12 @@ import com.ansgar.rdroidpc.entities.ComponentProperties;
 import com.ansgar.rdroidpc.listeners.SimpleMouseListener;
 import com.ansgar.rdroidpc.listeners.SimpleTextChangeListener;
 import com.ansgar.rdroidpc.managers.AppPackagesManager;
-import com.ansgar.rdroidpc.ui.frames.BasePanel;
+import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,8 +107,17 @@ public class PackageManagerPanel extends BasePanel {
         createPanel();
     }
 
-    private SimpleMouseListener getMouseListener(Component component) {
-        SimpleMouseListener mouseListener = new SimpleMouseListener(component);
+    private SimpleMouseListener getMouseListener(JLabel packageName) {
+        SimpleMouseListener mouseListener = new SimpleMouseListener<JLabel>(packageName) {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new PackageInfoPanel(
+                        deviceId,
+                        getParentComponent().getBounds(),
+                        packageName.getText()
+                );
+            }
+        };
         mouseListener.setProperties(new ComponentProperties(
                 Color.lightGray,
                 Color.decode(Colors.MAIN_BACKGROUND_COLOR)
