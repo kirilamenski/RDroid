@@ -221,7 +221,7 @@ public class VideoFrame extends BasePanel<VideoFramePresenter> implements VideoF
 
     @Override
     public void openPanel(VideoMenuItemsEnum item) {
-        Rectangle rectangle = new Rectangle(frame.getX() + frame.getWidth(), frame.getY(), 600, 400);
+        Rectangle rectangle = new Rectangle(frame.getX() + frame.getWidth(), frame.getY(), 600, frame.getHeight());
         if (currentOrientation == OrientationEnum.LANDSCAPE) rectangle.x = frame.getX();
         presenter.openPanel(item, device.getDeviceId(), rectangle);
     }
