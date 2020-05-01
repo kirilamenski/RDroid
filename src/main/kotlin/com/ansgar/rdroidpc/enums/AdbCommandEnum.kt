@@ -30,7 +30,8 @@ enum class AdbCommandEnum(val command: String) {
     PACKAGE_INFO("adb -s %s shell dumpsys package %s"),
     PACKAGES("adb -s %s shell pm list packages"),
     CLEAR_APP_DATA("adb -s %s shell pm clear %s"),
-    UN_INSTALL_APP("adb -s %s uninstall %s");
+    UN_INSTALL_APP("adb -s %s uninstall %s"),
+    OPEN_APP("adb -s %s shell monkey -p %s -c android.intent.category.LAUNCHER 1");
 
     companion object {
         fun getCommandValue(commandEnum: AdbCommandEnum): String {
