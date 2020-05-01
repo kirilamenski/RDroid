@@ -75,5 +75,9 @@ class StringConst {
         const val RUN = "Run"
         const val DUMP_SYS_MANAGER = "Dumpsys Manager";
         const val PACKAGE_MANAGER = "Package Manager";
+        const val UN_INSTALL = "Unisntall";
+        const val CLEAR_CACHE = "Clear Cache";
+        const val OPEN_APP = "Open App";
+        const val OPEN_APP_SETTINGS = "Open App Settings";
     }
 }
