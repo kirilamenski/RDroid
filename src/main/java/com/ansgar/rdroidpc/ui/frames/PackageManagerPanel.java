@@ -96,7 +96,7 @@ public class PackageManagerPanel extends BasePanel {
         foundedPackages.clear();
         if (query != null && !query.isEmpty()) {
             for (String packageName : allPackages) {
-                if (packageName.contains(query)) {
+                if (packageName.toLowerCase().contains(query.toLowerCase())) {
                     foundedPackages.add(packageName);
                 }
             }
