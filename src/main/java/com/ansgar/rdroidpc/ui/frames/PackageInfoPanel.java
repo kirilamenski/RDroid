@@ -4,6 +4,7 @@ import com.ansgar.rdroidpc.commands.CommandExecutor;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
+import com.ansgar.rdroidpc.ui.components.OptionDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +13,12 @@ import java.util.Locale;
 public class PackageInfoPanel extends BasePanel implements ButtonsPanel.OnButtonPanelListener {
 
     private String deviceId;
+    private String packageName;
 
     public PackageInfoPanel(String deviceId, Rectangle rectangle, String title) {
         super(rectangle, title);
         this.deviceId = deviceId;
+        this.packageName = title;
         createPanel();
     }
 
@@ -41,7 +44,7 @@ public class PackageInfoPanel extends BasePanel implements ButtonsPanel.OnButton
     }
 
     private JLabel getTitleComponent() {
-        JLabel title = new JLabel(frame.getTitle(), SwingConstants.CENTER);
+        JLabel title = new JLabel(packageName, SwingConstants.CENTER);
         title.setFont(new Font("TimesRoman", Font.PLAIN, 18));
         title.setMaximumSize(new Dimension(getWidth(), 100));
         title.setPreferredSize(new Dimension(getWidth(), 100));
@@ -71,20 +74,49 @@ public class PackageInfoPanel extends BasePanel implements ButtonsPanel.OnButton
 
     @Override
     public void onActionItemClicked(int position) {
-        String adbCommand = "";
         switch (position) {
             case 0:
-                adbCommand = AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.UN_INSTALL_APP);
+                showWarningDialog(
+                        getCommand(AdbCommandEnum.UN_INSTALL_APP),
+                        StringConst.UN_INSTALL.toLowerCase(),
+                        packageName
+                );
                 break;
             case 1:
-                adbCommand = AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.CLEAR_APP_DATA);
+                showWarningDialog(
+                        getCommand(AdbCommandEnum.CLEAR_APP_DATA),
+                        StringConst.CLEAR_CACHE.toLowerCase(),
+                        packageName
+                );
                 break;
             case 2:
-                adbCommand = AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.OPEN_APP);
+                executeAdbCommand(getCommand(AdbCommandEnum.OPEN_APP));
                 break;
         }
-        String command = String.format(Locale.ENGLISH, adbCommand, deviceId, frame.getTitle());
-        executeAdbCommand(command);
+    }
+
+    private String getCommand(AdbCommandEnum adbCommand) {
+        return String.format(
+                Locale.ENGLISH,
+                AdbCommandEnum.Companion.getCommandValue(adbCommand),
+                deviceId,
+                packageName
+        );
+    }
+
+    private void showWarningDialog(String command, String action, String packageName) {
+        String dialogTitle = String.format(
+                StringConst.CLEAR_APP_DATA_WARNING,
+                action,
+                packageName
+        );
+        int result = new OptionDialog()
+                .setDialogTitle(dialogTitle)
+                .setMainTitle("")
+                .showDialog(this, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (result == 0) {
+            executeAdbCommand(command);
+        }
     }
 
     private void executeAdbCommand(String command) {

@@ -72,6 +72,7 @@ class StringConst {
         const val SCREEN_RECORD_ALREADY_RUNNING = "Screen Record_already_running"
         const val SCREEN_RECORDING_L = "Screen recording %d"
         const val INSTALL_APK_MESSAGE = "Do you want to install this apk?"
+        const val CLEAR_APP_DATA_WARNING = "Do you want to %s %s?"
         const val RUN = "Run"
         const val DUMP_SYS_MANAGER = "Dumpsys Manager";
         const val PACKAGE_MANAGER = "Package Manager";
