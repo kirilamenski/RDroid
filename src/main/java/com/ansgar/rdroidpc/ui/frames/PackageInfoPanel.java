@@ -5,6 +5,7 @@ import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.enums.AdbCommandEnum;
 import com.ansgar.rdroidpc.ui.components.ButtonsPanel;
 import com.ansgar.rdroidpc.ui.components.OptionDialog;
+import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,29 +17,49 @@ public class PackageInfoPanel extends BasePanel implements ButtonsPanel.OnButton
     private String packageName;
 
     public PackageInfoPanel(String deviceId, Rectangle rectangle, String title) {
-        super(rectangle, title);
+        super(rectangle, title, true);
         this.deviceId = deviceId;
         this.packageName = title;
-        createPanel();
+        new SpinnerDialog(this) {
+            @Override
+            public void doInBack() {
+                CommandExecutor executor = new CommandExecutor();
+                executor.setOnFinishExecuteListener(result -> {
+                    createPanel(result.toString());
+                    executor.destroy();
+                });
+                executor.execute(String.format(
+                        Locale.ENGLISH,
+                        AdbCommandEnum.Companion.getCommandValue(AdbCommandEnum.PACKAGE_INFO),
+                        deviceId,
+                        packageName
+                ));
+            }
+        }.execute();
     }
 
-    private void createPanel() {
-        setLayout(new BorderLayout());
-        add(getScrollPane(getInfoContainer()));
+    private void createPanel(String packageInfo) {
+        setLayout(null);
+        add(getInfoContainer());
+        add(getScrollPane(getPackageInformation(packageInfo)));
+        updateUI();
     }
 
     private JPanel getInfoContainer() {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setLayout(null);
+        panel.setBounds(0, 0, getWidth(), 100);
         panel.add(getTitleComponent());
         panel.add(getButtonsPanel());
         return panel;
     }
 
-    private JScrollPane getScrollPane(JPanel scrollablePanel) {
+    private JScrollPane getScrollPane(JTextArea scrollablePanel) {
         JScrollPane scrollPane = new JScrollPane(scrollablePanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBackground(Color.CYAN);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(25);
+        scrollPane.setBounds(0, 100, getWidth(), getHeight());
         scrollPane.setPreferredSize(new Dimension(getWidth(), getHeight()));
         return scrollPane;
     }
@@ -46,8 +67,7 @@ public class PackageInfoPanel extends BasePanel implements ButtonsPanel.OnButton
     private JLabel getTitleComponent() {
         JLabel title = new JLabel(packageName, SwingConstants.CENTER);
         title.setFont(new Font("TimesRoman", Font.PLAIN, 18));
-        title.setMaximumSize(new Dimension(getWidth(), 100));
-        title.setPreferredSize(new Dimension(getWidth(), 100));
+        title.setBounds(0, 0, getWidth(), 50);
         return title;
     }
 
@@ -65,11 +85,19 @@ public class PackageInfoPanel extends BasePanel implements ButtonsPanel.OnButton
                 StringConst.OPEN_APP,
                 StringConst.OPEN_APP_SETTINGS
         );
-        buttonsPanel.setBounds(0, 0, getWidth(), 50);
+        buttonsPanel.setBounds(0, 50, getWidth(), 50);
         buttonsPanel.setIconSize(30, 30);
         buttonsPanel.setItemClickListener(this);
         buttonsPanel.createPanel();
         return buttonsPanel;
+    }
+
+    private JTextArea getPackageInformation(String packageInfo) {
+        JTextArea textArea = new JTextArea();
+        textArea.setEditable(false);
+        textArea.setText(packageInfo);
+        textArea.setBounds(0, 100, getWidth(), getHeight() - 100);
+        return textArea;
     }
 
     @Override
