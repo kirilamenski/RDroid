@@ -4,6 +4,7 @@ import com.android.chimpchat.core.TouchPressType;
 import com.ansgar.filemanager.DesktopUtil;
 import com.ansgar.rdroidpc.constants.AdbKeyCode;
 import com.ansgar.rdroidpc.constants.DimensionConst;
+import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
 import com.ansgar.rdroidpc.enums.MainMenuItemsEnum;
@@ -19,6 +20,7 @@ import com.ansgar.rdroidpc.ui.frames.VideoFrame;
 import com.ansgar.rdroidpc.ui.frames.views.VideoFrameView;
 import com.ansgar.rdroidpc.utils.DateUtil;
 import com.ansgar.rdroidpc.commands.tasks.OrientationCommandTask;
+import com.ansgar.rdroidpc.utils.SharedValues;
 
 import javax.swing.*;
 import java.awt.*;
@@ -171,7 +173,8 @@ public class VideoFramePresenter extends BasePresenter<VideoFrameView> implement
 
     private void openFileChooser() {
         FileChooser chooser = new FileChooser(this);
-        chooser.open(view.getChildComponent(), JFileChooser.DIRECTORIES_ONLY, "");
+        String defaultPath = SharedValues.get(SharedValuesKey.DEFAULT_FILE_UPLOADING_FOLDER, System.getProperty("user.home"));
+        chooser.open(view.getChildComponent(), JFileChooser.DIRECTORIES_ONLY, defaultPath);
     }
 
     private void openScreenRecordOptions() {

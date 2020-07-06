@@ -2,12 +2,14 @@ package com.ansgar.rdroidpc.ui.frames;
 
 import com.ansgar.rdroidpc.constants.Colors;
 import com.ansgar.rdroidpc.constants.DimensionConst;
+import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.entities.ScreenRecordOptions;
 import com.ansgar.rdroidpc.listeners.OnFileChooserListener;
 import com.ansgar.rdroidpc.listeners.OnScreenRecordOptionsListener;
 import com.ansgar.rdroidpc.ui.components.FileChooser;
 import com.ansgar.rdroidpc.utils.KeyListenerAdapter;
+import com.ansgar.rdroidpc.utils.SharedValues;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -106,7 +108,8 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         downloadFolderL.setBounds(5, 95, 200, 25);
         add(downloadFolderL);
 
-        downloadFolderTf = new JTextField();
+        String defaultPath = SharedValues.get(SharedValuesKey.DEFAULT_FILE_UPLOADING_FOLDER, System.getProperty("user.home"));
+        downloadFolderTf = new JTextField(defaultPath);
         downloadFolderTf.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode(Colors.BORDER_COLOR)));
         downloadFolderTf.setBounds(getRectangle().width - 230, 95, 185, 25);
         add(downloadFolderTf);
@@ -116,7 +119,7 @@ public class ScreenRecordOptionsFrame extends BasePanel implements OnFileChooser
         toggleBtn.setBounds(getRectangle().width - 230 + 185, 95, 20, 25);
         toggleBtn.addActionListener(e -> {
             FileChooser fileChooser = new FileChooser(this);
-            fileChooser.open(this, JFileChooser.FILES_AND_DIRECTORIES, downloadFolderTf.getText());
+            fileChooser.open(this, JFileChooser.DIRECTORIES_ONLY, downloadFolderTf.getText());
         });
 
         add(toggleBtn);

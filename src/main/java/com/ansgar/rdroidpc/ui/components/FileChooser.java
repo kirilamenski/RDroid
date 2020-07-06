@@ -1,7 +1,9 @@
 package com.ansgar.rdroidpc.ui.components;
 
+import com.ansgar.rdroidpc.constants.SharedValuesKey;
 import com.ansgar.rdroidpc.constants.StringConst;
 import com.ansgar.rdroidpc.listeners.OnFileChooserListener;
+import com.ansgar.rdroidpc.utils.SharedValues;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,9 +21,9 @@ public class FileChooser {
         chooser.setFileSelectionMode(mode);
         chooser.showDialog(component, StringConst.OK);
         if (chooser.getSelectedFile() != null) {
-            if (listener != null) {
-                listener.onPathSelected(chooser.getSelectedFile().getAbsolutePath());
-            }
+            String path = chooser.getSelectedFile().getAbsolutePath();
+            SharedValues.put(SharedValuesKey.DEFAULT_FILE_UPLOADING_FOLDER, path);
+            if (listener != null) listener.onPathSelected(path);
         }
     }
 
