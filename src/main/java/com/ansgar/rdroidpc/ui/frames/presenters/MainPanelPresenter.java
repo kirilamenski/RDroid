@@ -43,4 +43,8 @@ public class MainPanelPresenter extends BasePresenter<MainPanelView> implements 
         view.closeDevicesConnections();
     }
 
+    public void showAdbError() {
+        System.out.println("Adb has not founded. Please install or set adb path.");
+    }
+
 }

@@ -14,6 +14,7 @@ import com.ansgar.rdroidpc.ui.components.SpinnerDialog;
 import com.ansgar.rdroidpc.ui.components.menu.MenuBar;
 import com.ansgar.rdroidpc.ui.frames.presenters.MainPanelPresenter;
 import com.ansgar.rdroidpc.ui.frames.views.MainPanelView;
+import com.ansgar.rdroidpc.utils.SharedValues;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -42,7 +43,9 @@ public class MainPanel extends BasePanel<MainPanelPresenter> implements MainPane
         new SpinnerDialog(this) {
             @Override
             public void doInBack() {
-                adbBackend = new AdbBackend();
+                String adbPath = SharedValues.get(SharedValuesKey.ADB_PATH, "");
+                if (!adbPath.isEmpty()) adbBackend = new AdbBackend(adbPath, false);
+                else presenter.showAdbError();
                 setUpMainPanel();
             }
         }.execute();
